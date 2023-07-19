@@ -55,4 +55,4 @@ yes | paru -S --needed ly-git
 # Configuring the display manager.
 echo -e "\n${CYAN}Configuring display manager...${NO_COLOR}"
 sudo systemctl enable ly
-sed -i '/^#.*blank_password/s/^#//' /etc/ly/config.ini
+sudo sed -i '/^#.*blank_password/s/^#//' /etc/ly/config.ini
