@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Catch exit signal (CTRL + C), to terminate the whole script.
+trap "exit" INT
+
 # Update system.
 echo "Updating system..."
 yes | sudo pacman -Syu
