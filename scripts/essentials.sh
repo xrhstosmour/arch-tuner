@@ -20,6 +20,14 @@ echo -e "${Cyan}Installing paru AUR helper..."
 if command -v paru &>/dev/null; then
     echo -e "${Cyan}paru AUR helper, already exists in your system!"
 else
+
+    # Delete old paru directory, if it exists.
+    if [ -d "paru" ]; then
+        echo -e "${Cyan}Deleting old paru directory..."
+        sudo rm -rf paru
+    fi
+
+    # Proceed with installation.
     git clone https://aur.archlinux.org/paru.git && cd paru &&
         yes | rustup default stable && yes | makepkg -si && cd .. &&
         sudo rm -rf paru
