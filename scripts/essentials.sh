@@ -7,6 +7,9 @@ NO_COLOR='\033[0m'
 # Catch exit signal (CTRL + C), to terminate the whole script.
 trap "exit" INT
 
+# Terminate script on error.
+set -e
+
 # Update system.
 echo -e "\n${CYAN}Updating system...${NO_COLOR}"
 yes | sudo pacman -Syu
