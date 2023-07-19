@@ -12,7 +12,8 @@ set -e
 
 # Update system.
 echo -e "\n${CYAN}Updating system...${NO_COLOR}"
-yes | sudo pacman -S archlinux-keyring && yes | sudo pacman -Syu
+yes | sudo pacman -S --needed archlinux-keyring &&
+    yes | sudo pacman -Syu --needed
 
 # Install essential packages, if they do not exist.
 echo -e "\n${CYAN}Installing essential packages...${NO_COLOR}"
@@ -49,7 +50,7 @@ sudo sed -i '/^#.*Color/s/^#//' ~/etc/pacman.conf
 
 # Skipping review messages.
 echo -e "\n${CYAN}Skipping review messages...${NO_COLOR}"
-sudo echo "SkipReview" >>~/etc/paru.conf
+sudo sed -i "$ a SkipReview" ~/etc/paru.conf
 
 # Installing the display manager.
 echo -e "\n${CYAN}Installing display manager...${NO_COLOR}"
