@@ -33,7 +33,7 @@ else
 
     # Proceed with installation.
     git clone https://aur.archlinux.org/paru.git && cd paru &&
-        makepkg -si --noconfirm && cd .. && sudo rm -rf paru && cd ~
+        makepkg -si --noconfirm && cd .. && sudo rm -rf paru
 fi
 
 # Configuring paru AUR helper.
@@ -45,11 +45,11 @@ yes | paru -S --needed rustup && yes | rustup default stable
 
 # Enabling colors in terminal.
 echo -e "\n${CYAN}Enabling colors in terminal...${NO_COLOR}"
-sudo sed -i '/^#.*Color/s/^#//' /etc/pacman.conf
+sudo sed -i '/^#.*Color/s/^#//' ~/etc/pacman.conf
 
 # Skipping review messages.
 echo -e "\n${CYAN}Skipping review messages...${NO_COLOR}"
-echo "SkipReview" >>/etc/paru.conf
+sudo echo "SkipReview" >>~/etc/paru.conf
 
 # Installing the display manager.
 echo -e "\n${CYAN}Installing display manager...${NO_COLOR}"
@@ -58,4 +58,4 @@ yes | paru -S --needed ly-git
 # Configuring the display manager.
 echo -e "\n${CYAN}Configuring display manager...${NO_COLOR}"
 sudo systemctl enable ly
-sudo sed -i '/^#.*blank_password/s/^#//' /etc/ly/config.ini
+sudo sed -i '/^#.*blank_password/s/^#//' ~/etc/ly/config.ini
