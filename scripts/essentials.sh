@@ -12,7 +12,7 @@ set -e
 
 # Update system.
 echo -e "\n${CYAN}Updating system...${NO_COLOR}"
-yes | sudo pacman -Syu
+yes | sudo pacman -S archlinux-keyring && yes | sudo pacman -Syu
 
 # Install essential packages, if they do not exist.
 echo -e "\n${CYAN}Installing essential packages...${NO_COLOR}"
