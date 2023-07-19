@@ -30,16 +30,23 @@ else
 
     # Proceed with installation.
     git clone https://aur.archlinux.org/paru.git && cd paru &&
-        yes | rustup default stable && yes | makepkg -si && cd .. &&
-        sudo rm -rf paru
+        makepkg -si --noconfirm && cd .. && sudo rm -rf paru && cd ~
 fi
 
 # Configuring paru AUR helper.
-echo -e "${CYAN}Configuring paru AUR helper...${NO_COLOR}"
-echo -e "${CYAN}Enabling colors in terminal...${NO_COLOR}"
-sed -i '/^#.*Color/s/^#//' /etc/pacman.conf
-echo -e "${CYAN}Skipping review messages...${NO_COLOR}"
-echo -e "SkipReview" >>/etc/paru.conf
+echo -e "\n${CYAN}Configuring paru AUR helper...${NO_COLOR}"
+
+# Changing to stable rust version.
+echo -e "\n${CYAN}Changing to stable rust version...${NO_COLOR}"
+yes | paru -S --needed rustup && yes | rustup default stable
+
+# Enabling colors in terminal.
+echo -e "\n${CYAN}Enabling colors in terminal...${NO_COLOR}"
+sudo sed -i '/^#.*Color/s/^#//' /etc/pacman.conf
+
+# Skipping review messages.
+echo -e "\n${CYAN}Skipping review messages...${NO_COLOR}"
+echo "SkipReview" >>/etc/paru.conf
 
 # Installing the display manager.
 echo -e "\n${CYAN}Installing display manager...${NO_COLOR}"
