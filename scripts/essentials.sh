@@ -46,10 +46,10 @@ yes | paru -S --needed rustup && yes | rustup default stable
 
 # Enabling colors in terminal.
 echo -e "\n${CYAN}Enabling colors in terminal...${NO_COLOR}"
-sudo sed -i '/^#.*Color/s/^#//' ~/etc/pacman.conf
+sudo sed -i '/^#.*Color/s/^#//' /etc/pacman.conf
 
 # Skipping review messages.
 echo -e "\n${CYAN}Skipping review messages...${NO_COLOR}"
-sudo sed -i "$ a SkipReview" ~/etc/paru.conf
+sudo sed -i "$ a SkipReview" /etc/paru.conf
 
 # TODO: Install and configure terminal, commands, alias, prompts, etc.
