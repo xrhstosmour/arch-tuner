@@ -52,11 +52,4 @@ sudo sed -i '/^#.*Color/s/^#//' ~/etc/pacman.conf
 echo -e "\n${CYAN}Skipping review messages...${NO_COLOR}"
 sudo sed -i "$ a SkipReview" ~/etc/paru.conf
 
-# Installing the display manager.
-echo -e "\n${CYAN}Installing display manager...${NO_COLOR}"
-yes | paru -S --needed ly-git
-
-# Configuring the display manager.
-echo -e "\n${CYAN}Configuring display manager...${NO_COLOR}"
-sudo systemctl enable ly
-sudo sed -i '/^#.*blank_password/s/^#//' ~/etc/ly/config.ini
+# TODO: Install and configure terminal, commands, alias, prompts, etc.
