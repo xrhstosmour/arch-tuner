@@ -60,13 +60,19 @@ paru -S --noconfirm --needed starship fish bat exa rm-improved xcp \
 # Configuring command line tools.
 echo -e "\n${CYAN}Configuring shell...${NO_COLOR}"
 
-# Setting fish as default shell.
+# Setting default shell.
 echo -e "\n${CYAN}Setting default shell...${NO_COLOR}"
 sudo sed -i "$ a /usr/local/bin/fish" /etc/shells
-sudo chsh -s /usr/local/bin/fish
-mkdir -p $HOME/.config/fish
+sudo chsh -s /usr/bin/fish
 
-echo -e "\n${CYAN}Enabling command line tools while using shell...${NO_COLOR}"
+# Create shell configuration files.
+echo -e "\n${CYAN}Creating shell configuration files...${NO_COLOR}"
+mkdir -p $HOME/.config/fish
+touch $HOME/.cofig/fish/config.fish
+mkdir -p $HOME/.config/fish/conf.d/
+touch $HOME/.cofig/fish/conf.d/abbr.fish
+
+echo -e "\n${CYAN}Enabling command line tools...${NO_COLOR}"
 
 # Enabling starship at fish prompt.
 sudo sed -i "$ a starship init fish | source" $HOME/.config/fish/config.fish
@@ -76,7 +82,6 @@ sudo sed -i "$ a zoxide init fish | source" $HOME/.config/fish/config.fish
 
 # Configuring aliases.
 echo -e "\n${CYAN}Configuring aliases...${NO_COLOR}"
-sudo mkdir -p $HOME/.config/fish/conf.d/
 sudo sed -i "$ a abbr -a cat 'bat' | source" $HOME/.cofig/fish/conf.d/abbr.fish
 sudo sed -i "$ a abbr -a cat 'bat' | source" $HOME/.cofig/fish/conf.d/abbr.fish
 sudo sed -i "$ a abbr -a ls 'exa --git --icons --color=always --group-directories-first' | source" $HOME/.cofig/fish/conf.d/abbr.fish
