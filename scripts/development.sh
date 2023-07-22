@@ -28,5 +28,5 @@ paru -S --noconfirm --needed python python-pip
 
 # Configuring Python.
 echo -e "\n${CYAN}Configuring Python...${NO_COLOR}"
-pip install poetry
+paru -S --noconfirm --needed python-poetry
 poetry self add poetry-plugin-up
