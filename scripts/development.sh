@@ -11,26 +11,26 @@ trap "exit" INT
 set -e
 
 # Installing development tools.
-echo "\n${CYAN}Installing development tools...${NO_COLOR}"
+echo -e "\n${CYAN}Installing development tools...${NO_COLOR}"
 paru -S --noconfirm --needed vscodium-bin remmina-git gitkraken obsidian \
     postman-bin etcher-bin docker docker-compose
 
 # Configuring development tools.
-echo "Configuring development tools..."
+echo -e "Configuring development tools..."
 sudo systemctl enable docker && sudo systemctl start docker
 
 # Installing programming languages.
-echo "\n${CYAN}Installing programming languages...${NO_COLOR}"
+echo -e "\n${CYAN}Installing programming languages...${NO_COLOR}"
 
 # Installing Python.
-echo "\n${CYAN}Installing Python...${NO_COLOR}"
+echo -e "\n${CYAN}Installing Python...${NO_COLOR}"
 paru -S --noconfirm --needed python python-pip python-poetry
 
 # Configuring Python.
-echo "\n${CYAN}Configuring Python...${NO_COLOR}"
+echo -e "\n${CYAN}Configuring Python...${NO_COLOR}"
 
 # Configuring Poetry.
-echo "\n${CYAN}Configuring Poetry...${NO_COLOR}"
+echo -e "\n${CYAN}Configuring Poetry...${NO_COLOR}"
 set -x PYTHON_KEYRING_BACKEND 'keyring.backends.null.Keyring'
 poetry config virtualenvs.in-project true
 poetry plugin add poetry-plugin-up
