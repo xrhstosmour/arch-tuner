@@ -63,14 +63,14 @@ echo -e "\n${CYAN}Configuring shell...${NO_COLOR}"
 # Setting default shell.
 echo -e "\n${CYAN}Setting default shell...${NO_COLOR}"
 sudo sed -i "$ a /usr/local/bin/fish" /etc/shells
-sudo chsh -s /usr/bin/fish
+chsh -s /usr/local/bin/fish
 
 # Create shell configuration files.
 echo -e "\n${CYAN}Creating shell configuration files...${NO_COLOR}"
-mkdir -p $HOME/.config/fish
-touch $HOME/.cofig/fish/config.fish
-mkdir -p $HOME/.config/fish/conf.d/
-touch $HOME/.cofig/fish/conf.d/abbr.fish
+sudo mkdir -p $HOME/.config/fish
+sudo touch $HOME/.cofig/fish/config.fish
+sudo mkdir -p $HOME/.config/fish/conf.d/
+sudo touch $HOME/.cofig/fish/conf.d/abbr.fish
 
 echo -e "\n${CYAN}Enabling command line tools...${NO_COLOR}"
 
