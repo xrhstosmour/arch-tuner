@@ -36,7 +36,8 @@ poetry config virtualenvs.in-project true
 # Setting environment variable both for fish and bash shell.
 # This is needed to avoid error while adding poetry plugins.
 set -x PYTHON_KEYRING_BACKEND 'keyring.backends.null.Keyring'
-echo 'export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring' >> ~/.bashrc
-echo 'export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring' >> ~/.profile
-exec "$SHELL"
-poetry self add poetry-plugin-up
+echo 'export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring' >>~/.bashrc 2>/dev/null
+echo 'export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring' >>~/.profile 2>/dev/null
+
+# Installing poetry plugins in a new shell instance to get the environment variable.
+"$SHELL" -c 'poetry self add poetry-plugin-up'
