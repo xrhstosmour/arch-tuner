@@ -23,17 +23,22 @@ echo -e "\n${CYAN}Running essentials script...${NO_COLOR}"
 ./essentials.sh
 echo -e "\n${CYAN}Essentials script finished!${NO_COLOR}"
 
+# Default answer.
+development_answer=""
+
 # Proceed with the development script.
-echo -e "\n${BOLD_GREEN}Do you want to install development tools and programming languages? Y/N: ${NO_COLOR}"
-read -r answer
+while [[ "$development_answer" != "y" && "$development_answer" != "n" ]]; do
+    echo -e "\n${BOLD_GREEN}Do you want to install development tools and programming languages? Y/N: ${NO_COLOR}"
+    read -r development_answer
 
-# Convert the answer to lowercase to accept 'Y', 'y', 'N', 'n' as valid.
-answer=${answer,,}
+    # Convert the answer to lowercase to accept 'Y', 'y', 'N', 'n' as valid.
+    development_answer=${development_answer,,}
 
-if [[ "$answer" == "y" ]]; then
-    echo -e "\n${CYAN}Running development script...${NO_COLOR}"
-    ./development.sh
-    echo -e "\n${CYAN}Development script finished!${NO_COLOR}"
-elif [[ "$answer" != "n" ]]; then
-    echo "Invalid input!"
-fi
+    if [[ "$development_answer" == "y" ]]; then
+        echo -e "\n${CYAN}Running development script...${NO_COLOR}"
+        ./development.sh
+        echo -e "\n${CYAN}Development script finished!${NO_COLOR}"
+    elif [[ "$development_answer" != "n" ]]; then
+        echo "Invalid input!"
+    fi
+done
