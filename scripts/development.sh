@@ -1,4 +1,4 @@
-#!/usr/bin/fish
+#!/bin/bash
 
 # Color for the script's messages.
 CYAN='\033[1;36m'
@@ -33,4 +33,4 @@ echo -e "\n${CYAN}Configuring Python...${NO_COLOR}"
 echo -e "\n${CYAN}Configuring Poetry...${NO_COLOR}"
 set -x PYTHON_KEYRING_BACKEND 'keyring.backends.null.Keyring'
 poetry config virtualenvs.in-project true
-poetry plugin add poetry-plugin-up
+poetry self add poetry-plugin-up

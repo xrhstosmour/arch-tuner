@@ -62,7 +62,7 @@ echo -e "\n${CYAN}Configuring shell...${NO_COLOR}"
 
 # Setting default shell.
 echo -e "\n${CYAN}Setting default shell...${NO_COLOR}"
-grep -qxF '/usr/bin/fish' /etc/shells || echo '/usr/bin/fish' | sudo tee -a /etc/shells > /dev/null
+grep -qxF '/usr/bin/fish' /etc/shells || echo '/usr/bin/fish' | sudo tee -a /etc/shells >/dev/null
 sudo chsh -s /usr/bin/fish $USER
 
 # Create shell configuration files.
@@ -89,7 +89,3 @@ echo "abbr -a cd 'z' | source" >>~/.config/fish/conf.d/abbr.fish
 echo "abbr -a find 'fd' | source" >>~/.config/fish/conf.d/abbr.fish
 echo "abbr -a sed 'sd' | source" >>~/.config/fish/conf.d/abbr.fish
 echo "abbr -a up 'topgrade' | source" >>~/.config/fish/conf.d/abbr.fish
-
-# Saving configuration.
-echo -e "\n${CYAN}Saving configuration...${NO_COLOR}"
-exec fish
