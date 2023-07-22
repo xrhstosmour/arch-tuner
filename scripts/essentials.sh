@@ -42,7 +42,7 @@ echo -e "\n${CYAN}Configuring paru AUR helper...${NO_COLOR}"
 
 # Changing to stable rust version.
 echo -e "\n${CYAN}Changing to stable rust version...${NO_COLOR}"
-paru -S --noconfirm --needed rustup && rustup --noconfirm default stable
+paru -S --noconfirm --needed rustup && rustup default stable
 
 # Enabling colors in terminal.
 echo -e "\n${CYAN}Enabling colors in terminal...${NO_COLOR}"
