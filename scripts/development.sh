@@ -31,5 +31,5 @@ echo -e "\n${CYAN}Configuring Python...${NO_COLOR}"
 
 # Configuring Poetry.
 echo -e "\n${CYAN}Configuring Poetry...${NO_COLOR}"
-sudo set -x PYTHON_KEYRING_BACKEND 'keyring.backends.null.Keyring'
+set -x PYTHON_KEYRING_BACKEND 'keyring.backends.null.Keyring'
 poetry self add poetry-plugin-up
