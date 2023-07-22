@@ -10,6 +10,13 @@ trap "exit" INT
 # Terminate script on error.
 set -e
 
+echo -e "\n${CYAN}Starting installing procedure...${NO_COLOR}"
+
+# Give execution permission to all scripts.
+echo -e "\n${CYAN}Giving execution permission to all scripts...${NO_COLOR}"
+chmod +x ./essentials.sh
+chmod +x ./development.sh
+
 # Start by executing the essentials script.
 ./essentials.sh
 
