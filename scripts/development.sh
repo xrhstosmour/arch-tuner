@@ -12,7 +12,7 @@ set -e
 
 # Installing development tools.
 echo -e "\n${CYAN}Installing development tools...${NO_COLOR}"
-yes | paru -S --needed vscodium-bin remmina-git gitkraken obsidian \
+paru -S --noconfirm --needed vscodium-bin remmina-git gitkraken obsidian \
     postman-bin etcher-bin docker docker-compose
 
 # Configuring development tools.
@@ -24,7 +24,7 @@ echo -e "\n${CYAN}Installing programming languages...${NO_COLOR}"
 
 # Installing Python.
 echo -e "\n${CYAN}Installing Python...${NO_COLOR}"
-yes | paru -S --needed python python-pip
+paru -S --noconfirm --needed python python-pip
 
 # Configuring Python.
 echo -e "\n${CYAN}Configuring Python...${NO_COLOR}"

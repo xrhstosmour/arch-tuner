@@ -12,12 +12,12 @@ set -e
 
 # Update system.
 echo -e "\n${CYAN}Updating system...${NO_COLOR}"
-yes | sudo pacman -S --needed archlinux-keyring &&
-    yes | sudo pacman -Syu --needed
+sudo pacman -S --noconfirm --needed archlinux-keyring &&
+    sudo pacman -Syu --noconfirm --needed
 
 # Install essential packages, if they do not exist.
 echo -e "\n${CYAN}Installing essential packages...${NO_COLOR}"
-yes | sudo pacman -S --needed networkmanager base-devel git neovim \
+sudo pacman -S --noconfirm --needed networkmanager base-devel git neovim \
     neofetch btop
 
 # Install paru AUR helper.
@@ -42,7 +42,7 @@ echo -e "\n${CYAN}Configuring paru AUR helper...${NO_COLOR}"
 
 # Changing to stable rust version.
 echo -e "\n${CYAN}Changing to stable rust version...${NO_COLOR}"
-yes | paru -S --needed rustup && yes | rustup default stable
+paru -S --noconfirm --needed rustup && rustup --noconfirm default stable
 
 # Enabling colors in terminal.
 echo -e "\n${CYAN}Enabling colors in terminal...${NO_COLOR}"
