@@ -2,7 +2,7 @@
 
 # Color for the script's messages.
 CYAN='\033[1;36m'
-BOLD_GREEN='\e[1;${GREEN}m'
+BOLD_GREEN='\e[1;32m'
 NO_COLOR='\033[0m'
 
 # Catch exit signal (CTRL + C), to terminate the whole script.
