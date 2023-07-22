@@ -29,12 +29,12 @@ else
     # Delete old paru directory, if it exists.
     if [ -d "paru" ]; then
         echo -e "\n${CYAN}Deleting old paru directory...${NO_COLOR}"
-        sudo rm -rf paru
+        rm -rf paru
     fi
 
     # Proceed with installation.
     git clone https://aur.archlinux.org/paru.git && cd paru &&
-        makepkg -si --noconfirm && cd .. && sudo rm -rf paru
+        makepkg -si --noconfirm && cd .. && rm -rf paru
 fi
 
 # Configuring paru AUR helper.
@@ -50,7 +50,7 @@ sudo sed -i '/^#.*Color/s/^#//' /etc/pacman.conf
 
 # Skipping review messages.
 echo -e "\n${CYAN}Skipping review messages...${NO_COLOR}"
-sudo sed -i "$ a SkipReview" /etc/paru.conf
+echo "SkipReview" | sudo tee -a /etc/paru.conf
 
 # Installing prompt shell and command line tools.
 echo -e "\n${CYAN}Installing prompt shell and command line tools...${NO_COLOR}"
@@ -92,4 +92,4 @@ echo "abbr -a up 'topgrade' | source" >> ~/.config/fish/conf.d/abbr.fish
 
 # Saving configuration.
 echo -e "\n${CYAN}Saving configuration...${NO_COLOR}"
-source ~/.config/fish/config.fish
+exec fish
