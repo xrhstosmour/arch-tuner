@@ -24,8 +24,8 @@ echo -e "\n${CYAN}Running essentials script...${NO_COLOR}"
 echo -e "\n${CYAN}Essentials script finished!${NO_COLOR}"
 
 # Proceed with the development script.
-echo "\n"
-read -p "${BOLD_GREEN}Do you want to install development tools and programming languages? Y/N: ${NO_COLOR}" answer
+echo -e "\n${BOLD_GREEN}Do you want to install development tools and programming languages? Y/N: ${NO_COLOR}"
+read -r answer
 
 # Convert the answer to lowercase to accept 'Y', 'y', 'N', 'n' as valid.
 answer=${answer,,}
