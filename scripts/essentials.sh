@@ -57,6 +57,9 @@ echo -e "\n${CYAN}Installing prompt shell and command line tools...${NO_COLOR}"
 paru -S --noconfirm --needed starship fish bat exa rm-improved xcp \
     eva zoxide fd sd xh topgrade
 
+# Pass the starship configuration file.
+mkdir -p ~/.config && cp ../configuration/starship.toml ~/.config/starship.toml
+
 # Configuring command line tools.
 echo -e "\n${CYAN}Configuring shell...${NO_COLOR}"
 
