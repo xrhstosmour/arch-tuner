@@ -62,34 +62,33 @@ echo -e "\n${CYAN}Configuring shell...${NO_COLOR}"
 
 # Setting default shell.
 echo -e "\n${CYAN}Setting default shell...${NO_COLOR}"
-sudo sed -i "$ a /usr/local/bin/fish" /etc/shells
-sudo chsh -s /usr/bin/fish
+echo "/usr/bin/fish" | sudo tee -a /etc/shells
+sudo chsh -s /usr/bin/fish $USER
 
 # Create shell configuration files.
 echo -e "\n${CYAN}Creating shell configuration files...${NO_COLOR}"
-sudo mkdir -p ~/.config/fish && sudo touch ~/.config/fish/config.fish
-sudo mkdir -p ~/.config/fish/conf.d/ && sudo touch ~/.config/fish/conf.d/abbr.fish
+mkdir -p ~/.config/fish && touch ~/.config/fish/config.fish
+mkdir -p ~/.config/fish/conf.d/ && touch ~/.config/fish/conf.d/abbr.fish
 
 echo -e "\n${CYAN}Enabling command line tools...${NO_COLOR}"
 
 # Enabling starship at fish prompt.
-sudo sed -i "$ a starship init fish | source" ~/.config/fish/config.fish
+echo "starship init fish | source" >> ~/.config/fish/config.fish
 
 # Enabling zoxide at fish prompt.
-sudo sed -i "$ a zoxide init fish | source" ~/.config/fish/config.fish
+echo "zoxide init fish | source" >> ~/.config/fish/config.fish
 
 # Configuring aliases.
 echo -e "\n${CYAN}Configuring aliases...${NO_COLOR}"
-sudo sed -i "$ a abbr -a cat 'bat' | source" ~/.cofig/fish/conf.d/abbr.fish
-sudo sed -i "$ a abbr -a cat 'bat' | source" ~/.cofig/fish/conf.d/abbr.fish
-sudo sed -i "$ a abbr -a ls 'exa --git --icons --color=always --group-directories-first' | source" ~/.cofig/fish/conf.d/abbr.fish
-sudo sed -i "$ a abbr -a cp 'xcp' | source" ~/.cofig/fish/conf.d/abbr.fish
-sudo sed -i "$ a abbr -a rm 'rip' | source" ~/.cofig/fish/conf.d/abbr.fish
-sudo sed -i "$ a abbr -a eva 'calc' | source" ~/.cofig/fish/conf.d/abbr.fish
-sudo sed -i "$ a abbr -a cd 'z' | source" ~/.cofig/fish/conf.d/abbr.fish
-sudo sed -i "$ a abbr -a find 'fd' | source" ~/.cofig/fish/conf.d/abbr.fish
-sudo sed -i "$ a abbr -a sed 'sd' | source" ~/.cofig/fish/conf.d/abbr.fish
-sudo sed -i "$ a abbr -a up 'topgrade' | source" ~/.cofig/fish/conf.d/abbr.fish
+echo "abbr -a cat 'bat' | source" >> ~/.config/fish/conf.d/abbr.fish
+echo "abbr -a ls 'exa --git --icons --color=always --group-directories-first' | source" >> ~/.config/fish/conf.d/abbr.fish
+echo "abbr -a cp 'xcp' | source" >> ~/.config/fish/conf.d/abbr.fish
+echo "abbr -a rm 'rip' | source" >> ~/.config/fish/conf.d/abbr.fish
+echo "abbr -a eva 'calc' | source" >> ~/.config/fish/conf.d/abbr.fish
+echo "abbr -a cd 'z' | source" >> ~/.config/fish/conf.d/abbr.fish
+echo "abbr -a find 'fd' | source" >> ~/.config/fish/conf.d/abbr.fish
+echo "abbr -a sed 'sd' | source" >> ~/.config/fish/conf.d/abbr.fish
+echo "abbr -a up 'topgrade' | source" >> ~/.config/fish/conf.d/abbr.fish
 
 # Saving configuration.
 echo -e "\n${CYAN}Saving configuration...${NO_COLOR}"
