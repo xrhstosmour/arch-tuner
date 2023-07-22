@@ -24,9 +24,12 @@ echo -e "\n${CYAN}Installing programming languages...${NO_COLOR}"
 
 # Installing Python.
 echo -e "\n${CYAN}Installing Python...${NO_COLOR}"
-paru -S --noconfirm --needed python python-pip
+paru -S --noconfirm --needed python python-pip python-poetry
 
 # Configuring Python.
 echo -e "\n${CYAN}Configuring Python...${NO_COLOR}"
-paru -S --noconfirm --needed python-poetry
+
+# Configuring Poetry.
+echo -e "\n${CYAN}Configuring Poetry...${NO_COLOR}"
+sudo set -x PYTHON_KEYRING_BACKEND 'keyring.backends.null.Keyring'
 poetry self add poetry-plugin-up
