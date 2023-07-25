@@ -52,43 +52,24 @@ sudo sed -i '/^#.*Color/s/^#//' /etc/pacman.conf
 echo -e "\n${CYAN}Skipping review messages...${NO_COLOR}"
 grep -qxF 'SkipReview' /etc/paru.conf || echo 'SkipReview' | sudo tee -a /etc/paru.conf >/dev/null
 
-# Installing prompt shell and command line tools.
-echo -e "\n${CYAN}Installing prompt shell and command line tools...${NO_COLOR}"
+# Installing prompt shell and terminal tools.
+echo -e "\n${CYAN}Installing prompt shell and terminal tools...${NO_COLOR}"
 paru -S --noconfirm --needed starship fish bat exa rm-improved xcp \
     eva zoxide fd sd xh topgrade
 
-# Pass the starship configuration file.
-mkdir -p ~/.config && cp ../configuration/starship.toml ~/.config/starship.toml
+# Importing prompt configuration file.
+echo -e "\n${CYAN}Importing prompt configuration file...${NO_COLOR}"
+mkdir -p ~/.config && cp -f ./configurations/prompt/configuration.toml ~/.config/starship.toml
 
-# Configuring command line tools.
-echo -e "\n${CYAN}Configuring shell...${NO_COLOR}"
+# Importing shell configuration file.
+echo -e "\n${CYAN}Importing shell configuration file...${NO_COLOR}"
+mkdir -p ~/.config/fish && cp -f ./configurations/shell/configuration.fish ~/.config/fish/config.fish
+mkdir -p ~/.config/fish/conf.d/ && cp -f ./configurations/shell/aliases.fish ~/.config/fish/conf.d/abbr.fish
 
-# Setting default shell.
+# Check and set default shell if not already set.
 echo -e "\n${CYAN}Setting default shell...${NO_COLOR}"
-grep -qxF '/usr/bin/fish' /etc/shells || echo '/usr/bin/fish' | sudo tee -a /etc/shells >/dev/null
-sudo chsh -s /usr/bin/fish $USER
-
-# Create shell configuration files.
-echo -e "\n${CYAN}Creating shell configuration files...${NO_COLOR}"
-mkdir -p ~/.config/fish && touch ~/.config/fish/config.fish
-mkdir -p ~/.config/fish/conf.d/ && touch ~/.config/fish/conf.d/abbr.fish
-
-echo -e "\n${CYAN}Enabling command line tools...${NO_COLOR}"
-
-# Enabling starship at fish prompt.
-echo "starship init fish | source" >>~/.config/fish/config.fish
-
-# Enabling zoxide at fish prompt.
-echo "zoxide init fish | source" >>~/.config/fish/config.fish
-
-# Configuring aliases.
-echo -e "\n${CYAN}Configuring aliases...${NO_COLOR}"
-echo "abbr -a cat 'bat' | source" >>~/.config/fish/conf.d/abbr.fish
-echo "abbr -a ls 'exa --git --icons --color=always --group-directories-first' | source" >>~/.config/fish/conf.d/abbr.fish
-echo "abbr -a cp 'xcp' | source" >>~/.config/fish/conf.d/abbr.fish
-echo "abbr -a rm 'rip' | source" >>~/.config/fish/conf.d/abbr.fish
-echo "abbr -a eva 'calc' | source" >>~/.config/fish/conf.d/abbr.fish
-echo "abbr -a cd 'z' | source" >>~/.config/fish/conf.d/abbr.fish
-echo "abbr -a find 'fd' | source" >>~/.config/fish/conf.d/abbr.fish
-echo "abbr -a sed 'sd' | source" >>~/.config/fish/conf.d/abbr.fish
-echo "abbr -a up 'topgrade' | source" >>~/.config/fish/conf.d/abbr.fish
+current_shell=$(basename "$SHELL")
+if [ "$current_shell" != "fish" ]; then
+    grep -qxF '/usr/bin/fish' /etc/shells || echo '/usr/bin/fish' | sudo tee -a /etc/shells >/dev/null
+    sudo chsh -s /usr/bin/fish $USER
+fi
