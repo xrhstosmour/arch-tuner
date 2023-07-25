@@ -54,47 +54,47 @@ while [[ "$interface_answer" != "y" && "$interface_answer" != "n" ]]; do
         echo -e "\n${BOLD_CYAN}Running interface script...${NO_COLOR}"
         ./interface.sh
         echo -e "\n${BOLD_CYAN}Interface script finished!${NO_COLOR}"
-
-        # Default dektop answer.
-        dektop_answer=""
-
-        # Proceed with the dektop script.
-        while [[ "$dektop_answer" != "y" && "$dektop_answer" != "n" ]]; do
-            echo -e "\n${BOLD_GREEN}Do you want to install dektop applications? Y/N: ${NO_COLOR}"
-            read -r dektop_answer
-
-            # Convert the answer to lowercase to accept 'Y', 'y', 'N', 'n' as valid.
-            dektop_answer=${dektop_answer,,}
-
-            if [[ "$dektop_answer" == "y" ]]; then
-                echo -e "\n${BOLD_CYAN}Running dektop script...${NO_COLOR}"
-                ./dektop.sh
-                echo -e "\n${BOLD_CYAN}dektop script finished!${NO_COLOR}"
-            elif [[ "$dektop_answer" != "n" ]]; then
-                echo "Invalid input!"
-            fi
-        done
-
-        # Default development answer.
-        development_answer=""
-
-        # Proceed with the development script.
-        while [[ "$development_answer" != "y" && "$development_answer" != "n" ]]; do
-            echo -e "\n${BOLD_GREEN}Do you want to install development tools and programming languages? Y/N: ${NO_COLOR}"
-            read -r development_answer
-
-            # Convert the answer to lowercase to accept 'Y', 'y', 'N', 'n' as valid.
-            development_answer=${development_answer,,}
-
-            if [[ "$development_answer" == "y" ]]; then
-                echo -e "\n${BOLD_CYAN}Running development script...${NO_COLOR}"
-                ./development.sh
-                echo -e "\n${BOLD_CYAN}Development script finished!${NO_COLOR}"
-            elif [[ "$development_answer" != "n" ]]; then
-                echo "Invalid input!"
-            fi
-        done
     elif [[ "$interface_answer" != "n" ]]; then
+        echo "Invalid input!"
+    fi
+done
+
+# Default desktop answer.
+desktop_answer=""
+
+# Proceed with the desktop script.
+while [[ "$desktop_answer" != "y" && "$desktop_answer" != "n" ]]; do
+    echo -e "\n${BOLD_GREEN}Do you want to install desktop applications? Y/N: ${NO_COLOR}"
+    read -r desktop_answer
+
+    # Convert the answer to lowercase to accept 'Y', 'y', 'N', 'n' as valid.
+    desktop_answer=${desktop_answer,,}
+
+    if [[ "$desktop_answer" == "y" ]]; then
+        echo -e "\n${BOLD_CYAN}Running desktop script...${NO_COLOR}"
+        ./desktop.sh
+        echo -e "\n${BOLD_CYAN}desktop script finished!${NO_COLOR}"
+    elif [[ "$desktop_answer" != "n" ]]; then
+        echo "Invalid input!"
+    fi
+done
+
+# Default development answer.
+development_answer=""
+
+# Proceed with the development script.
+while [[ "$development_answer" != "y" && "$development_answer" != "n" ]]; do
+    echo -e "\n${BOLD_GREEN}Do you want to install development tools and programming languages? Y/N: ${NO_COLOR}"
+    read -r development_answer
+
+    # Convert the answer to lowercase to accept 'Y', 'y', 'N', 'n' as valid.
+    development_answer=${development_answer,,}
+
+    if [[ "$development_answer" == "y" ]]; then
+        echo -e "\n${BOLD_CYAN}Running development script...${NO_COLOR}"
+        ./development.sh
+        echo -e "\n${BOLD_CYAN}Development script finished!${NO_COLOR}"
+    elif [[ "$development_answer" != "n" ]]; then
         echo "Invalid input!"
     fi
 done
