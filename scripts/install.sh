@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Color for the script's messages.
-CYAN='\e[36m'
+# Colors for the script's messages.
 NO_COLOR='\e[0m'
+BOLD_CYAN='\e[1;36m'
 BOLD_GREEN='\e[1;32m'
 BOLD_YELLOW='\e[1;33m'
 BOLD_RED='\e[1;31m'
@@ -16,27 +16,27 @@ set -e
 # Wait for user approval.
 echo -e "\n${BOLD_RED}BACKUP EVERYTHING BEFORE PROCEEDING!${NO_COLOR}"
 echo -e "\n${BOLD_YELLOW}If not, exit script and re-run after backup!${NO_COLOR}"
-echo -e "\n${CYAN}Press ENTER to continue within next 10 seconds!${NO_COLOR}"
+echo -e "\n${BOLD_CYAN}Press ENTER to continue within next 10 seconds!${NO_COLOR}"
 
 # Read user input with a 10 second timeout
 if read -t 10; then
-    echo -e "\n${CYAN}Starting installing procedure...${NO_COLOR}"
+    echo -e "\n${BOLD_CYAN}Starting installing procedure...${NO_COLOR}"
 else
-    echo -e "\n${CYAN}Terminating script...${NO_COLOR}"
+    echo -e "\n${BOLD_CYAN}Terminating script...${NO_COLOR}"
     exit 1
 fi
 
 # Give execution permission to all scripts.
-echo -e "\n${CYAN}Giving execution permission to all scripts...${NO_COLOR}"
+echo -e "\n${BOLD_CYAN}Giving execution permission to all scripts...${NO_COLOR}"
 chmod +x ./essentials.sh
 chmod +x ./interface.sh
 chmod +x ./desktop.sh
 chmod +x ./development.sh
 
 # Start by executing the essentials script.
-echo -e "\n${CYAN}Running essentials script...${NO_COLOR}"
+echo -e "\n${BOLD_CYAN}Running essentials script...${NO_COLOR}"
 ./essentials.sh
-echo -e "\n${CYAN}Essentials script finished!${NO_COLOR}"
+echo -e "\n${BOLD_CYAN}Essentials script finished!${NO_COLOR}"
 
 # TODO: Convert the repeatable code into a function.
 # Default interface answer.
@@ -51,9 +51,9 @@ while [[ "$interface_answer" != "y" && "$interface_answer" != "n" ]]; do
     interface_answer=${interface_answer,,}
 
     if [[ "$interface_answer" == "y" ]]; then
-        echo -e "\n${CYAN}Running interface script...${NO_COLOR}"
+        echo -e "\n${BOLD_CYAN}Running interface script...${NO_COLOR}"
         ./interface.sh
-        echo -e "\n${CYAN}Interface script finished!${NO_COLOR}"
+        echo -e "\n${BOLD_CYAN}Interface script finished!${NO_COLOR}"
 
         # Default dektop answer.
         dektop_answer=""
@@ -67,9 +67,9 @@ while [[ "$interface_answer" != "y" && "$interface_answer" != "n" ]]; do
             dektop_answer=${dektop_answer,,}
 
             if [[ "$dektop_answer" == "y" ]]; then
-                echo -e "\n${CYAN}Running dektop script...${NO_COLOR}"
+                echo -e "\n${BOLD_CYAN}Running dektop script...${NO_COLOR}"
                 ./dektop.sh
-                echo -e "\n${CYAN}dektop script finished!${NO_COLOR}"
+                echo -e "\n${BOLD_CYAN}dektop script finished!${NO_COLOR}"
             elif [[ "$dektop_answer" != "n" ]]; then
                 echo "Invalid input!"
             fi
@@ -87,9 +87,9 @@ while [[ "$interface_answer" != "y" && "$interface_answer" != "n" ]]; do
             development_answer=${development_answer,,}
 
             if [[ "$development_answer" == "y" ]]; then
-                echo -e "\n${CYAN}Running development script...${NO_COLOR}"
+                echo -e "\n${BOLD_CYAN}Running development script...${NO_COLOR}"
                 ./development.sh
-                echo -e "\n${CYAN}Development script finished!${NO_COLOR}"
+                echo -e "\n${BOLD_CYAN}Development script finished!${NO_COLOR}"
             elif [[ "$development_answer" != "n" ]]; then
                 echo "Invalid input!"
             fi
