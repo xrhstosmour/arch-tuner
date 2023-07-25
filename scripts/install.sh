@@ -16,9 +16,15 @@ set -e
 # Wait for user approval.
 echo -e "\n${BOLD_RED}BACKUP EVERYTHING BEFORE PROCEEDING!${NO_COLOR}"
 echo -e "\n${BOLD_YELLOW}If not, exit script and re-run after backup!${NO_COLOR}"
-echo -e "\n${CYAN}Press ENTER to continue!${NO_COLOR}"
+echo -e "\n${CYAN}Press ENTER to continue within next 10 seconds!${NO_COLOR}"
 
-echo -e "\n${CYAN}Starting installing procedure...${NO_COLOR}"
+# Read user input with a 10 second timeout
+if read -t 10; then
+    echo -e "\n${CYAN}Starting installing procedure...${NO_COLOR}"
+else
+    echo -e "\n${CYAN}Terminating script...${NO_COLOR}"
+    exit 1
+fi
 
 # Give execution permission to all scripts.
 echo -e "\n${CYAN}Giving execution permission to all scripts...${NO_COLOR}"
