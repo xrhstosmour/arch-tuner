@@ -80,12 +80,14 @@ case $VENDOR in
 
     # Enabling persistence mode.
     echo -e "\n${CYAN}Enabling persistence mode...${NO_COLOR}"
-    sudo systemctl enable nvidia-persistenced.service
-    sudo systemctl start nvidia-persistenced.service
+    if systemctl list-units --full --all | grep -Fq 'nvidia-persistenced.service'; then
+        sudo systemctl enable nvidia-persistenced.service
+        sudo systemctl start nvidia-persistenced.service
+    fi
+
     ;;
 
 "amd")
-    # TODO: Check if this is the correct way to install AMD drivers.
     echo -e "\n${CYAN}Installing AMD drivers...${NO_COLOR}"
     paru -S --noconfirm --needed mesa-git xf86-video-amdgpu-git vulkan-radeon \
         libva-mesa-driver mesa-vdpau
