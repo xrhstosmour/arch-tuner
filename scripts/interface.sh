@@ -99,14 +99,29 @@ case $VENDOR in
     ;;
 
 "intel")
-    # TODO: Check if this is the correct way to install Intel drivers.
     echo -e "\n${CYAN}Installing Intel drivers...${NO_COLOR}"
-    paru -S --noconfirm --needed mesa mesa-amber xf86-video-intel vulkan-intel
+
+    # Keep the Intel GPU generation in a variable, to use it later.
+    GENERATION=$(lspci -k | grep -A 2 -E "(VGA|3D)" | grep 'Intel Corporation' | grep 'Generation Core Processor Family Integrated Graphics Controller')
+    if [[ $GENERATION =~ ([0-9]+) ]]; then
+        GENERATION_NUMBER=${BASH_REMATCH[1]}
+        if ((GENERATION_NUMBER <= 7)); then
+            echo -e "\n${CYAN}Installing Intel drivers supported for 7th generation and older...${NO_COLOR}"
+            paru -S --noconfirm --needed mesa-amber
+        else
+            echo -e "\n${CYAN}Installing Intel drivers supported for 8th generation and newer...${NO_COLOR}"
+            paru -S --noconfirm --needed mesa
+        fi
+    else
+        echo -e "\n${CYAN}No valid Intel GPU found or the generation format is not valid!${NO_COLOR}"
+    fi
+
+    # Proceed with the installation of common Intel drivers.
+    paru -S --noconfirm --needed xf86-video-intel vulkan-intel
 
     # Intalling Intel drivers for 32-bit support.
     echo -e "\n${CYAN}Installing Intel drivers for 32-bit support...${NO_COLOR}"
     paru -S --noconfirm --needed lib32-mesa lib32-mesa-amber lib32-vulkan-intel
-
     ;;
 
 "vmware")
