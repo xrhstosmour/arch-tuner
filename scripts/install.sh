@@ -1,15 +1,22 @@
 #!/bin/bash
 
 # Color for the script's messages.
-CYAN='\033[1;36m'
+CYAN='\e[36m'
+NO_COLOR='\e[0m'
 BOLD_GREEN='\e[1;32m'
-NO_COLOR='\033[0m'
+BOLD_YELLOW='\e[1;33m'
+BOLD_RED='\e[1;31m'
 
 # Catch exit signal (CTRL + C), to terminate the whole script.
 trap "exit" INT
 
 # Terminate script on error.
 set -e
+
+# Wait for user approval.
+echo -e "\n${BOLD_RED}BACKUP EVERYTHING BEFORE PROCEEDING!${NO_COLOR}"
+echo -e "\n${BOLD_YELLOW}If not, exit script and re-run after backup!${NO_COLOR}"
+echo -e "\n${CYAN}Press ENTER to continue!${NO_COLOR}"
 
 echo -e "\n${CYAN}Starting installing procedure...${NO_COLOR}"
 
