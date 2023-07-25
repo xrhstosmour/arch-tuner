@@ -132,7 +132,7 @@ case $VENDOR in
     echo -e "\n${BOLD_CYAN}Installing Open VM Tools...${NO_COLOR}"
     paru -S --noconfirm --needed open-vm-tools xf86-input-vmmouse \
         xf86-video-vmware gtkmm
-    sudo echo needs_root_rights=yes >>/etc/X11/Xwrapper.config
+    echo "needs_root_rights=yes" | sudo tee -a /etc/X11/Xwrapper.config
     sudo systemctl enable vmtoolsd && sudo systemctl start vmtoolsd
     ;;
 
