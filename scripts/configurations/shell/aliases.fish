@@ -1,6 +1,6 @@
 # Custom aliases for terminal tools.
 abbr cat "bat"
-abbr ls "exa --git --icons --long --all --header --color=always --group-directories-first"
+abbr ls "exa --long --all --icons --color=always --group-directories-first --git"
 abbr cp "xcp"
 abbr rm "rip"
 abbr eva "calc"
