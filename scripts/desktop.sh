@@ -12,4 +12,4 @@ set -e
 
 # Installing desktop applications.
 echo -e "\n${BOLD_CYAN}Installing desktop applications...${NO_COLOR}"
-xargs -a /packages/desktop.txt -r -- paru -S --noconfirm --needed
+xargs -a ./packages/desktop.txt -r -- paru -S --noconfirm --needed
