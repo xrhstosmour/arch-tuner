@@ -12,15 +12,15 @@ set -e
 
 # Installing firewall and antivirus.
 echo -e "\n${BOLD_CYAN}Installing firewall...${NO_COLOR}"
-paru -S --noconfirm --needed ufw
+paru -S --noconfirm --needed ufw iptables
 
 # Configuring firewall.
 echo -e "\n${BOLD_CYAN}Configuring firewall...${NO_COLOR}"
+sudo systemctl start ufw
+sudo systemctl enable ufw
 sudo ufw default allow outgoing
 sudo ufw default deny incoming
 echo "y" | sudo ufw enable
-sudo systemctl start ufw
-sudo systemctl enable ufw
 sudo ufw reload
 
 # Installing antivirus.
