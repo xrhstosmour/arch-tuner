@@ -43,7 +43,6 @@ sudo chmod -R 750 /qrntn
 
 # Configuring real-time scanning.
 echo -e "\n${BOLD_CYAN}Configuring real-time scanning...${NO_COLOR}"
-grep -qxF 'ScanOnAccess Yes' /etc/clamav/clamd.conf || echo 'ScanOnAccess Yes' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
 grep -qxF 'OnAccessPrevention Yes' /etc/clamav/clamd.conf || echo 'OnAccessPrevention Yes' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
 grep -qxF 'OnAccessIncludePath /' /etc/clamav/clamd.conf || echo 'OnAccessIncludePath /' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
 grep -qxF 'OnAccessExcludeUname clamav' /etc/clamav/clamd.conf || echo 'OnAccessExcludeUname clamav' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
