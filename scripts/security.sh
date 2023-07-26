@@ -16,10 +16,11 @@ paru -S --noconfirm --needed ufw
 
 # Configuring firewall.
 echo -e "\n${BOLD_CYAN}Configuring firewall...${NO_COLOR}"
-sudo systemctl start ufw
-sudo systemctl enable ufw
 sudo ufw default allow outgoing
 sudo ufw default deny incoming
+echo "y" | sudo ufw enable
+sudo systemctl start ufw
+sudo systemctl enable ufw
 sudo ufw reload
 
 # Installing antivirus.
@@ -30,4 +31,7 @@ paru -S --noconfirm --needed clamav
 echo -e "\n${BOLD_CYAN}Configuring antivirus...${NO_COLOR}"
 sudo systemctl stop clamav-freshclam
 sudo freshclam
-sudo systemctl restart clamav-freshclam
+sudo systemctl start clamav-freshclam.service
+sudo systemctl enable clamav-freshclam.service
+sudo systemctl start clamav-daemon.service
+sudo systemctl enable clamav-daemon.service
