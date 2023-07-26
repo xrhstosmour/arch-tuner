@@ -12,23 +12,23 @@ set -e
 
 # Installing development tools.
 echo -e "\n${BOLD_CYAN}Installing development tools...${NO_COLOR}"
-paru -S --noconfirm --needed vscodium-bin remmina-git gitkraken obsidian \
-    postman-bin etcher-bin docker docker-compose
+xargs -a /packages/development.txt -r -- paru -S --noconfirm --needed
 
 # Configuring development tools.
-echo -e "Configuring development tools..."
-sudo systemctl enable docker && sudo systemctl start docker
+echo -e "\n${BOLD_CYAN}Configuring development tools...${NO_COLOR}"
+
+# Configuring Docker.
+if grep -q "^docker$" /packages/development.txt; then
+    echo -e "\n${BOLD_CYAN}Configuring Docker...${NO_COLOR}"
+    sudo systemctl enable docker && sudo systemctl start docker
+fi
 
 # Installing programming languages.
 echo -e "\n${BOLD_CYAN}Installing programming languages...${NO_COLOR}"
+xargs -a /packages/programming.txt -r -- paru -S --noconfirm --needed
 
-# Installing Python.
-echo -e "\n${BOLD_CYAN}Installing Python...${NO_COLOR}"
-paru -S --noconfirm --needed python python-pip python-poetry python-poetry-plugin-up
-
-# Configuring Python.
-echo -e "\n${BOLD_CYAN}Configuring Python...${NO_COLOR}"
-
-# Configuring Poetry.
-echo -e "\n${BOLD_CYAN}Configuring Poetry...${NO_COLOR}"
-poetry config virtualenvs.in-project true
+# Configuring Python poetry.
+if grep -q "^python-poetry$" /packages/programming.txt; then
+    echo -e "\n${BOLD_CYAN}Configuring Poetry...${NO_COLOR}"
+    poetry config virtualenvs.in-project true
+fi

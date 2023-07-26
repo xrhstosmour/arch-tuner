@@ -12,7 +12,4 @@ set -e
 
 # Installing desktop applications.
 echo -e "\n${BOLD_CYAN}Installing desktop applications...${NO_COLOR}"
-paru -S --noconfirm --needed wezterm dolphin brave-bin gimp veracrypt \
-    keepassxc spotify thunderbird vlc davinci-resolve ferdium \
-    filen-desktop-appimage viber discord telegram-desktop \
-    signal-desktop flameshot libreoffice-fresh pamac
+xargs -a /packages/desktop.txt -r -- paru -S --noconfirm --needed
