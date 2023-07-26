@@ -32,6 +32,12 @@ else
         rm -rf paru
     fi
 
+    # Delete rust package manager, if it exists.
+    if pacman -Q rust >/dev/null 2>&1; then
+        echo -e "\n${BOLD_CYAN}Deleting rust package manager...${NO_COLOR}"
+        sudo pacman -R --noconfirm rust
+    fi
+
     # Changing to stable rust version.
     echo -e "\n${BOLD_CYAN}Changing to stable rust version...${NO_COLOR}"
     sudo pacman -S --noconfirm --needed rustup && rustup default stable
