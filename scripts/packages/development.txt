@@ -1,0 +1,8 @@
+vscodium-bin
+remmina-git
+gitkraken
+obsidian
+postman-bin
+etcher-bin
+docker
+docker-compose

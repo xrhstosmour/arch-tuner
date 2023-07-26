@@ -1,0 +1,4 @@
+python
+python-pip
+python-poetry
+python-poetry-plugin-up
