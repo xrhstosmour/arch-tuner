@@ -34,7 +34,7 @@ else
 
     # Changing to stable rust version.
     echo -e "\n${BOLD_CYAN}Changing to stable rust version...${NO_COLOR}"
-    pacman -S --noconfirm --needed rustup && rustup default stable
+    sudo pacman -S --noconfirm --needed rustup && rustup default stable
 
     # Proceed with installation.
     git clone https://aur.archlinux.org/paru.git && cd paru &&
