@@ -29,6 +29,7 @@ fi
 # Give execution permission to all scripts.
 echo -e "\n${BOLD_CYAN}Giving execution permission to all scripts...${NO_COLOR}"
 chmod +x ./essentials.sh
+chmod +x ./security.sh
 chmod +x ./interface.sh
 chmod +x ./desktop.sh
 chmod +x ./development.sh
@@ -37,6 +38,11 @@ chmod +x ./development.sh
 echo -e "\n${BOLD_CYAN}Running essentials script...${NO_COLOR}"
 ./essentials.sh
 echo -e "\n${BOLD_CYAN}Essentials script finished!${NO_COLOR}"
+
+# Proceed with the security script.
+echo -e "\n${BOLD_CYAN}Running security script...${NO_COLOR}"
+./security.sh
+echo -e "\n${BOLD_CYAN}Security script finished!${NO_COLOR}"
 
 # TODO: Convert the repeatable code into a function.
 # Default interface answer.
