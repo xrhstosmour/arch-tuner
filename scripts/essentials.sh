@@ -66,6 +66,10 @@ echo -e "\n${BOLD_CYAN}Importing shell configuration file...${NO_COLOR}"
 mkdir -p ~/.config/fish && cp -f ./configurations/shell/configuration.fish ~/.config/fish/config.fish
 mkdir -p ~/.config/fish/conf.d/ && cp -f ./configurations/shell/aliases.fish ~/.config/fish/conf.d/abbr.fish
 
+# Installing fonts.
+echo -e "\n${BOLD_CYAN}Installing fonts...${NO_COLOR}"
+paru -S --noconfirm --needed ttf-firacode-nerd
+
 # Check and set default shell if not already set.
 echo -e "\n${BOLD_CYAN}Setting default shell...${NO_COLOR}"
 current_shell=$(basename "$SHELL")
