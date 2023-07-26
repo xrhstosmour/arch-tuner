@@ -67,4 +67,4 @@ sudo systemctl enable clamav-daemon.service
 
 # Enable real-time scanning.
 echo -e "\n${BOLD_CYAN}Enabling real-time scanning...${NO_COLOR}"
-sudo clamonacc --enable=yes --move=/qrntn
+sudo clamonacc --move=/qrntn
