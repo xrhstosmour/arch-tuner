@@ -32,6 +32,10 @@ else
         rm -rf paru
     fi
 
+    # Changing to stable rust version.
+    echo -e "\n${BOLD_CYAN}Changing to stable rust version...${NO_COLOR}"
+    pacman -S --noconfirm --needed rustup && rustup default stable
+
     # Proceed with installation.
     git clone https://aur.archlinux.org/paru.git && cd paru &&
         makepkg -si --noconfirm && cd .. && rm -rf paru
@@ -39,10 +43,6 @@ fi
 
 # Configuring paru AUR helper.
 echo -e "\n${BOLD_CYAN}Configuring paru AUR helper...${NO_COLOR}"
-
-# Changing to stable rust version.
-echo -e "\n${BOLD_CYAN}Changing to stable rust version...${NO_COLOR}"
-paru -S --noconfirm --needed rustup && rustup default stable
 
 # Enabling colors in terminal.
 echo -e "\n${BOLD_CYAN}Enabling colors in terminal...${NO_COLOR}"
