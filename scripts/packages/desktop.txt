@@ -8,7 +8,7 @@ spotify
 thunderbird
 vlc
 davinci-resolve
-ferdium
+ferdium-bin
 filen-desktop-appimage
 viber
 discord
