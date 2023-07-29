@@ -25,7 +25,7 @@ echo -e "\n${BOLD_CYAN}Configuring essential packages...${NO_COLOR}"
 
 # Installing fastest mirrors.
 echo -e "\n${BOLD_CYAN}Installing fastest mirrors...${NO_COLOR}"
-sudo mkdir -p /etc/xdg/reflector/ && cp -f ./configurations/mirrors/reflector.conf /etc/xdg/reflector/reflector.conf
+sudo mkdir -p /etc/xdg/reflector/ && sudo cp -f ./configurations/mirrors/reflector.conf /etc/xdg/reflector/reflector.conf
 sudo systemctl enable reflector
 sudo systemctl start reflector
 sudo systemctl enable reflector.timer
