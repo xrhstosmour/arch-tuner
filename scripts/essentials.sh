@@ -17,8 +17,19 @@ sudo pacman -S --noconfirm --needed archlinux-keyring &&
 
 # Install essential packages, if they do not exist.
 echo -e "\n${BOLD_CYAN}Installing essential packages...${NO_COLOR}"
-sudo pacman -S --noconfirm --needed networkmanager base-devel git neovim \
-    neofetch btop
+sudo pacman -S --noconfirm --needed networkmanager base-devel git \
+    neovim neofetch btop reflector
+
+# Configuring essential packages.
+echo -e "\n${BOLD_CYAN}Configuring essential packages...${NO_COLOR}"
+
+# Installing fastest mirrors.
+echo -e "\n${BOLD_CYAN}Installing fastest mirrors...${NO_COLOR}"
+mkdir -p /etc/xdg/reflector/ && cp -f ./configurations/mirrors/reflector.conf /etc/xdg/reflector/reflector.conf
+sudo systemctl enable reflector
+sudo systemctl start reflector
+sudo systemctl enable reflector.timer
+sudo systemctl start reflector.timer
 
 # Install paru AUR helper.
 echo -e "\n${BOLD_CYAN}Installing paru AUR helper...${NO_COLOR}"
