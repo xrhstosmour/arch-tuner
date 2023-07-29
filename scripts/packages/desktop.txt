@@ -14,6 +14,7 @@ viber
 discord
 telegram-desktop
 signal-desktop
+session-desktop-bin
 flameshot
 libreoffice-fresh
 pamac
