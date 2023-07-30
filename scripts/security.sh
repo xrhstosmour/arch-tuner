@@ -145,7 +145,7 @@ if command -v NetworkManager >/dev/null && systemctl is-active --quiet NetworkMa
 fi
 
 # Check if keystroke anonymization is installed, if not install it.
-if ! paru -Qs kloak >/dev/null; then
+if ! paru -Qs kloak-git >/dev/null; then
 
     # Installing keystroke anonymization.
     echo -e "\n${BOLD_CYAN}Installing keystroke anonymization...${NO_COLOR}"

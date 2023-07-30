@@ -11,17 +11,17 @@ trap "exit" INT
 set -e
 
 # Check if display manager is installed, if not install it.
-if ! paru -Qs ly >/dev/null; then
+if ! paru -Qs ly-git >/dev/null; then
 
     # Installing the display manager.
     echo -e "\n${BOLD_CYAN}Installing display manager...${NO_COLOR}"
     paru -S --noconfirm --needed ly-git
-fi
 
-# Configuring the display manager.
-echo -e "\n${BOLD_CYAN}Configuring display manager...${NO_COLOR}"
-sudo systemctl enable ly
-sudo sed -i '/^#.*blank_password/s/^#//' /etc/ly/config.ini
+    # Configuring the display manager.
+    echo -e "\n${BOLD_CYAN}Configuring display manager...${NO_COLOR}"
+    sudo systemctl enable ly
+    sudo sed -i '/^#.*blank_password/s/^#//' /etc/ly/config.ini
+fi
 
 # Installing GPU drivers per vendor.
 VENDOR=$(lspci -v -m | grep -A1 VGA | grep SVendor | awk "{print \$2}" | tr "[:upper:]" "[:lower:]")
