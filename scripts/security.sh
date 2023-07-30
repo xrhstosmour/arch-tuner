@@ -95,21 +95,21 @@ paru -S --noconfirm --needed kloak-git
 cpu_manufacturer=$(grep -m 1 -oP 'vendor_id\s*:\s*\K.*' /proc/cpuinfo)
 
 # Initialize a flag indicating if a microcode update was installed.
-update_installed=false
+microcode_update_installed=false
 
 # Install the appropriate microcode based on the CPU manufacturer.
 if [[ $cpu_manufacturer == *'GenuineIntel'* ]]; then
     echo -e "\n${BOLD_CYAN}Installing Intel microcode updates...${NO_COLOR}"
     sudo pacman -S --noconfirm --needed intel-ucode
-    update_installed=true
+    microcode_update_installed=true
 elif [[ $cpu_manufacturer == *'AuthenticAMD'* ]]; then
     echo -e "\n${BOLD_CYAN}Installing AMD microcode updates...${NO_COLOR}"
     sudo pacman -S --noconfirm --needed amd-ucode
-    update_installed=true
+    microcode_update_installed=true
 fi
 
 # Update grub to apply microcode updates at boot, only if an update was installed.
-if $update_installed; then
+if $microcode_update_installed; then
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
@@ -120,3 +120,30 @@ paru -S --noconfirm --needed hardened_malloc
 # Enabling hardened memory allocator.
 echo -e "\n${BOLD_CYAN}Enabling hardened memory allocator...${NO_COLOR}"
 echo 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' | sudo tee -a /etc/environment >/dev/null
+
+# Initialize a variable to track whether a change was made.
+dnssec_change_made=false
+
+# Check if the 'DNSSEC' line already exists in the 'resolved.conf' file.
+if grep -q '^DNSSEC=' /etc/systemd/resolved.conf; then
+
+    # Check if 'DNSSEC' is set to 'yes'
+    if ! grep -q '^DNSSEC=yes' /etc/systemd/resolved.conf; then
+
+        # If it isn't, replace it with 'DNSSEC=yes'
+        sudo sed -i 's/^DNSSEC=.*/DNSSEC=yes/' /etc/systemd/resolved.conf
+        dnssec_change_made=true
+    fi
+else
+
+    # If the 'DNSSEC' line doesn't exist, add 'DNSSEC=yes' to the end of the file
+    echo 'DNSSEC=yes' | sudo tee -a /etc/systemd/resolved.conf >/dev/null
+    dnssec_change_made=true
+fi
+
+# If a change was made, restart the 'systemd-resolved' service to apply the changes
+if $dnssec_change_made; then
+
+    echo -e "\n${BOLD_CYAN}Enabling DNSSEC...${NO_COLOR}"
+    sudo systemctl restart systemd-resolved
+fi
