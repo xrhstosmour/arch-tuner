@@ -39,8 +39,9 @@ fi
 
 # Check if ipv6-icmp rule exists and if not add it.
 if ! grep -q 'ufw6-before-output -p ipv6-icmp -j ACCEPT' /etc/ufw/before6.rules; then
-    echo "# allow outbound ipv6-icmp" | sudo tee -a /etc/ufw/before6.rules
-    echo "-A ufw6-before-output -p ipv6-icmp -j ACCEPT" | sudo tee -a /etc/ufw/before6.rules
+
+    # Add the rule before the COMMIT line.
+    sudo sed -i '/COMMIT/ i # Allow outbound ipv6-icmp.\n-A ufw6-before-output -p ipv6-icmp -j ACCEPT' /etc/ufw/before6.rules
     firewall_changes_made=1
 fi
 
@@ -58,7 +59,7 @@ fi
 if [ $firewall_changes_made -eq 1 ]; then
     echo -e "\n${BOLD_CYAN}Configuring firewall...${NO_COLOR}"
     echo -e "\n${BOLD_CYAN}Enabling firewall...${NO_COLOR}"
-    echo "y" | sudo ufw enable
+    echo "y" | sudo ufw --force enable
     sudo ufw reload
 fi
 
