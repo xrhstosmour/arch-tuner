@@ -304,8 +304,9 @@ for file in ${UMASK_FILES[@]}; do
     fi
 done
 
-# TODO: Add Mandatory Access Control via AppArmor and its Policies/Profiles.
-# TODO: Check if we can use Kernel Hardening via linux-hardened kernel.
+# TODO: Install linux-hardened kernel via arch install and then remove it from here.
+# TODO: Add details and links from all the guides in README with installation instructions.
 # TODO: Add USB Port Protection.
 # TODO: Add Time Synchronization via chronyd.
 # TODO: Add Pluggable Authentication Modules (PAM) and U2F/FIDO2 authenticator choice.
+# TODO: Add Mandatory Access Control via AppArmor and its Policies/Profiles.
