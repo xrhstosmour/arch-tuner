@@ -75,7 +75,7 @@ if command -v NetworkManager >/dev/null && systemctl is-active --quiet NetworkMa
     echo -e "\n${BOLD_CYAN}Enabling trackability reduction...${NO_COLOR}"
 
     # Create or overwrite the configuration file with the desired settings
-    echo -e "[device]\nwifi.scan-rand-mac-address=yes\n\n[connection]\nwifi.cloned-mac-address=random\nethernet.cloned-mac-address=random" >"/etc/NetworkManager/conf.d/00-macrandomize.conf"
+    echo -e "[device]\nwifi.scan-rand-mac-address=yes\n\n[connection]\nwifi.cloned-mac-address=random\nethernet.cloned-mac-address=random" | sudo tee /etc/NetworkManager/conf.d/00-macrandomize.conf >/dev/null
 
     # Restart the NetworkManager service to apply the changes
     systemctl restart NetworkManager
