@@ -271,3 +271,41 @@ if [ $mountpoint_change_made -eq 1 ]; then
     echo -e "\n${BOLD_CYAN}Enabling mountpoint hardening...${NO_COLOR}"
     sudo mount -a
 fi
+
+# Set the desired umask value.
+UMASK_VALUE="077"
+
+# Define the files that could define the umask value.
+UMASK_FILES=("/etc/profile" "/etc/bash.bashrc" "/etc/login.defs")
+
+# Iterate over the files.
+for file in ${UMASK_FILES[@]}; do
+
+    # Check if the file exists.
+    if [ -f "$file" ]; then
+
+        echo -e "\n${BOLD_CYAN}Updating UMASK in file $file...${NO_COLOR}"
+
+        # If the file contains an umask setting, change it, if not, add it.
+        if grep -q "^umask" $file; then
+            sudo sed -i "s/^umask.*/umask $UMASK_VALUE/" $file
+        elif [ "$file" != "/etc/login.defs" ]; then
+            echo "umask $UMASK_VALUE" | sudo tee -a $file >/dev/null
+        fi
+
+        # If the file is /etc/login.defs, handle it separately.
+        if [ "$file" == "/etc/login.defs" ]; then
+            if grep -q "^UMASK" $file; then
+                sudo sed -i "s/^UMASK.*/UMASK $UMASK_VALUE/" $file
+            else
+                echo "UMASK $UMASK_VALUE" | sudo tee -a $file >/dev/null
+            fi
+        fi
+    fi
+done
+
+# TODO: Add Mandatory Access Control via AppArmor and its Policies/Profiles.
+# TODO: Check if we can use Kernel Hardening via linux-hardened kernel.
+# TODO: Add USB Port Protection.
+# TODO: Add Time Synchronization via chronyd.
+# TODO: Add Pluggable Authentication Modules (PAM) and U2F/FIDO2 authenticator choice.
