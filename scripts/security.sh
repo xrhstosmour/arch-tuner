@@ -106,3 +106,11 @@ fi
 if $update_installed; then
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 fi
+
+# Installing hardened memory allocator.
+echo -e "\n${BOLD_CYAN}Installing hardened memory allocator...${NO_COLOR}"
+paru -S --noconfirm --needed hardened_malloc
+
+# Enabling hardened memory allocator.
+echo -e "\n${BOLD_CYAN}Enabling hardened memory allocator...${NO_COLOR}"
+echo 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' | sudo tee -a /etc/environment >/dev/null
