@@ -33,7 +33,7 @@ fi
 
 # Check if DHCPv6 client rule exists and if not add it.
 if ! sudo ufw status | grep -q '546/udp (v6)'; then
-    sudo ufw allow out from any to any port 546 proto udp
+    sudo ufw allow out to any port 546 proto udp
     firewall_changes_made=1
 fi
 
@@ -56,18 +56,22 @@ if ! sudo ufw status | grep -q '443/tcp'; then
 fi
 
 # Check if DNS rule exists and if not add it.
-if ! sudo ufw status | grep -q '53'; then
-    sudo ufw allow out to any port 53
+if ! sudo ufw status | grep -q '53/tcp'; then
+    sudo ufw allow out to any port 53 proto tcp
+    firewall_changes_made=1
+fi
+if ! sudo ufw status | grep -q '53/udp'; then
+    sudo ufw allow out to any port 53 proto udp
     firewall_changes_made=1
 fi
 
 # Check if DHCP client rule exists and if not add it.
 if ! sudo ufw status | grep -q '67/udp'; then
-    sudo ufw allow out from any to any port 67 proto udp
+    sudo ufw allow out to any port 67 proto udp
     firewall_changes_made=1
 fi
 if ! sudo ufw status | grep -q '68/udp'; then
-    sudo ufw allow out from any to any port 68 proto udp
+    sudo ufw allow out to any port 68 proto udp
     firewall_changes_made=1
 fi
 
