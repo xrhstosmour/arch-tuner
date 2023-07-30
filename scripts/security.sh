@@ -71,14 +71,20 @@ sudo clamonacc --move=/qrntn
 # Check if NetworkManager is installed and running.
 if command -v NetworkManager >/dev/null && systemctl is-active --quiet NetworkManager; then
 
-    # Enabling trackability reduction.
-    echo -e "\n${BOLD_CYAN}Enabling trackability reduction...${NO_COLOR}"
+    # Check if the settings are already set to reduce trackability.
+    if ! grep -q "wifi.scan-rand-mac-address=yes" /etc/NetworkManager/conf.d/00-macrandomize.conf ||
+        ! grep -q "wifi.cloned-mac-address=random" /etc/NetworkManager/conf.d/00-macrandomize.conf ||
+        ! grep -q "ethernet.cloned-mac-address=random" /etc/NetworkManager/conf.d/00-macrandomize.conf; then
 
-    # Create or overwrite the configuration file with the desired settings
-    echo -e "[device]\nwifi.scan-rand-mac-address=yes\n\n[connection]\nwifi.cloned-mac-address=random\nethernet.cloned-mac-address=random" | sudo tee /etc/NetworkManager/conf.d/00-macrandomize.conf >/dev/null
+        # Enabling trackability reduction.
+        echo -e "\n${BOLD_CYAN}Enabling trackability reduction...${NO_COLOR}"
 
-    # Restart the NetworkManager service to apply the changes
-    systemctl restart NetworkManager
+        # Create or overwrite the configuration file with the desired settings
+        echo -e "[device]\nwifi.scan-rand-mac-address=yes\n\n[connection]\nwifi.cloned-mac-address=random\nethernet.cloned-mac-address=random" | sudo tee /etc/NetworkManager/conf.d/00-macrandomize.conf >/dev/null
+
+        # Restart the NetworkManager service to apply the changes
+        systemctl restart NetworkManager
+    fi
 fi
 
 # Installing keystroke anonymization.
