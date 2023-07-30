@@ -39,11 +39,6 @@ echo -e "\n${BOLD_CYAN}Running essentials script...${NO_COLOR}"
 ./essentials.sh
 echo -e "\n${BOLD_CYAN}Essentials script finished!${NO_COLOR}"
 
-# Proceed with the security script.
-echo -e "\n${BOLD_CYAN}Running security script...${NO_COLOR}"
-./security.sh
-echo -e "\n${BOLD_CYAN}Security script finished!${NO_COLOR}"
-
 # TODO: Convert the repeatable code into a function.
 # Default interface answer.
 interface_answer=""
@@ -104,3 +99,8 @@ while [[ "$development_answer" != "y" && "$development_answer" != "n" ]]; do
         echo "Invalid input!"
     fi
 done
+
+# Run the security script at the end.
+echo -e "\n${BOLD_CYAN}Running security script...${NO_COLOR}"
+./security.sh
+echo -e "\n${BOLD_CYAN}Security script finished!${NO_COLOR}"
