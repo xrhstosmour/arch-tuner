@@ -140,10 +140,28 @@ if command -v NetworkManager >/dev/null && systemctl is-active --quiet NetworkMa
     fi
 fi
 
-# Installing keystroke anonymization.
-echo -e "\n${BOLD_CYAN}Installing keystroke anonymization...${NO_COLOR}"
-paru -S --noconfirm --needed kloak-git
-# TODO: Run kloak on startup.
+# Check if keystroke anonymization is installed, if not install it.
+if ! paru -Qs kloak >/dev/null; then
+
+    # Installing keystroke anonymization.
+    echo -e "\n${BOLD_CYAN}Installing keystroke anonymization...${NO_COLOR}"
+    paru -S --noconfirm --needed kloak-git
+
+    # Create a systemd service to run kloak at startup.
+    echo -e "\n${BOLD_CYAN}Configuring keystroke anonymization...${NO_COLOR}"
+    echo "[Unit]
+    Description=Keystroke-level Online Anonymization Kernel
+
+    [Service]
+    ExecStart=/usr/bin/kloak
+
+    [Install]
+    WantedBy=multi-user.target" | sudo tee /etc/systemd/system/kloak.service
+
+    # Enable and start the service.
+    sudo systemctl enable kloak.service
+    sudo systemctl start kloak.service
+fi
 
 # Get the CPU manufacturer.
 cpu_manufacturer=$(grep -m 1 -oP 'vendor_id\s*:\s*\K.*' /proc/cpuinfo)
@@ -177,7 +195,7 @@ if ! grep -q '^LD_PRELOAD=/usr/lib/libhardened_malloc.so' /etc/environment; then
     # Enabling hardened memory allocator.
     echo -e "\n${BOLD_CYAN}Enabling hardened memory allocator...${NO_COLOR}"
 
-    # TODO: Check if this will not create any issues with running applications.
+    # ! Check if this will not create any issues with running applications.
     # If it doesn't exist, add 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' to the end of the file.
     echo 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' | sudo tee -a /etc/environment >/dev/null
 fi
