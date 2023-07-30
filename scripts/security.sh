@@ -14,17 +14,53 @@ set -e
 echo -e "\n${BOLD_CYAN}Installing firewall...${NO_COLOR}"
 paru -S --noconfirm --needed ufw iptables
 
-# Configuring firewall.
-echo -e "\n${BOLD_CYAN}Configuring firewall...${NO_COLOR}"
-sudo systemctl start ufw
-sudo systemctl enable ufw
-sudo ufw default allow outgoing
-sudo ufw default deny incoming
+# Check if UFW service is active and if not start it.
+if ! systemctl is-active --quiet ufw; then
+    sudo systemctl start ufw
+fi
+
+# Check if UFW service is enabled and if not enable it.
+if ! systemctl is-enabled --quiet ufw; then
+    sudo systemctl enable ufw
+fi
+
+# Check if default deny rules are set and if not set them.
+if ! sudo ufw status verbose | grep -q 'Default: deny (incoming), deny (outgoing), deny (routed)'; then
+    sudo ufw default deny incoming
+    sudo ufw default deny outgoing
+    firewall_changes_made=1
+fi
+
+# Check if DHCPv6 client rule exists and if not add it.
+if ! sudo ufw status | grep -q '546/udp (v6)'; then
+    sudo ufw allow out from any to any port 546 proto udp
+    firewall_changes_made=1
+fi
+
+# Check if ipv6-icmp rule exists and if not add it.
+if ! grep -q 'ufw6-before-output -p ipv6-icmp -j ACCEPT' /etc/ufw/before6.rules; then
+    echo "# allow outbound ipv6-icmp" | sudo tee -a /etc/ufw/before6.rules
+    echo "-A ufw6-before-output -p ipv6-icmp -j ACCEPT" | sudo tee -a /etc/ufw/before6.rules
+    firewall_changes_made=1
+fi
+
+# Check if HTTP and HTTPS rules exist and if not add them.
+if ! sudo ufw status | grep -q '80/tcp'; then
+    sudo ufw allow out to any port 80 proto tcp
+    firewall_changes_made=1
+fi
+if ! sudo ufw status | grep -q '443/tcp'; then
+    sudo ufw allow out to any port 443 proto tcp
+    firewall_changes_made=1
+fi
 
 # Enabling firewall.
-echo -e "\n${BOLD_CYAN}Enabling firewall...${NO_COLOR}"
-echo "y" | sudo ufw enable
-sudo ufw reload
+if [ $firewall_changes_made -eq 1 ]; then
+    echo -e "\n${BOLD_CYAN}Configuring firewall...${NO_COLOR}"
+    echo -e "\n${BOLD_CYAN}Enabling firewall...${NO_COLOR}"
+    echo "y" | sudo ufw enable
+    sudo ufw reload
+fi
 
 # Installing antivirus.
 echo -e "\n${BOLD_CYAN}Installing antivirus...${NO_COLOR}"
