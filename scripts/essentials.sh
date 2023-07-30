@@ -23,8 +23,8 @@ sudo pacman -S --noconfirm --needed networkmanager base-devel git \
 # Configuring essential packages.
 echo -e "\n${BOLD_CYAN}Configuring essential packages...${NO_COLOR}"
 
-# Installing fastest mirrors.
-echo -e "\n${BOLD_CYAN}Installing fastest mirrors...${NO_COLOR}"
+# Installing fastest mirrors by rate.
+echo -e "\n${BOLD_CYAN}Installing fastest mirrors by rate...${NO_COLOR}"
 sudo mkdir -p /etc/xdg/reflector/ && sudo cp -f ./configurations/mirrors/reflector.conf /etc/xdg/reflector/reflector.conf
 sudo systemctl enable reflector
 sudo systemctl start reflector

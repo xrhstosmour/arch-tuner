@@ -55,6 +55,22 @@ if ! sudo ufw status | grep -q '443/tcp'; then
     firewall_changes_made=1
 fi
 
+# Check if DNS rule exists and if not add it.
+if ! sudo ufw status | grep -q '53'; then
+    sudo ufw allow out to any port 53
+    firewall_changes_made=1
+fi
+
+# Check if DHCP client rule exists and if not add it.
+if ! sudo ufw status | grep -q '67/udp'; then
+    sudo ufw allow out from any to any port 67 proto udp
+    firewall_changes_made=1
+fi
+if ! sudo ufw status | grep -q '68/udp'; then
+    sudo ufw allow out from any to any port 68 proto udp
+    firewall_changes_made=1
+fi
+
 # Enabling firewall.
 if [ $firewall_changes_made -eq 1 ]; then
     echo -e "\n${BOLD_CYAN}Configuring firewall...${NO_COLOR}"
