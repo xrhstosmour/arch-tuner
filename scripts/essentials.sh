@@ -35,7 +35,11 @@ sudo systemctl start reflector.timer
 args=$(grep -v '^#' /etc/xdg/reflector/reflector.conf)
 
 # Run reflector with the arguments.
-sudo reflector ${args} > /dev/null
+sudo reflector ${args} >/dev/null
+
+# Configuring neofetch system infromtaion tool.
+echo -e "\n${BOLD_CYAN}Configuring system information tool...${NO_COLOR}"
+mkdir -p ~/.config/neofetch && cp -f ./configurations/information/neofetch.conf ~/.config/neofetch/config.conf
 
 # Install paru AUR helper.
 echo -e "\n${BOLD_CYAN}Installing paru AUR helper...${NO_COLOR}"
