@@ -90,6 +90,7 @@ fi
 # Installing keystroke anonymization.
 echo -e "\n${BOLD_CYAN}Installing keystroke anonymization...${NO_COLOR}"
 paru -S --noconfirm --needed kloak-git
+# TODO: Run kloak on startup.
 
 # Get the CPU manufacturer.
 cpu_manufacturer=$(grep -m 1 -oP 'vendor_id\s*:\s*\K.*' /proc/cpuinfo)
@@ -153,4 +154,45 @@ if $dnssec_change_made; then
 
     echo -e "\n${BOLD_CYAN}Enabling DNSSEC...${NO_COLOR}"
     sudo systemctl restart systemd-resolved
+fi
+
+# Function to add options to a mount point.
+add_mount_options() {
+    local mount_point="$1"
+    local options="$2"
+
+    # Check if the options are already present.
+    if ! grep -q " $mount_point .*defaults,.*$options" /etc/fstab; then
+
+        # If the options are not present, add them.
+        if grep -q " $mount_point " /etc/fstab; then
+            echo -e "\n${BOLD_CYAN}Adding options $options to mount point $mount_point...${NO_COLOR}"
+            sudo sed -i "s|\($mount_point .*\) defaults |\1 defaults,$options |" /etc/fstab
+            mountpoint_change_made=1
+        fi
+    fi
+}
+
+# A flag to check if any change is made
+mountpoint_change_made=0
+
+# Add nodev, noexec, and nosuid options to /boot and /boot/efi.
+add_mount_options "/boot" "nodev,nosuid,noexec"
+add_mount_options "/boot/efi" "nodev,nosuid,noexec"
+
+# Add nodev and nosuid options to /home and /root.
+add_mount_options "/home" "nodev,nosuid"
+add_mount_options "/root" "nodev,nosuid"
+
+# Add nodev, noexec, and nosuid options to directories under /var excluding /var/tmp.
+for dir in /var/*; do
+    if [[ $dir != "/var/tmp" ]]; then
+        add_mount_options "$dir" "nodev,nosuid,noexec"
+    fi
+done
+
+# Remount all filesystems with new options if any change is made.
+if [ $mountpoint_change_made -eq 1 ]; then
+    echo -e "\n${BOLD_CYAN}Enabling mountpoint hardening...${NO_COLOR}"
+    sudo mount -a
 fi
