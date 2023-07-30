@@ -18,24 +18,40 @@ sudo pacman -S --noconfirm --needed archlinux-keyring &&
 # Install essential packages, if they do not exist.
 echo -e "\n${BOLD_CYAN}Installing essential packages...${NO_COLOR}"
 sudo pacman -S --noconfirm --needed networkmanager base-devel git \
-    neovim neofetch btop reflector
+    neovim neofetch btop
 
 # Configuring essential packages.
 echo -e "\n${BOLD_CYAN}Configuring essential packages...${NO_COLOR}"
 
-# Installing fastest mirrors by rate.
-echo -e "\n${BOLD_CYAN}Installing fastest mirrors by rate...${NO_COLOR}"
-sudo mkdir -p /etc/xdg/reflector/ && sudo cp -f ./configurations/mirrors/reflector.conf /etc/xdg/reflector/reflector.conf
-sudo systemctl enable reflector
-sudo systemctl start reflector
-sudo systemctl enable reflector.timer
-sudo systemctl start reflector.timer
+# Check if reflector is installed, if not install it.
+if ! paru -Qs reflector >/dev/null; then
 
-# Read the configuration file into a string, excluding comment lines.
-args=$(grep -v '^#' /etc/xdg/reflector/reflector.conf)
+    # Installing fastest mirrors by rate.
+    echo -e "\n${BOLD_CYAN}Installing fastest mirrors by rate...${NO_COLOR}"
+    sudo pacman -S --noconfirm reflector
+fi
 
-# Run reflector with the arguments.
-sudo reflector ${args} >/dev/null
+# Copy the configuration file only if it is not the same as the current one.
+if ! cmp -s ./configurations/mirrors/reflector.conf /etc/xdg/reflector/reflector.conf; then
+    echo -e "\n${BOLD_CYAN}Configuring mirror list...${NO_COLOR}"
+    sudo mkdir -p /etc/xdg/reflector/ && sudo cp -f ./configurations/mirrors/reflector.conf /etc/xdg/reflector/reflector.conf
+
+    # Read the configuration file into a string, excluding comment lines.
+    args=$(grep -v '^#' /etc/xdg/reflector/reflector.conf)
+
+    # Run reflector with the arguments.
+    sudo reflector ${args} >/dev/null
+fi
+
+# Enable and start reflector service and timer if they are not already active.
+if ! systemctl is-active --quiet reflector; then
+    sudo systemctl enable reflector
+    sudo systemctl start reflector
+fi
+if ! systemctl is-active --quiet reflector.timer; then
+    sudo systemctl enable reflector.timer
+    sudo systemctl start reflector.timer
+fi
 
 # Configuring neofetch system infromtaion tool.
 echo -e "\n${BOLD_CYAN}Configuring system information tool...${NO_COLOR}"
