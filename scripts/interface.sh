@@ -11,7 +11,7 @@ trap "exit" INT
 set -e
 
 # Check if display manager is installed, if not install it.
-if ! paru -Qs ly-git >/dev/null; then
+if ! paru -Qq | grep -q '^ly-git$'; then
 
     # Installing the display manager.
     echo -e "\n${BOLD_CYAN}Installing display manager...${NO_COLOR}"
