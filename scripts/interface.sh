@@ -10,9 +10,13 @@ trap "exit" INT
 # Terminate script on error.
 set -e
 
-# Installing the display manager.
-echo -e "\n${BOLD_CYAN}Installing display manager...${NO_COLOR}"
-paru -S --noconfirm --needed ly-git
+# Check if display manager is installed, if not install it.
+if ! paru -Qs ly >/dev/null; then
+
+    # Installing the display manager.
+    echo -e "\n${BOLD_CYAN}Installing display manager...${NO_COLOR}"
+    paru -S --noconfirm --needed ly-git
+fi
 
 # Configuring the display manager.
 echo -e "\n${BOLD_CYAN}Configuring display manager...${NO_COLOR}"
