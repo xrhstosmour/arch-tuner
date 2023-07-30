@@ -30,6 +30,7 @@ sudo systemctl enable reflector
 sudo systemctl start reflector
 sudo systemctl enable reflector.timer
 sudo systemctl start reflector.timer
+reflector
 
 # Install paru AUR helper.
 echo -e "\n${BOLD_CYAN}Installing paru AUR helper...${NO_COLOR}"
