@@ -31,8 +31,8 @@ sudo systemctl start reflector
 sudo systemctl enable reflector.timer
 sudo systemctl start reflector.timer
 
-# Read the configuration file into an array.
-readarray -t args </etc/xdg/reflector/reflector.conf
+# Read the configuration file into an array, without comments.
+readarray -t args < <(grep -v '^#' /etc/xdg/reflector/reflector.conf)
 
 # Run reflector with the arguments.
 sudo reflector "${args[@]}" >/dev/null
