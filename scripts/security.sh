@@ -113,13 +113,20 @@ if $microcode_update_installed; then
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
-# Installing hardened memory allocator.
-echo -e "\n${BOLD_CYAN}Installing hardened memory allocator...${NO_COLOR}"
-paru -S --noconfirm --needed hardened_malloc
+# Check if the 'LD_PRELOAD' line already exists in the '/etc/environment' file.
+if ! grep -q '^LD_PRELOAD=/usr/lib/libhardened_malloc.so' /etc/environment; then
 
-# Enabling hardened memory allocator.
-echo -e "\n${BOLD_CYAN}Enabling hardened memory allocator...${NO_COLOR}"
-echo 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' | sudo tee -a /etc/environment >/dev/null
+    # Installing hardened memory allocator.
+    echo -e "\n${BOLD_CYAN}Installing hardened memory allocator...${NO_COLOR}"
+    paru -S --noconfirm --needed hardened_malloc
+
+    # Enabling hardened memory allocator.
+    echo -e "\n${BOLD_CYAN}Enabling hardened memory allocator...${NO_COLOR}"
+
+    # TODO: Check if this will not create any issues with running applications.
+    # If it doesn't exist, add 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' to the end of the file.
+    echo 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' | sudo tee -a /etc/environment >/dev/null
+fi
 
 # Initialize a variable to track whether a change was made.
 dnssec_change_made=false
