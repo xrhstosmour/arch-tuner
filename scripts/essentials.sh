@@ -35,7 +35,7 @@ sudo systemctl start reflector.timer
 readarray -t args </etc/xdg/reflector/reflector.conf
 
 # Run reflector with the arguments.
-sudo reflector "${args[@]}" >/dev/null 2>&1
+sudo reflector "${args[@]}" >/dev/null
 
 # Install paru AUR helper.
 echo -e "\n${BOLD_CYAN}Installing paru AUR helper...${NO_COLOR}"
