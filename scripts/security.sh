@@ -180,11 +180,11 @@ microcode_update_installed=false
 # Install the appropriate microcode based on the CPU manufacturer.
 if [[ $cpu_manufacturer == *'GenuineIntel'* ]]; then
     echo -e "\n${BOLD_CYAN}Installing Intel microcode updates...${NO_COLOR}"
-    sudo pacman -S --noconfirm --needed intel-ucode
+    sudo paru -S --noconfirm --needed intel-ucode
     microcode_update_installed=true
 elif [[ $cpu_manufacturer == *'AuthenticAMD'* ]]; then
     echo -e "\n${BOLD_CYAN}Installing AMD microcode updates...${NO_COLOR}"
-    sudo pacman -S --noconfirm --needed amd-ucode
+    sudo paru -S --noconfirm --needed amd-ucode
     microcode_update_installed=true
 fi
 
@@ -351,7 +351,7 @@ if ! paru -Qq | grep -q '^lkrg-dkms-git$'; then
 
     # Installing Linux kernel runtime guard.
     echo -e "\n${BOLD_CYAN}Installing Linux kernel runtime guard...${NO_COLOR}"
-    paru -S --noconfirm lkrg-dkms-git
+    paru -S --noconfirm dkms lkrg-dkms-git
 fi
 
 # Configure the Linux kernel runtime guard.
@@ -368,6 +368,10 @@ fi
 
 # Regenerate the initramfs.
 sudo mkinitcpio -P
+
+# Enable and start the Linux kernel runtime guard service.
+sudo systemctl enable lkrg-dkms
+sudo systemctl start lkrg-dkms
 
 # Disabling SUID
 echo -e "\n${BOLD_CYAN}Disabling SUID...${NO_COLOR}"
