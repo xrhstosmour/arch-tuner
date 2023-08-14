@@ -341,7 +341,7 @@ sudo chmod 644 /etc/chrony/chrony.conf
 sudo chown root:root /etc/chrony/chrony.conf
 
 # Add the seccomp filter option to the environment file.
-echo 'OPTIONS="-F 1"' | sudo tee /etc/sysconfig/chronyd >/dev/null
+sudo mkdir -p /etc/sysconfig && echo 'OPTIONS="-F 1"' | sudo tee /etc/sysconfig/chronyd >/dev/null
 
 # Restart the network time security to apply the changes.
 systemctl restart chronyd
