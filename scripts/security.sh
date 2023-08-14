@@ -1,4 +1,8 @@
 #!/bin/bash
+# ? We are not going to use hardened kernel because we are going to face problems with:
+# ? lots of drivers, programming languages, virtualization, processes and many more.
+# ? Also the perfomance and usabillity are going to be affected negatively.
+# ? So we are going to stick with the default stable kernel and harden manually.
 
 # Color for the script's messages.
 BOLD_CYAN='\e[1;36m'
@@ -304,9 +308,73 @@ for file in ${UMASK_FILES[@]}; do
     fi
 done
 
-# TODO: Install linux-hardened kernel via arch install and then remove it from here.
-# TODO: Add details and links from all the guides in README with installation instructions.
-# TODO: Add USB Port Protection.
-# TODO: Add Time Synchronization via chronyd.
+# Installing USB port protection.
+echo -e "\n${BOLD_CYAN}Installing USB port protection...${NO_COLOR}"
+paru -S --noconfirm --needed usbguard
+
+# Configuring USB port protection.
+echo -e "\n${BOLD_CYAN}Configuring USB port protection...${NO_COLOR}"
+sudo systemctl enable --now usbguard
+
+# Generate an initial policy and allow the already connected devices.
+# ? We will use the default police which allows only the already connected devices.
+# ? In case you want to allow permanently a device:
+# ? 1. Connect the device.
+# ? 2. Run 'sudo usbguard list-devices'.
+# ? 3. Find the DEVICE_ID of the device you want to allow.
+# ? 4. Run 'sudo usbguard generate-policy --device DEVICE_ID | sudo tee -a /etc/usbguard/rules.conf > /dev/null'.
+sudo usbguard generate-policy | sudo tee /etc/usbguard/rules.conf >/dev/null
+sudo chmod 0600 /etc/usbguard/rules.conf
+sudo chown root:root /etc/usbguard/rules.conf
+
+# Restart the usbguard service to apply the changes.
+sudo systemctl restart usbguard
+
+# Installing encrypted network time security.
+echo -e "\n${BOLD_CYAN}Installing encrypted network time security...${NO_COLOR}"
+paru -S --noconfirm --needed chrony
+
+# Configuring encrypted network time security.
+echo -e "\n${BOLD_CYAN}Configuring encrypted network time security...${NO_COLOR}"
+cp -f ./configurations/network/time.conf /etc/chrony/chrony.conf
+sudo chmod 644 /etc/chrony/chrony.conf
+sudo chown root:root /etc/chrony/chrony.conf
+
+# Add the seccomp filter option to the environment file.
+echo 'OPTIONS="-F 1"' | sudo tee /etc/sysconfig/chronyd >/dev/null
+
+# Restart the network time security to apply the changes.
+systemctl restart chronyd
+
+# Check if Linux kernel runtime guard is installed.
+if ! paru -Qq | grep -q '^lkrg-dkms-git$'; then
+
+    # Installing Linux kernel runtime guard.
+    echo -e "\n${BOLD_CYAN}Installing Linux kernel runtime guard...${NO_COLOR}"
+    paru -S --noconfirm lkrg-dkms-git
+fi
+
+echo "Loading LKRG module into the kernel..."
+
+# Load the LKRG module into the kernel.
+sudo modprobe lkrg
+
+echo "Ensuring LKRG starts at every boot..."
+
+# Add 'lkrg' to the MODULES line in /etc/mkinitcpio.conf if it's not already present.
+if ! grep -q "^MODULES=.*lkrg" /etc/mkinitcpio.conf; then
+    sudo sed -i '/^MODULES=/ s/)/ lkrg)/' /etc/mkinitcpio.conf
+fi
+
+# Regenerate the initramfs.
+echo "Regenerating the initramfs..."
+sudo mkinitcpio -P
+
+echo "LKRG setup completed."
+
+# Disabling SUID
+echo -e "\n${BOLD_CYAN}Disabling SUID...${NO_COLOR}"
+sudo find / -perm /4000 -type f -exec chmod u-s {} \;
+
 # TODO: Add Pluggable Authentication Modules (PAM) and U2F/FIDO2 authenticator choice.
-# TODO: Add Mandatory Access Control via AppArmor and its Policies/Profiles.
+# TODO: Add Mandatory Access Control via AppArmor and its policies/profiles.
