@@ -349,9 +349,12 @@ systemctl restart chronyd
 # Check if Linux kernel runtime guard is installed.
 if ! paru -Qq | grep -q '^lkrg-dkms-git$'; then
 
+    # Keep the linux kernel header in a variable, to use it later.
+    KERNEL=$(cat /usr/lib/modules/*/pkgbase)
+
     # Installing Linux kernel runtime guard.
     echo -e "\n${BOLD_CYAN}Installing Linux kernel runtime guard...${NO_COLOR}"
-    paru -S --noconfirm dkms lkrg-dkms-git
+    paru -S --noconfirm --needed $KERNEL-headers dkms lkrg-dkms-git
 fi
 
 # Configure the Linux kernel runtime guard.
