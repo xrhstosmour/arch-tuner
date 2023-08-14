@@ -336,7 +336,7 @@ paru -S --noconfirm --needed chrony
 
 # Configuring encrypted network time security.
 echo -e "\n${BOLD_CYAN}Configuring encrypted network time security...${NO_COLOR}"
-sudo mkdir -p /etc/chrony/ && cp -f ./configurations/network/time.conf /etc/chrony/chrony.conf
+sudo mkdir -p /etc/chrony/ && sudo cp -f ./configurations/network/time.conf /etc/chrony/chrony.conf
 sudo chmod 644 /etc/chrony/chrony.conf
 sudo chown root:root /etc/chrony/chrony.conf
 
