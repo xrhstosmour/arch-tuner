@@ -354,27 +354,26 @@ if ! paru -Qq | grep -q '^lkrg-dkms-git$'; then
     paru -S --noconfirm lkrg-dkms-git
 fi
 
-echo "Loading LKRG module into the kernel..."
+# Configure the Linux kernel runtime guard.
+echo -e "\n${BOLD_CYAN}Configuring Linux kernel runtime guard...${NO_COLOR}"
 
 # Load the LKRG module into the kernel.
 sudo modprobe lkrg
 
-echo "Ensuring LKRG starts at every boot..."
-
+# Ensure LKRG starts at every boot.
 # Add 'lkrg' to the MODULES line in /etc/mkinitcpio.conf if it's not already present.
 if ! grep -q "^MODULES=.*lkrg" /etc/mkinitcpio.conf; then
     sudo sed -i '/^MODULES=/ s/)/ lkrg)/' /etc/mkinitcpio.conf
 fi
 
 # Regenerate the initramfs.
-echo "Regenerating the initramfs..."
 sudo mkinitcpio -P
-
-echo "LKRG setup completed."
 
 # Disabling SUID
 echo -e "\n${BOLD_CYAN}Disabling SUID...${NO_COLOR}"
 sudo find / -perm /4000 -type f -exec chmod u-s {} \;
 
-# TODO: Add Pluggable Authentication Modules (PAM) and U2F/FIDO2 authenticator choice.
-# TODO: Add Mandatory Access Control via AppArmor and its policies/profiles.
+# TODO: Implement Encrypted Swap.
+# TODO: Implement Secure Boot process.
+# TODO: Implement Pluggable Authentication Modules (PAM) and U2F/FIDO2 authenticator choice.
+# TODO: Implement Mandatory Access Control via AppArmor and its policies/profiles.
