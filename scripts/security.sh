@@ -381,41 +381,12 @@ sudo mkdir -p /etc/sysconfig && echo 'OPTIONS="-F 1"' | sudo tee /etc/sysconfig/
 # Restart the network time security to apply the changes.
 systemctl restart chronyd
 
-# Check if Linux kernel runtime guard is installed.
-if ! paru -Qq | grep -q '^lkrg-dkms-git$'; then
-
-    # Keep the linux kernel header in a variable, to use it later.
-    KERNEL=$(cat /usr/lib/modules/*/pkgbase)
-
-    # Installing Linux kernel runtime guard.
-    echo -e "\n${BOLD_CYAN}Installing Linux kernel runtime guard...${NO_COLOR}"
-    paru -S --noconfirm --needed $KERNEL-headers dkms lkrg-dkms-git
-fi
-
-# Configure the Linux kernel runtime guard.
-echo -e "\n${BOLD_CYAN}Configuring Linux kernel runtime guard...${NO_COLOR}"
-
-# Load the LKRG module into the kernel.
-sudo modprobe lkrg
-
-# Ensure LKRG starts at every boot.
-# Add 'lkrg' to the MODULES line in /etc/mkinitcpio.conf if it's not already present.
-if ! grep -q "^MODULES=.*lkrg" /etc/mkinitcpio.conf; then
-    sudo sed -i '/^MODULES=/ s/)/ lkrg)/' /etc/mkinitcpio.conf
-fi
-
-# Regenerate the initramfs.
-sudo mkinitcpio -P
-
-# Enable and start the Linux kernel runtime guard service.
-sudo systemctl enable lkrg-dkms
-sudo systemctl start lkrg-dkms
+# TODO: Implement Linux kernel runtime guard when there is support for newer kernels.
+# TODO: Implement Secure Boot process.
+# TODO: Implement Pluggable Authentication Modules (PAM) and U2F/FIDO2 authenticator choice.
+# TODO: Implement Mandatory Access Control via AppArmor and its policies/profiles.
 
 # Disabling SUID
 echo -e "\n${BOLD_CYAN}Disabling SUID...${NO_COLOR}"
 sudo find / -perm /4000 -type f -exec chmod u-s {} \;
 
-# TODO: Implement Encrypted Swap.
-# TODO: Implement Secure Boot process.
-# TODO: Implement Pluggable Authentication Modules (PAM) and U2F/FIDO2 authenticator choice.
-# TODO: Implement Mandatory Access Control via AppArmor and its policies/profiles.
