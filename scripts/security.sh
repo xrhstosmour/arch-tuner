@@ -164,48 +164,6 @@ sudo systemctl enable clamav-daemon.service
 echo -e "\n${BOLD_CYAN}Enabling real-time scanning...${NO_COLOR}"
 sudo clamonacc --move=/qrntn
 
-# Check if NetworkManager is installed and running.
-if command -v NetworkManager >/dev/null && systemctl is-active --quiet NetworkManager; then
-
-    # Check if the settings are already set to reduce trackability.
-    if ! grep -q "wifi.scan-rand-mac-address=yes" /etc/NetworkManager/conf.d/00-macrandomize.conf ||
-        ! grep -q "wifi.cloned-mac-address=random" /etc/NetworkManager/conf.d/00-macrandomize.conf ||
-        ! grep -q "ethernet.cloned-mac-address=random" /etc/NetworkManager/conf.d/00-macrandomize.conf; then
-
-        # Enabling trackability reduction.
-        echo -e "\n${BOLD_CYAN}Enabling trackability reduction...${NO_COLOR}"
-
-        # Create or overwrite the configuration file with the desired settings
-        echo -e "[device]\nwifi.scan-rand-mac-address=yes\n\n[connection]\nwifi.cloned-mac-address=random\nethernet.cloned-mac-address=random" | sudo tee /etc/NetworkManager/conf.d/00-macrandomize.conf >/dev/null
-
-        # Restart the NetworkManager service to apply the changes
-        systemctl restart NetworkManager
-    fi
-fi
-
-# Check if keystroke anonymization is installed, if not install it.
-if ! paru -Qq | grep -q '^kloak-git$'; then
-
-    # Installing keystroke anonymization.
-    echo -e "\n${BOLD_CYAN}Installing keystroke anonymization...${NO_COLOR}"
-    paru -S --noconfirm --needed kloak-git
-
-    # Create a systemd service to run kloak at startup.
-    echo -e "\n${BOLD_CYAN}Configuring keystroke anonymization...${NO_COLOR}"
-    echo "[Unit]
-    Description=Keystroke-level Online Anonymization Kernel
-
-    [Service]
-    ExecStart=/usr/bin/kloak
-
-    [Install]
-    WantedBy=multi-user.target" | sudo tee /etc/systemd/system/kloak.service
-
-    # Enable and start the service.
-    sudo systemctl enable kloak.service
-    sudo systemctl start kloak.service
-fi
-
 # Get the CPU manufacturer.
 cpu_manufacturer=$(grep -m 1 -oP 'vendor_id\s*:\s*\K.*' /proc/cpuinfo)
 
@@ -310,38 +268,6 @@ if [ $mountpoint_change_made -eq 1 ]; then
     echo -e "\n${BOLD_CYAN}Enabling mountpoint hardening...${NO_COLOR}"
     sudo mount -a
 fi
-
-# Set the desired umask value.
-UMASK_VALUE="077"
-
-# Define the files that could define the umask value.
-UMASK_FILES=("/etc/profile" "/etc/bash.bashrc" "/etc/login.defs")
-
-# Iterate over the files.
-for file in ${UMASK_FILES[@]}; do
-
-    # Check if the file exists.
-    if [ -f "$file" ]; then
-
-        echo -e "\n${BOLD_CYAN}Updating UMASK in file $file...${NO_COLOR}"
-
-        # If the file contains an umask setting, change it, if not, add it.
-        if grep -q "^umask" $file; then
-            sudo sed -i "s/^umask.*/umask $UMASK_VALUE/" $file
-        elif [ "$file" != "/etc/login.defs" ]; then
-            echo "umask $UMASK_VALUE" | sudo tee -a $file >/dev/null
-        fi
-
-        # If the file is /etc/login.defs, handle it separately.
-        if [ "$file" == "/etc/login.defs" ]; then
-            if grep -q "^UMASK" $file; then
-                sudo sed -i "s/^UMASK.*/UMASK $UMASK_VALUE/" $file
-            else
-                echo "UMASK $UMASK_VALUE" | sudo tee -a $file >/dev/null
-            fi
-        fi
-    fi
-done
 
 # Installing USB port protection.
 echo -e "\n${BOLD_CYAN}Installing USB port protection...${NO_COLOR}"
