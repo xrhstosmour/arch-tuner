@@ -26,3 +26,9 @@ append_line_to_file() {
     # Return false to indicate that no change was made.
     return false
 }
+
+# Function to handle the interrupt signal.
+handle_interrupt_signal() {
+    echo -e "\n${BOLD_RED}Interrupt signal received, exiting...${NO_COLOR}"
+    exit 1
+}
