@@ -9,7 +9,7 @@ source ./constants.sh
 source ./signals.sh
 source ./functions.sh
 
-# FIREWALL
+# ! FIREWALL SECTION.
 # Installing needed firewall packages.
 if ! paru -Qs iptables >/dev/null; then
     echo -e "\n${BOLD_CYAN}Installing needed firewall packages...${NO_COLOR}"
@@ -103,11 +103,17 @@ if $firewall_changes_made; then
     sudo ufw reload
 fi
 
-# ANTIVIRUS
+# ! ANTIVIRUS SECTION.
+# Initialize a flag indicating if a antivirus change has been made.
+antivirus_changes_made=false
+
 # Installing antivirus.
 if ! paru -Qs clamav >/dev/null; then
     echo -e "\n${BOLD_CYAN}Installing antivirus...${NO_COLOR}"
     paru -S --noconfirm --needed clamav
+
+    # Set the antivirus_changes_made flag to true.
+    antivirus_changes_made=true
 fi
 
 # Get the date from freshclam --version output.
@@ -126,6 +132,9 @@ if [ "$database_timestamp" -lt "$current_timestamp" ]; then
     # Updating virus database.
     sudo systemctl stop clamav-freshclam
     sudo freshclam
+
+    # Set the antivirus_changes_made flag to true.
+    antivirus_changes_made=true
 fi
 
 # Creating quarantine folder.
@@ -135,35 +144,43 @@ if [ ! -d "$quarantine_folder" ]; then
     sudo mkdir -p "$quarantine_folder"
     sudo chown -R clamav:clamav "$quarantine_folder"
     sudo chmod -R 750 "$quarantine_folder"
+
+    # Set the antivirus_changes_made flag to true.
+    antivirus_changes_made=true
 fi
 
 # Configuring real-time scanning.
-echo -e "\n${BOLD_CYAN}Configuring real-time scanning...${NO_COLOR}"
-grep -qxF 'OnAccessPrevention Yes' /etc/clamav/clamd.conf || echo 'OnAccessPrevention Yes' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
-grep -qxF 'OnAccessIncludePath /' /etc/clamav/clamd.conf || echo 'OnAccessIncludePath /' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
-grep -qxF 'OnAccessExcludeUname clamav' /etc/clamav/clamd.conf || echo 'OnAccessExcludeUname clamav' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
-grep -qxF 'OnAccessExcludePath /proc' /etc/clamav/clamd.conf || echo 'OnAccessExcludePath /proc' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
-grep -qxF 'OnAccessExcludePath /sys' /etc/clamav/clamd.conf || echo 'OnAccessExcludePath /sys' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
-grep -qxF 'OnAccessExcludePath /dev' /etc/clamav/clamd.conf || echo 'OnAccessExcludePath /dev' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
-grep -qxF 'OnAccessExcludePath /run' /etc/clamav/clamd.conf || echo 'OnAccessExcludePath /run' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
-grep -qxF 'OnAccessExcludePath /tmp' /etc/clamav/clamd.conf || echo 'OnAccessExcludePath /tmp' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
-grep -qxF 'OnAccessExcludePath /qrntn' /etc/clamav/clamd.conf || echo 'OnAccessExcludePath /qrntn' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
-grep -qxF 'OnAccessExcludePath /var/tmp' /etc/clamav/clamd.conf || echo 'OnAccessExcludePath /var/tmp' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
-grep -qxF 'OnAccessExcludePath /var/run' /etc/clamav/clamd.conf || echo 'OnAccessExcludePath /var/run' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
-grep -qxF 'OnAccessExcludePath /var/lock' /etc/clamav/clamd.conf || echo 'OnAccessExcludePath /var/lock' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
-grep -qxF 'User clamav' /etc/clamav/clamd.conf || echo 'User clamav' | sudo tee -a /etc/clamav/clamd.conf >/dev/null
+real_time_scanning_configuration="/etc/clamav/clamd.conf"
+append_line_to_file "$real_time_scanning_configuration" "OnAccessPrevention Yes" "Allowing real-time scanning..." && antivirus_changes_made=true
+append_line_to_file "$real_time_scanning_configuration" "User clamav" "Setting clamav as the user for real-time scanning..." && antivirus_changes_made=true
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludeUname clamav" "Excluding clamav user from real-time scanning..." && antivirus_changes_made=true
+append_line_to_file "$real_time_scanning_configuration" "OnAccessIncludePath /" "Allowing real-time scanning at root folder..." && antivirus_changes_made=true
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /proc" "Excluding /proc from real-time scanning..." && antivirus_changes_made=true
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /sys" "Excluding /sys from real-time scanning..." && antivirus_changes_made=true
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /dev" "Excluding /dev from real-time scanning..." && antivirus_changes_made=true
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /run" "Excluding /run from real-time scanning..." && antivirus_changes_made=true
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /tmp" "Excluding /tmp from real-time scanning..." && antivirus_changes_made=true
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /qrntn" "Excluding /qrntn from real-time scanning..." && antivirus_changes_made=true
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /var/tmp" "Excluding /var/tmp from real-time scanning..." && antivirus_changes_made=true
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /var/run" "Excluding /var/run from real-time scanning..." && antivirus_changes_made=true
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /var/lock" "Excluding /var/lock from real-time scanning..." && antivirus_changes_made=true
 
 # Enabling antivirus.
-echo -e "\n${BOLD_CYAN}Enabling antivirus...${NO_COLOR}"
-sudo systemctl start clamav-freshclam.service
-sudo systemctl enable clamav-freshclam.service
-sudo systemctl start clamav-daemon.service
-sudo systemctl enable clamav-daemon.service
+if $antivirus_changes_made; then
+    echo -e "\n${BOLD_CYAN}Enabling antivirus...${NO_COLOR}"
+    sudo systemctl start clamav-freshclam
+    sudo systemctl enable clamav-freshclam
+    sudo systemctl start clamav-daemon
+    sudo systemctl enable clamav-daemon
+fi
 
 # Enabling real-time scanning.
-echo -e "\n${BOLD_CYAN}Enabling real-time scanning...${NO_COLOR}"
-sudo clamonacc --move=/qrntn
+if $antivirus_changes_made; then
+    echo -e "\n${BOLD_CYAN}Enabling real-time scanning...${NO_COLOR}"
+    sudo clamonacc --move=/qrntn
+fi
 
+# ! CPU MICROCODE UPDATES SECTION.
 # Get the CPU manufacturer.
 cpu_manufacturer=$(grep -m 1 -oP 'vendor_id\s*:\s*\K.*' /proc/cpuinfo)
 
@@ -186,6 +203,7 @@ if $microcode_update_installed; then
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
+# ! HARDENED MEMORY ALLOCATOR.
 # Check if the 'LD_PRELOAD' line already exists in the '/etc/environment' file.
 if ! grep -q '^LD_PRELOAD=/usr/lib/libhardened_malloc.so' /etc/environment; then
 
@@ -201,6 +219,7 @@ if ! grep -q '^LD_PRELOAD=/usr/lib/libhardened_malloc.so' /etc/environment; then
     echo 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' | sudo tee -a /etc/environment >/dev/null
 fi
 
+# ! DNSSEC SECTION.
 # Initialize a variable to track whether a change was made.
 dnssec_change_made=false
 
@@ -228,6 +247,7 @@ if $dnssec_change_made; then
     sudo systemctl restart systemd-resolved
 fi
 
+# ! MOUNTING POINTS SECTION.
 # Function to add options to a mount point.
 add_mount_options() {
     local mount_point="$1"
@@ -269,6 +289,7 @@ if [ $mountpoint_change_made -eq 1 ]; then
     sudo mount -a
 fi
 
+# ! USB PORT PROTECTION SECTION.
 # Installing USB port protection.
 echo -e "\n${BOLD_CYAN}Installing USB port protection...${NO_COLOR}"
 paru -S --noconfirm --needed usbguard
@@ -291,6 +312,7 @@ sudo chown root:root /etc/usbguard/rules.conf
 # Restart the usbguard service to apply the changes.
 sudo systemctl restart usbguard
 
+# ! ENCRYPTED NETWORK TIME SECURITY SECTION.
 # Installing encrypted network time security.
 echo -e "\n${BOLD_CYAN}Installing encrypted network time security...${NO_COLOR}"
 paru -S --noconfirm --needed chrony
@@ -312,7 +334,7 @@ systemctl restart chronyd
 # TODO: Implement Pluggable Authentication Modules (PAM) and U2F/FIDO2 authenticator choice.
 # TODO: Implement Mandatory Access Control via AppArmor and its policies/profiles.
 
+# ! Set owner User ID SECTION.
 # Disabling SUID
-echo -e "\n${BOLD_CYAN}Disabling SUID...${NO_COLOR}"
+echo -e "\n${BOLD_CYAN}Disabling Set owner User ID (SUID)...${NO_COLOR}"
 sudo find / -perm /4000 -type f -exec chmod u-s {} \;
-
