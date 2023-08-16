@@ -35,21 +35,21 @@ if ! systemctl is-active --quiet ufw; then
 fi
 
 # Initialize a flag indicating if a firewall change has been made.
-firewall_changes_made=false
+firewall_changes_made=1
 
 # Check if default deny rules are set and if not set them.
 if ! sudo ufw status verbose | grep -q 'Default: deny (incoming), deny (outgoing), deny (routed)'; then
     echo -e "\n${BOLD_CYAN}Denying all incoming and outgoing connections...${NO_COLOR}"
     sudo ufw default deny incoming
     sudo ufw default deny outgoing
-    firewall_changes_made=true
+    firewall_changes_made=0
 fi
 
 # Check if DHCPv6 rule exists and if not add it.
 if ! sudo ufw status | grep -q '546/udp (v6)'; then
     echo -e "\n${BOLD_CYAN}Allowing DHCPv6 (546/UDP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 546 proto udp
-    firewall_changes_made=true
+    firewall_changes_made=0
 fi
 
 # Check if ICMPv6 rule exists and if not add it.
@@ -58,43 +58,43 @@ if ! grep -q 'ufw6-before-output -p ipv6-icmp -j ACCEPT' /etc/ufw/before6.rules;
 
     # Add the rule before the COMMIT line.
     sudo sed -i '/COMMIT/ i # Allow outbound ipv6-icmp.\n-A ufw6-before-output -p ipv6-icmp -j ACCEPT' /etc/ufw/before6.rules
-    firewall_changes_made=true
+    firewall_changes_made=0
 fi
 
 # Check if HTTP and HTTPS rules exist and if not add them.
 if ! sudo ufw status | grep -q '80/tcp'; then
     echo -e "\n${BOLD_CYAN}Allowing HTTP (80/TCP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 80 proto tcp
-    firewall_changes_made=true
+    firewall_changes_made=0
 fi
 if ! sudo ufw status | grep -q '443/tcp'; then
     echo -e "\n${BOLD_CYAN}Allowing HTTPS (443/TCP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 443 proto tcp
-    firewall_changes_made=true
+    firewall_changes_made=0
 fi
 
 # Check if DNS rule exists and if not add it.
 if ! sudo ufw status | grep -q '53/tcp'; then
     echo -e "\n${BOLD_CYAN}Allowing DNS (53/TCP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 53 proto tcp
-    firewall_changes_made=true
+    firewall_changes_made=0
 fi
 if ! sudo ufw status | grep -q '53/udp'; then
     echo -e "\n${BOLD_CYAN}Allowing DNS (53/UDP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 53 proto udp
-    firewall_changes_made=true
+    firewall_changes_made=0
 fi
 
 # Check if DHCP client rule exists and if not add it.
 if ! sudo ufw status | grep -q '67/udp'; then
     echo -e "\n${BOLD_CYAN}Allowing DHCP (67/UDP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 67 proto udp
-    firewall_changes_made=true
+    firewall_changes_made=0
 fi
 if ! sudo ufw status | grep -q '68/udp'; then
     echo -e "\n${BOLD_CYAN}Allowing DHCP (68/UDP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 68 proto udp
-    firewall_changes_made=true
+    firewall_changes_made=0
 fi
 
 # Restarting firewall to apply new rules.
@@ -105,15 +105,15 @@ fi
 
 # ! ANTIVIRUS SECTION.
 # Initialize a flag indicating if a antivirus change has been made.
-antivirus_changes_made=false
+antivirus_changes_made=1
 
 # Installing antivirus.
 if ! paru -Qs clamav >/dev/null; then
     echo -e "\n${BOLD_CYAN}Installing antivirus...${NO_COLOR}"
     paru -S --noconfirm --needed clamav
 
-    # Set the antivirus_changes_made flag to true.
-    antivirus_changes_made=true
+    # Set the antivirus_changes_made flag to 0 (true).
+    antivirus_changes_made=0
 fi
 
 # Get the date from freshclam --version output.
@@ -133,8 +133,8 @@ if [ "$database_timestamp" -lt "$current_timestamp" ]; then
     sudo systemctl stop clamav-freshclam
     sudo freshclam
 
-    # Set the antivirus_changes_made flag to true.
-    antivirus_changes_made=true
+    # Set the antivirus_changes_made flag to 0 (true).
+    antivirus_changes_made=0
 fi
 
 # Creating quarantine folder.
@@ -145,25 +145,27 @@ if [ ! -d "$quarantine_folder" ]; then
     sudo chown -R clamav:clamav "$quarantine_folder"
     sudo chmod -R 750 "$quarantine_folder"
 
-    # Set the antivirus_changes_made flag to true.
-    antivirus_changes_made=true
+    # Set the antivirus_changes_made flag to 0 (true).
+    antivirus_changes_made=0
 fi
 
 # Configuring real-time scanning.
 real_time_scanning_configuration="/etc/clamav/clamd.conf"
-append_line_to_file "$real_time_scanning_configuration" "OnAccessPrevention Yes" "Allowing real-time scanning..." && antivirus_changes_made=true
-append_line_to_file "$real_time_scanning_configuration" "User clamav" "Setting clamav as the user for real-time scanning..." && antivirus_changes_made=true
-append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludeUname clamav" "Excluding clamav user from real-time scanning..." && antivirus_changes_made=true
-append_line_to_file "$real_time_scanning_configuration" "OnAccessIncludePath /" "Allowing real-time scanning at root folder..." && antivirus_changes_made=true
-append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /proc" "Excluding /proc from real-time scanning..." && antivirus_changes_made=true
-append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /sys" "Excluding /sys from real-time scanning..." && antivirus_changes_made=true
-append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /dev" "Excluding /dev from real-time scanning..." && antivirus_changes_made=true
-append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /run" "Excluding /run from real-time scanning..." && antivirus_changes_made=true
-append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /tmp" "Excluding /tmp from real-time scanning..." && antivirus_changes_made=true
-append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /qrntn" "Excluding /qrntn from real-time scanning..." && antivirus_changes_made=true
-append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /var/tmp" "Excluding /var/tmp from real-time scanning..." && antivirus_changes_made=true
-append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /var/run" "Excluding /var/run from real-time scanning..." && antivirus_changes_made=true
-append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /var/lock" "Excluding /var/lock from real-time scanning..." && antivirus_changes_made=true
+
+# To each function execution proceed to change the antivirus_changes_made flag to 0 (true), only if the line was appended (function returned 0 (true)).
+append_line_to_file "$real_time_scanning_configuration" "OnAccessPrevention Yes" "Allowing real-time scanning..." && antivirus_changes_made=0
+append_line_to_file "$real_time_scanning_configuration" "User clamav" "Setting clamav as the user for real-time scanning..." && antivirus_changes_made=0
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludeUname clamav" "Excluding clamav user from real-time scanning..." && antivirus_changes_made=0
+append_line_to_file "$real_time_scanning_configuration" "OnAccessIncludePath /" "Allowing real-time scanning at root folder..." && antivirus_changes_made=0
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /proc" "Excluding /proc from real-time scanning..." && antivirus_changes_made=0
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /sys" "Excluding /sys from real-time scanning..." && antivirus_changes_made=0
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /dev" "Excluding /dev from real-time scanning..." && antivirus_changes_made=0
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /run" "Excluding /run from real-time scanning..." && antivirus_changes_made=0
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /tmp" "Excluding /tmp from real-time scanning..." && antivirus_changes_made=0
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /qrntn" "Excluding /qrntn from real-time scanning..." && antivirus_changes_made=0
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /var/tmp" "Excluding /var/tmp from real-time scanning..." && antivirus_changes_made=0
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /var/run" "Excluding /var/run from real-time scanning..." && antivirus_changes_made=0
+append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /var/lock" "Excluding /var/lock from real-time scanning..." && antivirus_changes_made=0
 
 # Enabling antivirus.
 if $antivirus_changes_made; then
@@ -185,17 +187,17 @@ fi
 cpu_manufacturer=$(grep -m 1 -oP 'vendor_id\s*:\s*\K.*' /proc/cpuinfo)
 
 # Initialize a flag indicating if a microcode update was installed.
-microcode_update_installed=false
+microcode_update_installed=1
 
 # Install the appropriate microcode based on the CPU manufacturer.
 if [[ $cpu_manufacturer == *'GenuineIntel'* ]]; then
     echo -e "\n${BOLD_CYAN}Installing Intel microcode updates...${NO_COLOR}"
     sudo paru -S --noconfirm --needed intel-ucode
-    microcode_update_installed=true
+    microcode_update_installed=0
 elif [[ $cpu_manufacturer == *'AuthenticAMD'* ]]; then
     echo -e "\n${BOLD_CYAN}Installing AMD microcode updates...${NO_COLOR}"
     sudo paru -S --noconfirm --needed amd-ucode
-    microcode_update_installed=true
+    microcode_update_installed=0
 fi
 
 # Update grub to apply microcode updates at boot, only if an update was installed.
@@ -221,7 +223,7 @@ fi
 
 # ! DNSSEC SECTION.
 # Initialize a variable to track whether a change was made.
-dnssec_change_made=false
+dnssec_change_made=1
 
 # Check if the 'DNSSEC' line already exists in the 'resolved.conf' file.
 if grep -q '^DNSSEC=' /etc/systemd/resolved.conf; then
@@ -231,13 +233,13 @@ if grep -q '^DNSSEC=' /etc/systemd/resolved.conf; then
 
         # If it isn't, replace it with 'DNSSEC=yes'
         sudo sed -i 's/^DNSSEC=.*/DNSSEC=yes/' /etc/systemd/resolved.conf
-        dnssec_change_made=true
+        dnssec_change_made=0
     fi
 else
 
     # If the 'DNSSEC' line doesn't exist, add 'DNSSEC=yes' to the end of the file
     echo 'DNSSEC=yes' | sudo tee -a /etc/systemd/resolved.conf >/dev/null
-    dnssec_change_made=true
+    dnssec_change_made=0
 fi
 
 # If a change was made, restart the 'systemd-resolved' service to apply the changes

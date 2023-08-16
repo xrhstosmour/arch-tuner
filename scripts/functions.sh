@@ -20,12 +20,12 @@ append_line_to_file() {
         # Append line to file.
         echo "$line_to_append" | sudo tee -a "$file_path" >/dev/null
 
-        # Return true to indicate that a change was made.
-        return true
+        # Return 0 (true) to indicate that a change was made.
+        return 0
     fi
 
-    # Return false to indicate that no change was made.
-    return false
+    # Return 1 (false) to indicate that no change was made.
+    return 1
 }
 
 # Function to handle the interrupt signal.
