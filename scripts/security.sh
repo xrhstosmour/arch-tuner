@@ -98,7 +98,7 @@ if ! sudo ufw status | grep -q '68/udp'; then
 fi
 
 # Restarting firewall to apply new rules.
-if $firewall_changes_made; then
+if [ $firewall_changes_made -eq 0 ]; then
     echo -e "\n${BOLD_CYAN}Restarting firewall...${NO_COLOR}"
     sudo ufw reload
 fi
@@ -168,7 +168,7 @@ append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /va
 append_line_to_file "$real_time_scanning_configuration" "OnAccessExcludePath /var/lock" "Excluding /var/lock from real-time scanning..." && antivirus_changes_made=0
 
 # Enabling antivirus.
-if $antivirus_changes_made; then
+if [ $antivirus_changes_made -eq 0 ]; then
     echo -e "\n${BOLD_CYAN}Enabling antivirus...${NO_COLOR}"
     sudo systemctl start clamav-freshclam
     sudo systemctl enable clamav-freshclam
@@ -177,7 +177,7 @@ if $antivirus_changes_made; then
 fi
 
 # Enabling real-time scanning.
-if $antivirus_changes_made; then
+if [ $antivirus_changes_made -eq 0 ]; then
     echo -e "\n${BOLD_CYAN}Enabling real-time scanning...${NO_COLOR}"
     sudo clamonacc --move=/qrntn
 fi
@@ -201,7 +201,7 @@ elif [[ $cpu_manufacturer == *'AuthenticAMD'* ]]; then
 fi
 
 # Update grub to apply microcode updates at boot, only if an update was installed.
-if $microcode_update_installed; then
+if [ $microcode_update_installed -eq 0 ]; then
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
@@ -243,7 +243,7 @@ else
 fi
 
 # If a change was made, restart the 'systemd-resolved' service to apply the changes
-if $dnssec_change_made; then
+if [ $dnssec_change_made -eq 0 ]; then
 
     echo -e "\n${BOLD_CYAN}Enabling DNSSEC...${NO_COLOR}"
     sudo systemctl restart systemd-resolved
@@ -262,13 +262,13 @@ add_mount_options() {
         if grep -q " $mount_point " /etc/fstab; then
             echo -e "\n${BOLD_CYAN}Adding options $options to mount point $mount_point...${NO_COLOR}"
             sudo sed -i "s|\($mount_point .*\) defaults |\1 defaults,$options |" /etc/fstab
-            mountpoint_change_made=1
+            mountpoint_change_made=0
         fi
     fi
 }
 
 # A flag to check if any change is made
-mountpoint_change_made=0
+mountpoint_change_made=1
 
 # Add nodev, noexec, and nosuid options to /boot and /boot/efi.
 add_mount_options "/boot" "nodev,nosuid,noexec"
@@ -286,7 +286,7 @@ for dir in /var/*; do
 done
 
 # Remount all filesystems with new options if any change is made.
-if [ $mountpoint_change_made -eq 1 ]; then
+if [ $mountpoint_change_made -eq 0 ]; then
     echo -e "\n${BOLD_CYAN}Enabling mountpoint hardening...${NO_COLOR}"
     sudo mount -a
 fi
