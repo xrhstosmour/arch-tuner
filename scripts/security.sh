@@ -1,6 +1,6 @@
 #!/bin/bash
 # ? We are not going to use hardened kernel because we are going to face problems with:
-# ? lots of drivers, programming languages, virtualization, processes and many more.
+# ? drivers, programming languages, virtualization, processes and many more.
 # ? Also the perfomance and usabillity are going to be affected negatively.
 # ? So we are going to stick with the default stable kernel and harden manually.
 
@@ -14,18 +14,28 @@ trap "exit" INT
 # Terminate script on error.
 set -e
 
-# Installing firewall and antivirus.
-echo -e "\n${BOLD_CYAN}Installing firewall...${NO_COLOR}"
-paru -S --noconfirm --needed ufw iptables
+# Installing needed firewall packages.
+if ! paru -Qs iptables >/dev/null; then
+    echo -e "\n${BOLD_CYAN}Installing needed firewall packages...${NO_COLOR}"
+    paru -S --noconfirm --needed iptables
+fi
 
-# Check if UFW service is active and if not start it.
-if ! systemctl is-active --quiet ufw; then
-    sudo systemctl start ufw
+# Installing firewall.
+if ! paru -Qs ufw >/dev/null; then
+    echo -e "\n${BOLD_CYAN}Installing firewall...${NO_COLOR}"
+    paru -S --noconfirm --needed ufw
 fi
 
 # Check if UFW service is enabled and if not enable it.
 if ! systemctl is-enabled --quiet ufw; then
+    echo -e "\n${BOLD_CYAN}Enabling firewall...${NO_COLOR}"
     sudo systemctl enable ufw
+fi
+
+# Check if UFW service is active and if not start it.
+if ! systemctl is-active --quiet ufw; then
+    echo -e "\n${BOLD_CYAN}Starting firewall...${NO_COLOR}"
+    sudo systemctl start ufw
 fi
 
 # Initialize a flag indicating if a firewall change has been made.
@@ -33,19 +43,22 @@ firewall_changes_made=false
 
 # Check if default deny rules are set and if not set them.
 if ! sudo ufw status verbose | grep -q 'Default: deny (incoming), deny (outgoing), deny (routed)'; then
+    echo -e "\n${BOLD_CYAN}Denying all incoming and outgoing connections...${NO_COLOR}"
     sudo ufw default deny incoming
     sudo ufw default deny outgoing
     firewall_changes_made=true
 fi
 
-# Check if DHCPv6 client rule exists and if not add it.
+# Check if DHCPv6 rule exists and if not add it.
 if ! sudo ufw status | grep -q '546/udp (v6)'; then
+    echo -e "\n${BOLD_CYAN}Allowing DHCPv6 (546/UDP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 546 proto udp
     firewall_changes_made=true
 fi
 
-# Check if ipv6-icmp rule exists and if not add it.
+# Check if ICMPv6 rule exists and if not add it.
 if ! grep -q 'ufw6-before-output -p ipv6-icmp -j ACCEPT' /etc/ufw/before6.rules; then
+    echo -e "\n${BOLD_CYAN}Allowing ICMPv6 connections...${NO_COLOR}"
 
     # Add the rule before the COMMIT line.
     sudo sed -i '/COMMIT/ i # Allow outbound ipv6-icmp.\n-A ufw6-before-output -p ipv6-icmp -j ACCEPT' /etc/ufw/before6.rules
@@ -54,39 +67,43 @@ fi
 
 # Check if HTTP and HTTPS rules exist and if not add them.
 if ! sudo ufw status | grep -q '80/tcp'; then
+    echo -e "\n${BOLD_CYAN}Allowing HTTP (80/TCP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 80 proto tcp
     firewall_changes_made=true
 fi
 if ! sudo ufw status | grep -q '443/tcp'; then
+    echo -e "\n${BOLD_CYAN}Allowing HTTPS (443/TCP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 443 proto tcp
     firewall_changes_made=true
 fi
 
 # Check if DNS rule exists and if not add it.
 if ! sudo ufw status | grep -q '53/tcp'; then
+    echo -e "\n${BOLD_CYAN}Allowing DNS (53/TCP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 53 proto tcp
     firewall_changes_made=true
 fi
 if ! sudo ufw status | grep -q '53/udp'; then
+    echo -e "\n${BOLD_CYAN}Allowing DNS (53/UDP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 53 proto udp
     firewall_changes_made=true
 fi
 
 # Check if DHCP client rule exists and if not add it.
 if ! sudo ufw status | grep -q '67/udp'; then
+    echo -e "\n${BOLD_CYAN}Allowing DHCP (67/UDP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 67 proto udp
     firewall_changes_made=true
 fi
 if ! sudo ufw status | grep -q '68/udp'; then
+    echo -e "\n${BOLD_CYAN}Allowing DHCP (68/UDP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 68 proto udp
     firewall_changes_made=true
 fi
 
-# Enabling firewall.
+# Restarting firewall to apply new rules.
 if $firewall_changes_made; then
-    echo -e "\n${BOLD_CYAN}Configuring firewall...${NO_COLOR}"
-    echo -e "\n${BOLD_CYAN}Enabling firewall...${NO_COLOR}"
-    echo "y" | sudo ufw --force enable
+    echo -e "\n${BOLD_CYAN}Restarting firewall...${NO_COLOR}"
     sudo ufw reload
 fi
 
