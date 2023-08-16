@@ -14,7 +14,7 @@ append_line_to_file() {
 
         # Print message if it exists.
         if [ -n "$message" ]; then
-            echo -e "$message"
+            echo -e "\n${BOLD_CYAN}""$message""${NO_COLOR}"
         fi
 
         # Append line to file.
