@@ -4,16 +4,11 @@
 # ? Also the perfomance and usabillity are going to be affected negatively.
 # ? So we are going to stick with the default stable kernel and harden manually.
 
-# Color for the script's messages.
-BOLD_CYAN='\e[1;36m'
-NO_COLOR='\e[0m'
+# Import constant variables and signal handlers.
+source ./constants.sh
+source ./signals.sh
 
-# Catch exit signal (CTRL + C), to terminate the whole script.
-trap "exit" INT
-
-# Terminate script on error.
-set -e
-
+# FIREWALL
 # Installing needed firewall packages.
 if ! paru -Qs iptables >/dev/null; then
     echo -e "\n${BOLD_CYAN}Installing needed firewall packages...${NO_COLOR}"
