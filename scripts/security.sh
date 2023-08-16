@@ -4,9 +4,10 @@
 # ? Also the perfomance and usabillity are going to be affected negatively.
 # ? So we are going to stick with the default stable kernel and harden manually.
 
-# Import constant variables and signal handlers.
+# Import constant variables, signal handlers and functions.
 source ./constants.sh
 source ./signals.sh
+source ./functions.sh
 
 # FIREWALL
 # Installing needed firewall packages.
@@ -102,20 +103,39 @@ if $firewall_changes_made; then
     sudo ufw reload
 fi
 
+# ANTIVIRUS
 # Installing antivirus.
-echo -e "\n${BOLD_CYAN}Installing antivirus...${NO_COLOR}"
-paru -S --noconfirm --needed clamav
+if ! paru -Qs clamav >/dev/null; then
+    echo -e "\n${BOLD_CYAN}Installing antivirus...${NO_COLOR}"
+    paru -S --noconfirm --needed clamav
+fi
 
-# Configuring antivirus.
-echo -e "\n${BOLD_CYAN}Configuring antivirus...${NO_COLOR}"
-sudo systemctl stop clamav-freshclam
-sudo freshclam
+# Get the date from freshclam --version output.
+database_date=$(sudo freshclam --version | awk -F'/' '{print $3}' | cut -d ' ' -f1-4)
+
+# Convert to UNIX timestamp.
+database_timestamp=$(date --date="$database_date" +%s)
+
+# Get the current date's UNIX timestamp minus one day (86400 seconds).
+current_timestamp=$(date --date="yesterday" +%s)
+
+# Check if the database date is earlier than the current date minus one day
+if [ "$database_timestamp" -lt "$current_timestamp" ]; then
+    echo -e "\n${BOLD_CYAN}Updating virus database...${NO_COLOR}"
+
+    # Updating virus database.
+    sudo systemctl stop clamav-freshclam
+    sudo freshclam
+fi
 
 # Creating quarantine folder.
-echo -e "\n${BOLD_CYAN}Creating quarantine folder...${NO_COLOR}"
-sudo mkdir -p /qrntn
-sudo chown -R clamav:clamav /qrntn
-sudo chmod -R 750 /qrntn
+quarantine_folder="/qrntn"
+if [ ! -d "$quarantine_folder" ]; then
+    echo -e "\n${BOLD_CYAN}Creating quarantine folder...${NO_COLOR}"
+    sudo mkdir -p "$quarantine_folder"
+    sudo chown -R clamav:clamav "$quarantine_folder"
+    sudo chmod -R 750 "$quarantine_folder"
+fi
 
 # Configuring real-time scanning.
 echo -e "\n${BOLD_CYAN}Configuring real-time scanning...${NO_COLOR}"
