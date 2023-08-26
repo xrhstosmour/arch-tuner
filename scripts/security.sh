@@ -191,17 +191,28 @@ microcode_update_installed=1
 
 # Install the appropriate microcode based on the CPU manufacturer.
 if [[ $cpu_manufacturer == *'GenuineIntel'* ]]; then
-    echo -e "\n${BOLD_CYAN}Installing Intel microcode updates...${NO_COLOR}"
-    sudo paru -S --noconfirm --needed intel-ucode
-    microcode_update_installed=0
+    if ! paru -Qs intel-ucode >/dev/null; then
+        # Installing Intel microcode updates.
+        echo -e "\n${BOLD_CYAN}Installing Intel microcode updates...${NO_COLOR}"
+        paru -S --noconfirm --needed intel-ucode
+
+        # Set the microcode_update_installed flag to 0 (true).
+        microcode_update_installed=0
+    fi
 elif [[ $cpu_manufacturer == *'AuthenticAMD'* ]]; then
-    echo -e "\n${BOLD_CYAN}Installing AMD microcode updates...${NO_COLOR}"
-    sudo paru -S --noconfirm --needed amd-ucode
-    microcode_update_installed=0
+    if ! paru -Qs amd-ucode >/dev/null; then
+        # Installing AMD microcode updates.
+        echo -e "\n${BOLD_CYAN}Installing AMD microcode updates...${NO_COLOR}"
+        paru -S --noconfirm --needed amd-ucode
+
+        # Set the microcode_update_installed flag to 0 (true).
+        microcode_update_installed=0
+    fi
 fi
 
 # Update grub to apply microcode updates at boot, only if an update was installed.
 if [ $microcode_update_installed -eq 0 ]; then
+    echo -e "\n${BOLD_CYAN}Updating grub to apply microcode updates at boot...${NO_COLOR}"
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
