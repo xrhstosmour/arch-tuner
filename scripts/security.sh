@@ -249,7 +249,7 @@ if ! grep -q '^LD_PRELOAD=/usr/lib/libhardened_malloc.so' /etc/environment; then
     # Enabling hardened memory allocator.
     echo -e "\n${BOLD_CYAN}Enabling hardened memory allocator...${NO_COLOR}"
 
-    # ! Check if this will not create any issues with running applications.
+    # TODO: Check if this creates any issues with running applications.
     # Add 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' to the end of the file.
     echo 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' | sudo tee -a /etc/environment >/dev/null
 fi
