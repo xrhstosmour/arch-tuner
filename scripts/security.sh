@@ -349,21 +349,40 @@ if [ $usb_port_protection_change_made -eq 0 ]; then
 fi
 
 # ! ENCRYPTED NETWORK TIME SECURITY SECTION.
+# Initialize a flag indicating if an encrypted network time security change has been made.
+encrypted_network_time_security_change_made=1
+
 # Installing encrypted network time security.
-echo -e "\n${BOLD_CYAN}Installing encrypted network time security...${NO_COLOR}"
-paru -S --noconfirm --needed chrony
+if ! paru -Qs chrony >/dev/null; then
+    echo -e "\n${BOLD_CYAN}Installing encrypted network time security...${NO_COLOR}"
+    paru -S --noconfirm --needed chrony
+fi
 
-# Configuring encrypted network time security.
-echo -e "\n${BOLD_CYAN}Configuring encrypted network time security...${NO_COLOR}"
-sudo mkdir -p /etc/chrony/ && sudo cp -f ./configurations/network/time.conf /etc/chrony/chrony.conf
-sudo chmod 644 /etc/chrony/chrony.conf
-sudo chown root:root /etc/chrony/chrony.conf
+# Configuring encrypted network time security, only if the file exists and its contents are different from the source file.
+if [ ! -f /etc/chrony/chrony.conf ] || ! diff ./configurations/network/time.conf /etc/chrony/chrony.conf &>/dev/null; then
+    echo -e "\n${BOLD_CYAN}Configuring encrypted network time security...${NO_COLOR}"
+    sudo mkdir -p /etc/chrony/ && sudo cp -f ./configurations/network/time.conf /etc/chrony/chrony.conf
+    sudo chmod 644 /etc/chrony/chrony.conf
+    sudo chown root:root /etc/chrony/chrony.conf
 
-# Add the seccomp filter option to the environment file.
-sudo mkdir -p /etc/sysconfig && echo 'OPTIONS="-F 1"' | sudo tee /etc/sysconfig/chronyd >/dev/null
+    # Set the encrypted_network_time_security_change_made flag to 0 (true).
+    encrypted_network_time_security_change_made=0
+fi
+
+# Add the seccomp filter option to the environment file only if not exists.
+if ! grep -q 'OPTIONS="-F 1"' /etc/sysconfig/chronyd 2>/dev/null; then
+    echo -e "\n${BOLD_CYAN}Limiting access to encrypted network time security application...${NO_COLOR}"
+    sudo mkdir -p /etc/sysconfig && echo 'OPTIONS="-F 1"' | sudo tee /etc/sysconfig/chronyd >/dev/null
+
+    # Set the encrypted_network_time_security_change_made flag to 0 (true).
+    encrypted_network_time_security_change_made=0
+fi
 
 # Restart the network time security to apply the changes.
-systemctl restart chronyd
+if [ $encrypted_network_time_security_change_made -eq 0 ]; then
+    echo -e "\n${BOLD_CYAN}Starting network time security...${NO_COLOR}"
+    sudo systemctl restart chronyd
+fi
 
 # TODO: Implement Linux kernel runtime guard when there is support for newer kernels.
 # TODO: Implement Secure Boot process.
