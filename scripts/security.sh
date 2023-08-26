@@ -261,45 +261,29 @@ if [ $dnssec_change_made -eq 0 ]; then
     sudo systemctl restart systemd-resolved
 fi
 
-# ! MOUNTING POINTS SECTION.
-# Function to add options to a mount point.
-add_mount_options() {
-    local mount_point="$1"
-    local options="$2"
+# ! MOUNTING OPTIONS SECTION.
+# Initialize a flag indicating if a mount options change has been made.
+mount_options_change_made=1
 
-    # Check if the options are already present.
-    if ! grep -q " $mount_point .*defaults,.*$options" /etc/fstab; then
-
-        # If the options are not present, add them.
-        if grep -q " $mount_point " /etc/fstab; then
-            echo -e "\n${BOLD_CYAN}Adding options $options to mount point $mount_point...${NO_COLOR}"
-            sudo sed -i "s|\($mount_point .*\) defaults |\1 defaults,$options |" /etc/fstab
-            mountpoint_change_made=0
-        fi
-    fi
-}
-
-# A flag to check if any change is made
-mountpoint_change_made=1
-
+# To each function execution proceed to change the  && mount_options_change_made flag to 0 (true), only if the mount point option changed (function returned 0 (true)).
 # Add nodev, noexec, and nosuid options to /boot and /boot/efi.
-add_mount_options "/boot" "nodev,nosuid,noexec"
-add_mount_options "/boot/efi" "nodev,nosuid,noexec"
+add_mount_options "/boot" "nodev,nosuid,noexec" && mount_options_change_made=0
+add_mount_options "/boot/efi" "nodev,nosuid,noexec" && mount_options_change_made=0
 
 # Add nodev and nosuid options to /home and /root.
-add_mount_options "/home" "nodev,nosuid"
-add_mount_options "/root" "nodev,nosuid"
+add_mount_options "/home" "nodev,nosuid" && mount_options_change_made=0
+add_mount_options "/root" "nodev,nosuid" && mount_options_change_made=0
 
 # Add nodev, noexec, and nosuid options to directories under /var excluding /var/tmp.
 for dir in /var/*; do
     if [[ $dir != "/var/tmp" ]]; then
-        add_mount_options "$dir" "nodev,nosuid,noexec"
+        add_mount_options "$dir" "nodev,nosuid,noexec" && mount_options_change_made=0
     fi
 done
 
 # Remount all filesystems with new options if any change is made.
-if [ $mountpoint_change_made -eq 0 ]; then
-    echo -e "\n${BOLD_CYAN}Enabling mountpoint hardening...${NO_COLOR}"
+if [ $mount_options_change_made -eq 0 ]; then
+    echo -e "\n${BOLD_CYAN}Enabling mount point hardening...${NO_COLOR}"
     sudo mount -a
 fi
 
