@@ -1,21 +1,17 @@
 #!/bin/bash
 
-# Color for the script's messages.
-BOLD_CYAN='\e[1;36m'
-NO_COLOR='\e[0m'
-
 # Catch exit signal (CTRL + C), to terminate the whole script.
 trap "exit" INT
 
 # Terminate script on error.
 set -e
 
-# Installing development tools.
-echo -e "\n${BOLD_CYAN}Installing development tools...${NO_COLOR}"
-xargs -a ./packages/development.txt -r -- paru -S --noconfirm --needed
+# Import constant variables and functions.
+source ./constants.sh
+source ./functions.sh
 
-# Configuring development tools.
-echo -e "\n${BOLD_CYAN}Configuring development tools...${NO_COLOR}"
+# Installing development tools.
+install_packages_from_file "./packages/development.txt"
 
 # Configuring Docker.
 if grep -q "^docker$" ./packages/development.txt; then
@@ -24,8 +20,7 @@ if grep -q "^docker$" ./packages/development.txt; then
 fi
 
 # Installing programming languages.
-echo -e "\n${BOLD_CYAN}Installing programming languages...${NO_COLOR}"
-xargs -a ./packages/programming.txt -r -- paru -S --noconfirm --needed
+install_packages_from_file "./packages/programming.txt"
 
 # Configuring Python poetry.
 if grep -q "^python-poetry$" ./packages/programming.txt; then

@@ -10,7 +10,7 @@ trap "exit" INT
 # Terminate script on error.
 set -e
 
-# Import constant variables, signal handlers and functions.
+# Import constant variables and functions.
 source ./constants.sh
 source ./functions.sh
 
