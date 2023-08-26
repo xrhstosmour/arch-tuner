@@ -42,6 +42,8 @@ if ! sudo ufw status verbose | grep -q 'Default: deny (incoming), deny (outgoing
     echo -e "\n${BOLD_CYAN}Denying all incoming and outgoing connections...${NO_COLOR}"
     sudo ufw default deny incoming
     sudo ufw default deny outgoing
+
+    # Set the firewall_changes_made flag to 0 (true).
     firewall_changes_made=0
 fi
 
@@ -49,6 +51,8 @@ fi
 if ! sudo ufw status | grep -q '546/udp (v6)'; then
     echo -e "\n${BOLD_CYAN}Allowing DHCPv6 (546/UDP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 546 proto udp
+
+    # Set the firewall_changes_made flag to 0 (true).
     firewall_changes_made=0
 fi
 
@@ -58,6 +62,8 @@ if ! grep -q 'ufw6-before-output -p ipv6-icmp -j ACCEPT' /etc/ufw/before6.rules;
 
     # Add the rule before the COMMIT line.
     sudo sed -i '/COMMIT/ i # Allow outbound ipv6-icmp.\n-A ufw6-before-output -p ipv6-icmp -j ACCEPT' /etc/ufw/before6.rules
+
+    # Set the firewall_changes_made flag to 0 (true).
     firewall_changes_made=0
 fi
 
@@ -65,11 +71,15 @@ fi
 if ! sudo ufw status | grep -q '80/tcp'; then
     echo -e "\n${BOLD_CYAN}Allowing HTTP (80/TCP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 80 proto tcp
+
+    # Set the firewall_changes_made flag to 0 (true).
     firewall_changes_made=0
 fi
 if ! sudo ufw status | grep -q '443/tcp'; then
     echo -e "\n${BOLD_CYAN}Allowing HTTPS (443/TCP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 443 proto tcp
+
+    # Set the firewall_changes_made flag to 0 (true).
     firewall_changes_made=0
 fi
 
@@ -77,11 +87,15 @@ fi
 if ! sudo ufw status | grep -q '53/tcp'; then
     echo -e "\n${BOLD_CYAN}Allowing DNS (53/TCP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 53 proto tcp
+
+    # Set the firewall_changes_made flag to 0 (true).
     firewall_changes_made=0
 fi
 if ! sudo ufw status | grep -q '53/udp'; then
     echo -e "\n${BOLD_CYAN}Allowing DNS (53/UDP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 53 proto udp
+
+    # Set the firewall_changes_made flag to 0 (true).
     firewall_changes_made=0
 fi
 
@@ -89,11 +103,15 @@ fi
 if ! sudo ufw status | grep -q '67/udp'; then
     echo -e "\n${BOLD_CYAN}Allowing DHCP (67/UDP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 67 proto udp
+
+    # Set the firewall_changes_made flag to 0 (true).
     firewall_changes_made=0
 fi
 if ! sudo ufw status | grep -q '68/udp'; then
     echo -e "\n${BOLD_CYAN}Allowing DHCP (68/UDP) connections...${NO_COLOR}"
     sudo ufw allow out to any port 68 proto udp
+
+    # Set the firewall_changes_made flag to 0 (true).
     firewall_changes_made=0
 fi
 
@@ -246,12 +264,16 @@ if grep -q '^DNSSEC=' /etc/systemd/resolved.conf; then
     # Check if 'DNSSEC' is set to 'yes', if not, replace it with 'DNSSEC=yes'
     if ! grep -q '^DNSSEC=yes' /etc/systemd/resolved.conf; then
         sudo sed -i 's/^DNSSEC=.*/DNSSEC=yes/' /etc/systemd/resolved.conf
+
+        # Set the dnssec_change_made flag to 0 (true).
         dnssec_change_made=0
     fi
 else
 
     # If the 'DNSSEC' line doesn't exist, add 'DNSSEC=yes' to the end of the file
     echo 'DNSSEC=yes' | sudo tee -a /etc/systemd/resolved.conf >/dev/null
+
+    # Set the dnssec_change_made flag to 0 (true).
     dnssec_change_made=0
 fi
 
@@ -288,27 +310,43 @@ if [ $mount_options_change_made -eq 0 ]; then
 fi
 
 # ! USB PORT PROTECTION SECTION.
+# Initialize a flag indicating if a USB port protection change has been made.
+usb_port_protection_change_made=1
+
 # Installing USB port protection.
-echo -e "\n${BOLD_CYAN}Installing USB port protection...${NO_COLOR}"
-paru -S --noconfirm --needed usbguard
+if ! paru -Qs usbguard >/dev/null; then
+    echo -e "\n${BOLD_CYAN}Installing USB port protection...${NO_COLOR}"
+    paru -S --noconfirm --needed usbguard
+fi
 
-# Configuring USB port protection.
-echo -e "\n${BOLD_CYAN}Configuring USB port protection...${NO_COLOR}"
-sudo systemctl enable --now usbguard
+# Enabling the USB port protection service if it is not already active.
+if ! systemctl --quiet is-active usbguard; then
+    echo -e "\n${BOLD_CYAN}Enabling USB port protection...${NO_COLOR}"
+    sudo systemctl enable --now usbguard
+fi
 
-# Generate an initial policy and allow the already connected devices.
+# Generate an initial policy, if none exists and allow the already connected devices.
 # ? We will use the default police which allows only the already connected devices.
 # ? In case you want to allow permanently a device:
 # ? 1. Connect the device.
 # ? 2. Run 'sudo usbguard list-devices'.
 # ? 3. Find the DEVICE_ID of the device you want to allow.
 # ? 4. Run 'sudo usbguard generate-policy --device DEVICE_ID | sudo tee -a /etc/usbguard/rules.conf > /dev/null'.
-sudo usbguard generate-policy | sudo tee /etc/usbguard/rules.conf >/dev/null
-sudo chmod 0600 /etc/usbguard/rules.conf
-sudo chown root:root /etc/usbguard/rules.conf
+if [ ! -s /etc/usbguard/rules.conf ]; then
+    echo -e "\n${BOLD_CYAN}Configuring USB port protection...${NO_COLOR}"
+    sudo usbguard generate-policy | sudo tee /etc/usbguard/rules.conf >/dev/null
+    sudo chmod 0600 /etc/usbguard/rules.conf
+    sudo chown root:root /etc/usbguard/rules.conf
+
+    # Set the usb_port_protection_change_made flag to 0 (true).
+    usb_port_protection_change_made=0
+fi
 
 # Restart the usbguard service to apply the changes.
-sudo systemctl restart usbguard
+if [ $usb_port_protection_change_made -eq 0 ]; then
+    echo -e "\n${BOLD_CYAN}Starting USB port protection...${NO_COLOR}"
+    sudo systemctl restart usbguard
+fi
 
 # ! ENCRYPTED NETWORK TIME SECURITY SECTION.
 # Installing encrypted network time security.
