@@ -390,6 +390,6 @@ if [ $mount_options_change_made -eq 0 ]; then
 fi
 
 # ! Set owner User ID SECTION.
-# Disabling SUID
+# Disabling SUID, excluding sbin, bin, usr, opt, root and boot directories.
 echo -e "\n${BOLD_CYAN}Disabling Set owner User ID (SUID)...${NO_COLOR}"
-sudo find / -perm /4000 -type f -exec chmod u-s {} \;
+sudo find / \( -path /sbin -o -path /usr -o -path /bin -o -path /opt -o -path /root -o -path /boot \) -prune -o -perm /4000 -type f -exec chmod u-s {} \;
