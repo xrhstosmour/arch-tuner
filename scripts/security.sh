@@ -191,8 +191,9 @@ microcode_update_installed=1
 
 # Install the appropriate microcode based on the CPU manufacturer.
 if [[ $cpu_manufacturer == *'GenuineIntel'* ]]; then
+
+    # Installing Intel microcode updates.
     if ! paru -Qs intel-ucode >/dev/null; then
-        # Installing Intel microcode updates.
         echo -e "\n${BOLD_CYAN}Installing Intel microcode updates...${NO_COLOR}"
         paru -S --noconfirm --needed intel-ucode
 
@@ -200,8 +201,9 @@ if [[ $cpu_manufacturer == *'GenuineIntel'* ]]; then
         microcode_update_installed=0
     fi
 elif [[ $cpu_manufacturer == *'AuthenticAMD'* ]]; then
+
+    # Installing AMD microcode updates.
     if ! paru -Qs amd-ucode >/dev/null; then
-        # Installing AMD microcode updates.
         echo -e "\n${BOLD_CYAN}Installing AMD microcode updates...${NO_COLOR}"
         paru -S --noconfirm --needed amd-ucode
 
@@ -221,14 +223,16 @@ fi
 if ! grep -q '^LD_PRELOAD=/usr/lib/libhardened_malloc.so' /etc/environment; then
 
     # Installing hardened memory allocator.
-    echo -e "\n${BOLD_CYAN}Installing hardened memory allocator...${NO_COLOR}"
-    paru -S --noconfirm --needed hardened_malloc
+    if ! paru -Qs hardened_malloc >/dev/null; then
+        echo -e "\n${BOLD_CYAN}Installing hardened memory allocator...${NO_COLOR}"
+        paru -S --noconfirm --needed hardened_malloc
+    fi
 
     # Enabling hardened memory allocator.
     echo -e "\n${BOLD_CYAN}Enabling hardened memory allocator...${NO_COLOR}"
 
     # ! Check if this will not create any issues with running applications.
-    # If it doesn't exist, add 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' to the end of the file.
+    # Add 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' to the end of the file.
     echo 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' | sudo tee -a /etc/environment >/dev/null
 fi
 
@@ -239,10 +243,8 @@ dnssec_change_made=1
 # Check if the 'DNSSEC' line already exists in the 'resolved.conf' file.
 if grep -q '^DNSSEC=' /etc/systemd/resolved.conf; then
 
-    # Check if 'DNSSEC' is set to 'yes'
+    # Check if 'DNSSEC' is set to 'yes', if not, replace it with 'DNSSEC=yes'
     if ! grep -q '^DNSSEC=yes' /etc/systemd/resolved.conf; then
-
-        # If it isn't, replace it with 'DNSSEC=yes'
         sudo sed -i 's/^DNSSEC=.*/DNSSEC=yes/' /etc/systemd/resolved.conf
         dnssec_change_made=0
     fi
@@ -255,7 +257,6 @@ fi
 
 # If a change was made, restart the 'systemd-resolved' service to apply the changes
 if [ $dnssec_change_made -eq 0 ]; then
-
     echo -e "\n${BOLD_CYAN}Enabling DNSSEC...${NO_COLOR}"
     sudo systemctl restart systemd-resolved
 fi
