@@ -1,17 +1,13 @@
 #!/bin/bash
 
-# Colors for the script's messages.
-NO_COLOR='\e[0m'
-BOLD_CYAN='\e[1;36m'
-BOLD_GREEN='\e[1;32m'
-BOLD_YELLOW='\e[1;33m'
-BOLD_RED='\e[1;31m'
-
 # Catch exit signal (CTRL + C), to terminate the whole script.
 trap "exit" INT
 
 # Terminate script on error.
 set -e
+
+# Import constant variables.
+source ./constants.sh
 
 # Wait for user approval.
 echo -e "\n${BOLD_RED}BACKUP EVERYTHING BEFORE PROCEEDING!${NO_COLOR}"
@@ -28,16 +24,19 @@ fi
 
 # Give execution permission to all scripts.
 echo -e "\n${BOLD_CYAN}Giving execution permission to all scripts...${NO_COLOR}"
+chmod +x ./functions.sh
+chmod +x ./constants.sh
 chmod +x ./essentials.sh
 chmod +x ./security.sh
+chmod +x ./privacy.sh
 chmod +x ./interface.sh
 chmod +x ./desktop.sh
 chmod +x ./development.sh
 
 # Start by executing the essentials script.
-echo -e "\n${BOLD_CYAN}Running essentials script...${NO_COLOR}"
+echo -e "\n${BOLD_CYAN}Executing essentials script...${NO_COLOR}"
 ./essentials.sh
-echo -e "\n${BOLD_CYAN}Essentials script finished!${NO_COLOR}"
+echo -e "\n${BOLD_CYAN}Essentials script execution finished!${NO_COLOR}"
 
 # TODO: Convert the repeatable code into a function.
 # Default interface answer.
@@ -52,9 +51,9 @@ while [[ "$interface_answer" != "y" && "$interface_answer" != "n" ]]; do
     interface_answer=${interface_answer,,}
 
     if [[ "$interface_answer" == "y" ]]; then
-        echo -e "\n${BOLD_CYAN}Running interface script...${NO_COLOR}"
+        echo -e "\n${BOLD_CYAN}Executing interface script...${NO_COLOR}"
         ./interface.sh
-        echo -e "\n${BOLD_CYAN}Interface script finished!${NO_COLOR}"
+        echo -e "\n${BOLD_CYAN}Interface script execution finished!${NO_COLOR}"
     elif [[ "$interface_answer" != "n" ]]; then
         echo "Invalid input!"
     fi
@@ -72,9 +71,9 @@ while [[ "$desktop_answer" != "y" && "$desktop_answer" != "n" ]]; do
     desktop_answer=${desktop_answer,,}
 
     if [[ "$desktop_answer" == "y" ]]; then
-        echo -e "\n${BOLD_CYAN}Running desktop script...${NO_COLOR}"
+        echo -e "\n${BOLD_CYAN}Executing desktop script...${NO_COLOR}"
         ./desktop.sh
-        echo -e "\n${BOLD_CYAN}desktop script finished!${NO_COLOR}"
+        echo -e "\n${BOLD_CYAN}desktop script execution finished!${NO_COLOR}"
     elif [[ "$desktop_answer" != "n" ]]; then
         echo "Invalid input!"
     fi
@@ -92,15 +91,20 @@ while [[ "$development_answer" != "y" && "$development_answer" != "n" ]]; do
     development_answer=${development_answer,,}
 
     if [[ "$development_answer" == "y" ]]; then
-        echo -e "\n${BOLD_CYAN}Running development script...${NO_COLOR}"
+        echo -e "\n${BOLD_CYAN}Executing development script...${NO_COLOR}"
         ./development.sh
-        echo -e "\n${BOLD_CYAN}Development script finished!${NO_COLOR}"
+        echo -e "\n${BOLD_CYAN}Development script execution finished!${NO_COLOR}"
     elif [[ "$development_answer" != "n" ]]; then
         echo "Invalid input!"
     fi
 done
 
+# Run the privacy script.
+echo -e "\n${BOLD_CYAN}Executing privacy script...${NO_COLOR}"
+./privacy.sh
+echo -e "\n${BOLD_CYAN}Privacy script execution finished!${NO_COLOR}"
+
 # Run the security script at the end.
-echo -e "\n${BOLD_CYAN}Running security script...${NO_COLOR}"
+echo -e "\n${BOLD_CYAN}Executing security script...${NO_COLOR}"
 ./security.sh
-echo -e "\n${BOLD_CYAN}Security script finished!${NO_COLOR}"
+echo -e "\n${BOLD_CYAN}Security script execution finished!${NO_COLOR}"
