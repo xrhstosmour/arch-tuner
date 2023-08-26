@@ -53,10 +53,11 @@ add_mount_options() {
 # The file should contain one package per line.
 # The variable should contain packages separated by spaces.
 # install_packages "path/to/file.txt" "package_manager"
-# install_packages "PACKAGES_TO_INSTALL" "package_manager"
+# install_packages "$PACKAGES_TO_INSTALL" "package_manager"
 install_packages() {
     local input="$1"
     local manager="$2"
+    local message="$3"
 
     # Determine the installation command based on the chosen package manager.
     case "$manager" in
@@ -86,7 +87,15 @@ install_packages() {
 
         # Check if the package is already installed
         if ! $query_command "$package" >/dev/null 2>&1; then
-            echo -e "\n${BOLD_CYAN}Installing '$package'...${NO_COLOR}"
+
+            # Print message if it exists.
+            if [ -n "$message" ]; then
+                echo -e "\n${BOLD_CYAN}""$message""${NO_COLOR}"
+            else
+                echo -e "\n${BOLD_CYAN}Installing '$package'...${NO_COLOR}"
+            fi
+
+            # Install the package.
             $install_command "$package"
         fi
     }
