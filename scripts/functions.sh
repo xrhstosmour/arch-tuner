@@ -49,8 +49,28 @@ add_mount_options() {
     return 1
 }
 
-# Function to handle the interrupt signal.
-handle_interrupt_signal() {
-    echo -e "\n${BOLD_RED}Interrupt signal received, exiting...${NO_COLOR}"
-    exit 1
+install_packages_from_file() {
+    local file="$1"
+
+    # Check if the file exists and is readable.
+    if [[ ! -r "$file" ]]; then
+        echo "File '$file' not found or not readable!"
+        return 1
+    fi
+
+    # Read and process each line from the file.
+    while IFS= read -r package; do
+
+        # Trim leading and trailing whitespace and skip if it's a comment or empty.
+        package=$(echo "$package" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+        if [[ "$package" == \#* ]] || [[ -z "$package" ]]; then
+            continue
+        fi
+
+        # Check if the package is already installed
+        if ! paru -Qs "$package" >/dev/null 2>&1; then
+            echo -e "\n${BOLD_CYAN}Installing '$package'...${NO_COLOR}"
+            paru -S --noconfirm --needed "$package"
+        fi
+    done <"$file"
 }
