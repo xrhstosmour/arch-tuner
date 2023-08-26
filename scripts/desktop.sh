@@ -11,4 +11,4 @@ source ./constants.sh
 source ./functions.sh
 
 # Installing desktop applications.
-install_packages_from_file "./packages/desktop.txt"
+install_packages "./packages/desktop.txt" "paru"

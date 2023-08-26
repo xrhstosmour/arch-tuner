@@ -49,28 +49,57 @@ add_mount_options() {
     return 1
 }
 
-install_packages_from_file() {
-    local file="$1"
+# Function to install packages from file or variable choosing the appropriate package manager.
+# The file should contain one package per line.
+# The variable should contain packages separated by spaces.
+# install_packages "path/to/file.txt" "package_manager"
+# install_packages "PACKAGES_TO_INSTALL" "package_manager"
+install_packages() {
+    local input="$1"
+    local manager="$2"
 
-    # Check if the file exists and is readable.
-    if [[ ! -r "$file" ]]; then
-        echo "File '$file' not found or not readable!"
+    # Determine the installation command based on the chosen package manager.
+    case "$manager" in
+    paru)
+        local install_command="paru -S --noconfirm --needed"
+        local query_command="paru -Qs"
+        ;;
+    pacman)
+        local install_command="sudo pacman -S --noconfirm --needed"
+        local query_command="pacman -Qs"
+        ;;
+    *)
+        echo "Unsupported package manager: $manager"
         return 1
-    fi
+        ;;
+    esac
 
-    # Read and process each line from the file.
-    while IFS= read -r package; do
+    # A helper function to process and install a package.
+    process_package() {
+        local package="$1"
 
         # Trim leading and trailing whitespace and skip if it's a comment or empty.
         package=$(echo "$package" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
         if [[ "$package" == \#* ]] || [[ -z "$package" ]]; then
-            continue
+            return
         fi
 
         # Check if the package is already installed
-        if ! paru -Qs "$package" >/dev/null 2>&1; then
+        if ! $query_command "$package" >/dev/null 2>&1; then
             echo -e "\n${BOLD_CYAN}Installing '$package'...${NO_COLOR}"
-            paru -S --noconfirm --needed "$package"
+            $install_command "$package"
         fi
-    done <"$file"
+    }
+
+    # Determine if the input is a file or variable and act accordingly.
+    if [[ -r "$input" ]]; then
+        while IFS= read -r package; do
+            process_package "$package"
+        done <"$input"
+    else
+        IFS=' ' read -ra packages_array <<<"$input"
+        for package in "${packages_array[@]}"; do
+            process_package "$package"
+        done
+    fi
 }

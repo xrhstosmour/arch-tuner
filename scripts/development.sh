@@ -11,7 +11,7 @@ source ./constants.sh
 source ./functions.sh
 
 # Installing development tools.
-install_packages_from_file "./packages/development.txt"
+install_packages "./packages/development.txt" "paru"
 
 # Configuring Docker.
 if grep -q "^docker$" ./packages/development.txt; then
@@ -20,7 +20,7 @@ if grep -q "^docker$" ./packages/development.txt; then
 fi
 
 # Installing programming languages.
-install_packages_from_file "./packages/programming.txt"
+install_packages "./packages/programming.txt" "paru"
 
 # Configuring Python poetry.
 if grep -q "^python-poetry$" ./packages/programming.txt; then
