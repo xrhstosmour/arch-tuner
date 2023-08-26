@@ -4,9 +4,14 @@
 # ? Also the perfomance and usabillity are going to be affected negatively.
 # ? So we are going to stick with the default stable kernel and harden manually.
 
+# Catch exit signal (CTRL + C), to terminate the whole script.
+trap "exit" INT
+
+# Terminate script on error.
+set -e
+
 # Import constant variables, signal handlers and functions.
 source ./constants.sh
-source ./signals.sh
 source ./functions.sh
 
 # ! FIREWALL SECTION.
