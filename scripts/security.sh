@@ -283,32 +283,6 @@ if [ $dnssec_change_made -eq 0 ]; then
     sudo systemctl restart systemd-resolved
 fi
 
-# ! MOUNTING OPTIONS SECTION.
-# Initialize a flag indicating if a mount options change has been made.
-mount_options_change_made=1
-
-# To each function execution proceed to change the  && mount_options_change_made flag to 0 (true), only if the mount point option changed (function returned 0 (true)).
-# Add nodev, noexec, and nosuid options to /boot and /boot/efi.
-add_mount_options "/boot" "nodev,nosuid,noexec" && mount_options_change_made=0
-add_mount_options "/boot/efi" "nodev,nosuid,noexec" && mount_options_change_made=0
-
-# Add nodev and nosuid options to /home and /root.
-add_mount_options "/home" "nodev,nosuid" && mount_options_change_made=0
-add_mount_options "/root" "nodev,nosuid" && mount_options_change_made=0
-
-# Add nodev, noexec, and nosuid options to directories under /var excluding /var/tmp.
-for dir in /var/*; do
-    if [[ $dir != "/var/tmp" ]]; then
-        add_mount_options "$dir" "nodev,nosuid,noexec" && mount_options_change_made=0
-    fi
-done
-
-# Remount all filesystems with new options if any change is made.
-if [ $mount_options_change_made -eq 0 ]; then
-    echo -e "\n${BOLD_CYAN}Enabling mount point hardening...${NO_COLOR}"
-    sudo mount -a
-fi
-
 # ! USB PORT PROTECTION SECTION.
 # Initialize a flag indicating if a USB port protection change has been made.
 usb_port_protection_change_made=1
@@ -388,6 +362,32 @@ fi
 # TODO: Implement Secure Boot process.
 # TODO: Implement Pluggable Authentication Modules (PAM) and U2F/FIDO2 authenticator choice.
 # TODO: Implement Mandatory Access Control via AppArmor and its policies/profiles.
+
+# ! MOUNTING OPTIONS SECTION.
+# Initialize a flag indicating if a mount options change has been made.
+mount_options_change_made=1
+
+# To each function execution proceed to change the  && mount_options_change_made flag to 0 (true), only if the mount point option changed (function returned 0 (true)).
+# Add nodev, noexec, and nosuid options to /boot and /boot/efi.
+add_mount_options "/boot" "nodev,nosuid,noexec" && mount_options_change_made=0
+add_mount_options "/boot/efi" "nodev,nosuid,noexec" && mount_options_change_made=0
+
+# Add nodev and nosuid options to /home and /root.
+add_mount_options "/home" "nodev,nosuid" && mount_options_change_made=0
+add_mount_options "/root" "nodev,nosuid" && mount_options_change_made=0
+
+# Add nodev, noexec, and nosuid options to directories under /var excluding /var/tmp.
+for dir in /var/*; do
+    if [[ $dir != "/var/tmp" ]]; then
+        add_mount_options "$dir" "nodev,nosuid,noexec" && mount_options_change_made=0
+    fi
+done
+
+# Remount all filesystems with new options if any change is made.
+if [ $mount_options_change_made -eq 0 ]; then
+    echo -e "\n${BOLD_CYAN}Enabling mount point hardening...${NO_COLOR}"
+    sudo mount -a
+fi
 
 # ! Set owner User ID SECTION.
 # Disabling SUID
