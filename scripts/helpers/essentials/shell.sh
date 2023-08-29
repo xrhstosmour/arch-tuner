@@ -6,10 +6,11 @@ trap "exit" INT
 # Terminate script on error.
 set -e
 
-# Import functions.
+# Import functions and constant variables.
 source ../functions.sh
+source ../../core/constants.sh
 
-# Constant variable for changing and configuring shell.
+# Constant variables for changing and configuring shell.
 FISH_SHELL="fish"
 FISH_BINARY_DIRECTORY="/usr/bin/fish"
 FISH_CONFIGURATION_DIRECTORY="~/.config/fish"
