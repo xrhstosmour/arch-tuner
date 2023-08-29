@@ -3,6 +3,27 @@
 # Import constant variables.
 source ../core/constants.sh
 
+# Function to log an info message.
+# log_info "Info message to log"
+log_info() {
+    info="$1"
+    echo -e "\n${BOLD_CYAN}""$info""${NO_COLOR}"
+}
+
+# Function to log a warning message.
+# log_warning "Warning message to log"
+log_warning() {
+    warning="$1"
+    echo -e "\n${BOLD_YELLOW}""$warning""${NO_COLOR}"
+}
+
+# Function to log an error message.
+# log_error "Warning message to log"
+log_error() {
+    error="$1"
+    echo -e "\n${BOLD_RED}""$error""${NO_COLOR}"
+}
+
 # Function to check if a line exists in a file and add it if it does not.
 # append_line_to_file "/file/path/with.extension" "Line To Append" "Message to print if the line is appended."
 append_line_to_file() {
