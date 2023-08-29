@@ -35,7 +35,7 @@ append_line_to_file() {
 
         # Print message if it exists.
         if [ -n "$message" ]; then
-            echo -e "\n${BOLD_CYAN}""$message""${NO_COLOR}"
+            log_info "$message"
         fi
 
         # Append line to file.
@@ -58,7 +58,7 @@ add_mount_options() {
     # Check if the options are already present and if not add them.
     if ! grep -q " $mount_point .*defaults,.*$options" /etc/fstab; then
         if grep -q " $mount_point " /etc/fstab; then
-            echo -e "\n${BOLD_CYAN}Adding options $options to mount point $mount_point...${NO_COLOR}"
+            log_info "Adding options $options to mount point $mount_point..."
             sudo sed -i "s|\($mount_point .*\) defaults |\1 defaults,$options |" /etc/fstab
 
             # Return 0 (true) to indicate that a change was made.
@@ -70,6 +70,95 @@ add_mount_options() {
     return 1
 }
 
+# Function to trim a string.
+# trim_string "string_to_trim"
+trim_string() {
+    echo "$1" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+}
+
+# Function to check if there is at least one missing package.
+# The file should contain one package per line.
+# The variable should contain packages separated by spaces.
+# are_packages_installed "path/to/file.txt" "package_manager"
+# are_packages_installed "$PACKAGES_TO_INSTALL" "package_manager"
+are_packages_installed() {
+    local input="$1"
+    local package_manager="$2"
+    local package_not_found=0
+
+    # Determine the installation command based on the chosen package manager.
+    case "$package_manager" in
+    "$AUR_PACKAGE_MANAGER")
+        local query_command="$AUR_PACKAGE_MANAGER -Qs"
+        ;;
+    "$ARCH_PACKAGE_MANAGER")
+        local query_command="$ARCH_PACKAGE_MANAGER -Qs"
+        ;;
+    *)
+        log_error "Unsupported package manager: $package_manager"
+        return 1
+        ;;
+    esac
+
+    # Check if the argument is a file.
+    if [ -f "$input" ]; then
+        # Read packages from file, each package separated by a new line.
+        mapfile -t packages <"$input"
+    else
+        # Read packages from a space separated string.
+        IFS=' ' read -ra packages <<<"$input"
+    fi
+
+    # Loop through the packages and check if they are installed.
+    for package in "${packages[@]}"; do
+
+        # Trim leading and trailing whitespace and skip if it's a comment or empty.
+        package=$(echo "$package" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+        if [[ "$package" == \#* ]] || [[ -z "$package" ]]; then
+            continue
+        fi
+
+        # Check if the package is already installed.
+        if ! $query_command "$package" >/dev/null 2>&1; then
+            package_not_found=1
+        fi
+    done
+
+    # Return 0 (true) if at least one package is missing.
+    if [ $package_not_found -eq 1 ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Function to install a package if it is not already installed.
+# process_package "package" "install_command" "message"
+process_package() {
+    local package="$(trim_string "$1")"
+    local install_command="$2"
+    local message="$4"
+
+    # Skip if it's a comment or empty.
+    [[ "$package" == \#* ]] || [[ -z "$package" ]] && return
+
+    # Check if the package is already installed.
+    if are_packages_installed "$package" "$manager"; then
+
+        # Print message if it is valid.
+        if [ -n "$message" ]; then
+            log_info "$message"
+        else
+            log_info "Installing '$package'..."
+        fi
+
+        # Install the package.
+        $install_command "$package"
+    else
+        log_warning "Package '$package' is already installed!"
+    fi
+}
+
 # Function to install packages from file or variable choosing the appropriate package manager.
 # The file should contain one package per line.
 # The variable should contain packages separated by spaces.
@@ -79,59 +168,31 @@ install_packages() {
     local input="$1"
     local manager="$2"
     local message="$3"
+    local install_command=""
 
     # Determine the installation command based on the chosen package manager.
     case "$manager" in
-    paru)
-        local install_command="paru -S --noconfirm --needed"
-        local query_command="paru -Qs"
+    "$AUR_PACKAGE_MANAGER")
+        install_command="$AUR_PACKAGE_MANAGER -S --noconfirm --needed"
         ;;
-    pacman)
-        local install_command="sudo pacman -S --noconfirm --needed"
-        local query_command="pacman -Qs"
+    "$ARCH_PACKAGE_MANAGER")
+        install_command="sudo $ARCH_PACKAGE_MANAGER -S --noconfirm --needed"
         ;;
     *)
-        echo "Unsupported package manager: $manager"
+        log_error "Unsupported package manager: $manager"
         return 1
         ;;
     esac
 
-    # A helper function to process and install a package.
-    process_package() {
-        local package="$1"
-
-        # Trim leading and trailing whitespace and skip if it's a comment or empty.
-        package=$(echo "$package" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-        if [[ "$package" == \#* ]] || [[ -z "$package" ]]; then
-            return
-        fi
-
-        # Check if the package is already installed
-        if ! $query_command "$package" >/dev/null 2>&1; then
-
-            # Print message if it exists.
-            if [ -n "$message" ]; then
-                echo -e "\n${BOLD_CYAN}""$message""${NO_COLOR}"
-            else
-                echo -e "\n${BOLD_CYAN}Installing '$package'...${NO_COLOR}"
-            fi
-
-            # Install the package.
-            $install_command "$package"
-        else
-            echo -e "\n${BOLD_CYAN}Package '$package' is already installed!${NO_COLOR}"
-        fi
-    }
-
     # Determine if the input is a file or variable and act accordingly.
     if [[ -r "$input" ]]; then
         while IFS= read -r package; do
-            process_package "$package"
+            process_package "$package" "$install_command" "$message"
         done <"$input"
     else
         IFS=' ' read -ra packages_array <<<"$input"
         for package in "${packages_array[@]}"; do
-            process_package "$package"
+            process_package "$package" "$install_command" "$message"
         done
     fi
 }
