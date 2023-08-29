@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Import constant variables.
-source ./constants.sh
+source ../core/constants.sh
 
 # Function to check if a line exists in a file and add it if it does not.
 # append_line_to_file "/file/path/with.extension" "Line To Append" "Message to print if the line is appended."
@@ -97,6 +97,8 @@ install_packages() {
 
             # Install the package.
             $install_command "$package"
+        else
+            echo -e "\n${BOLD_CYAN}Package '$package' is already installed!${NO_COLOR}"
         fi
     }
 
