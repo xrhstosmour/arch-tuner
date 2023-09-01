@@ -7,13 +7,13 @@ trap "exit" INT
 set -e
 
 # Constant variable of the scripts' working directory to use for relative paths.
-SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+TOOLS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions variables.
-source "$SCRIPT_DIRECTORY/../functions.sh"
+source "$TOOLS_SCRIPT_DIRECTORY/../functions.sh"
 
 # Constant variable for the file path containing the development tools to install.
-DEVELOPMENT_TOOLS="$SCRIPT_DIRECTORY/../../packages/development.txt"
+DEVELOPMENT_TOOLS="$TOOLS_SCRIPT_DIRECTORY/../../packages/development.txt"
 
 # Check if at least one development package is not installed.
 if ! are_packages_installed "$DEVELOPMENT_TOOLS" "$AUR_PACKAGE_MANAGER"; then

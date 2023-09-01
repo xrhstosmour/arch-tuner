@@ -7,13 +7,13 @@ trap "exit" INT
 set -e
 
 # Constant variable of the scripts' working directory to use for relative paths.
-SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+PROGRAMMING_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$SCRIPT_DIRECTORY/../functions.sh"
+source "$PROGRAMMING_SCRIPT_DIRECTORY/../functions.sh"
 
 # Constant variable for the file path containing the programming languages to install.
-PROGRAMMING_LANGUAGES="$SCRIPT_DIRECTORY/../../packages/programming.txt"
+PROGRAMMING_LANGUAGES="$PROGRAMMING_SCRIPT_DIRECTORY/../../packages/programming.txt"
 
 # Check if at least one programming language package is not installed.
 if ! are_packages_installed "$PROGRAMMING_LANGUAGES" "$AUR_PACKAGE_MANAGER"; then

@@ -7,13 +7,13 @@ trap "exit" INT
 set -e
 
 # Constant variable of the scripts' working directory to use for relative paths.
-SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+DESKTOP_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$SCRIPT_DIRECTORY/../helpers/functions.sh"
+source "$DESKTOP_SCRIPT_DIRECTORY/../helpers/functions.sh"
 
 # Constant variable for the file path containing the desktop applications to install.
-DESKTOP_PACKAGES="$SCRIPT_DIRECTORY/../packages/desktop.txt"
+DESKTOP_PACKAGES="$DESKTOP_SCRIPT_DIRECTORY/../packages/desktop.txt"
 
 # Check if at least one desktop package is not installed.
 if ! are_packages_installed "$DESKTOP_PACKAGES" "$AUR_PACKAGE_MANAGER"; then
