@@ -7,10 +7,10 @@ trap "exit" INT
 set -e
 
 # Constant variable of the scripts' working directory to use for relative paths.
-SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+TERMINAL_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$SCRIPT_DIRECTORY/../functions.sh"
+source "$TERMINAL_SCRIPT_DIRECTORY/../functions.sh"
 
 # Constant variable for the terminal tools to install.
 TERMINAL_TOOLS="bat exa rm-improved xcp eva zoxide fd sd xh topgrade"

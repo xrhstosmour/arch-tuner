@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Constant variable of the scripts' working directory to use for relative paths.
-SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+FUNCTIONS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import constant variables.
-source "$SCRIPT_DIRECTORY/../core/constants.sh"
+source "$FUNCTIONS_SCRIPT_DIRECTORY/../core/constants.sh"
 
 # Function to log an info message.
 # log_info "Info message to log"

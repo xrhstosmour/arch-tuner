@@ -7,10 +7,10 @@ trap "exit" INT
 set -e
 
 # Constant variable of the scripts' working directory to use for relative paths.
-SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+FONTS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$SCRIPT_DIRECTORY/../functions.sh"
+source "$FONTS_SCRIPT_DIRECTORY/../functions.sh"
 
 # Constant variable for the fonts to install.
 FONTS="ttf-firacode-nerd"

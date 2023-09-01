@@ -7,15 +7,15 @@ trap "exit" INT
 set -e
 
 # Constant variable of the scripts' working directory to use for relative paths.
-SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+PROMPT_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$SCRIPT_DIRECTORY/../functions.sh"
+source "$PROMPT_SCRIPT_DIRECTORY/../functions.sh"
 
 # Constant variables for changing and configuring shell.
 STARSHIP_DIRECTORY="$HOME/.config"
 STARSHIP_CONFIGURATION="$HOME/.config/starship.toml"
-STARSHIP_CONFIGURATION_TO_PASS="$SCRIPT_DIRECTORY/../../configurations/prompt/configuration.toml"
+STARSHIP_CONFIGURATION_TO_PASS="$PROMPT_SCRIPT_DIRECTORY/../../configurations/prompt/configuration.toml"
 
 # Installing prompt.
 install_packages "starship" "$AUR_PACKAGE_MANAGER" "Installing prompt..."

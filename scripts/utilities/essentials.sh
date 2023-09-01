@@ -7,10 +7,10 @@ trap "exit" INT
 set -e
 
 # Constant variable of the scripts' working directory to use for relative paths.
-SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+ESSENTIALS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$SCRIPT_DIRECTORY/../helpers/functions.sh"
+source "$ESSENTIALS_SCRIPT_DIRECTORY/../helpers/functions.sh"
 
 # Update system.
 log_info "Updating system..."
@@ -28,33 +28,33 @@ fi
 
 # Give execution permission to all needed scripts.
 log_info "Giving execution permission to all essential scripts..."
-chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/aur.sh
-chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/information.sh
-chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
-chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/terminal.sh
-chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/prompt.sh
-chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/fonts.sh
-chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/shell.sh
+chmod +x $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/aur.sh
+chmod +x $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/information.sh
+chmod +x $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
+chmod +x $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/terminal.sh
+chmod +x $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/prompt.sh
+chmod +x $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/fonts.sh
+chmod +x $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/shell.sh
 
 # Install and configure AUR helper.
-sh $SCRIPT_DIRECTORY/../helpers/essentials/aur.sh
+sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/aur.sh
 
 # Install and configure system information tool.
-sh $SCRIPT_DIRECTORY/../helpers/essentials/information.sh
+sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/information.sh
 
 # Install and configure mirror list manager.
-sh $SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
+sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
 
 # Install terminal tools.
-sh $SCRIPT_DIRECTORY/../helpers/essentials/terminal.sh
+sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/terminal.sh
 
 # Install and configure prompt.
-sh $SCRIPT_DIRECTORY/../helpers/essentials/prompt.sh
+sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/prompt.sh
 
 # Install fonts.
-sh $SCRIPT_DIRECTORY/../helpers/essentials/fonts.sh
+sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/fonts.sh
 
 # Install and configure shell.
-sh $SCRIPT_DIRECTORY/../helpers/essentials/shell.sh
+sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/shell.sh
 
 # TODO: Restart device to apply changes and rerun script.

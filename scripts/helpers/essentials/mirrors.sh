@@ -7,15 +7,15 @@ trap "exit" INT
 set -e
 
 # Constant variable of the scripts' working directory to use for relative paths.
-SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+MIRRORS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$SCRIPT_DIRECTORY/../functions.sh"
+source "$MIRRORS_SCRIPT_DIRECTORY/../functions.sh"
 
 # Constant variables for changing and configuring shell.
 REFLECTOR_DIRECTORY="/etc/xdg/reflector/"
 REFLECTOR_CONFIGURATION="/etc/xdg/reflector/reflector.conf"
-REFLECTOR_CONFIGURATION_TO_PASS="$SCRIPT_DIRECTORY/../../configurations/mirrors/reflector.conf"
+REFLECTOR_CONFIGURATION_TO_PASS="$MIRRORS_SCRIPT_DIRECTORY/../../configurations/mirrors/reflector.conf"
 
 # Installing mirror list manager.
 install_packages "reflector" "$AUR_PACKAGE_MANAGER" "Installing mirror list manager..."
