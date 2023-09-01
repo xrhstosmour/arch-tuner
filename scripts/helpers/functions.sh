@@ -95,7 +95,7 @@ are_packages_installed() {
         local query_command="$ARCH_PACKAGE_MANAGER -Q"
         ;;
     *)
-        log_error "Unsupported package manager: $package_manager"
+        log_error "Unsupported package manager: '$package_manager'"
         return 1
         ;;
     esac
@@ -149,7 +149,7 @@ process_package() {
         if [ -n "$message" ]; then
             log_info "$message"
         else
-            log_info "Installing '$package'..."
+            log_info "Installing '$package' package..."
         fi
 
         # Install the package.
@@ -179,7 +179,7 @@ install_packages() {
         install_command="sudo $ARCH_PACKAGE_MANAGER -S --noconfirm --needed"
         ;;
     *)
-        log_error "Unsupported package manager: $manager"
+        log_error "Unsupported package manager: '$manager'"
         return 1
         ;;
     esac
