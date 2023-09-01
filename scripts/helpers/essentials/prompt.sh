@@ -14,8 +14,8 @@ source "$SCRIPT_DIRECTORY/../functions.sh"
 source "$SCRIPT_DIRECTORY/../../core/constants.sh"
 
 # Constant variables for changing and configuring shell.
-STARSHIP_DIRECTORY="~/.config"
-STARSHIP_CONFIGURATION="~/.config/starship.toml"
+STARSHIP_DIRECTORY="$HOME/.config"
+STARSHIP_CONFIGURATION="$HOME/.config/starship.toml"
 STARSHIP_CONFIGURATION_TO_PASS="$SCRIPT_DIRECTORY/../../configurations/prompt/configuration.toml"
 
 # Installing prompt.
