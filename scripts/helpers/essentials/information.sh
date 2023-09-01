@@ -14,8 +14,8 @@ source "$SCRIPT_DIRECTORY/../functions.sh"
 source "$SCRIPT_DIRECTORY/../../core/constants.sh"
 
 # Constant variables for installing and configuring system information tool.
-NEOFETCH_DIRECTORY="~/.config/neofetch"
-NEOFETCH_CONFIGURATION="~/.config/neofetch/config.conf"
+NEOFETCH_DIRECTORY="$HOME/.config/neofetch"
+NEOFETCH_CONFIGURATION="$HOME/.config/neofetch/config.conf"
 NEOFETCH_CONFIGURATION_TO_PASS="$SCRIPT_DIRECTORY/../../configurations/information/neofetch.conf"
 
 # Installing system information tool package.
