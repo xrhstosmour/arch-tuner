@@ -16,13 +16,13 @@ source "$SCRIPT_DIRECTORY/../../core/constants.sh"
 # Constant variables for installing and configuring system information tool.
 NEOFETCH_DIRECTORY="~/.config/neofetch"
 NEOFETCH_CONFIGURATION="~/.config/neofetch/config.conf"
-NEOFETCH_CONFIGURATION_TO_PASS="../configurations/information/neofetch.conf"
+NEOFETCH_CONFIGURATION_TO_PASS="$SCRIPT_DIRECTORY/../../configurations/information/neofetch.conf"
 
 # Installing system information tool package.
 install_packages "neofetch" "$AUR_PACKAGE_MANAGER" "Installing system information tool..."
 
 # Configuring system information tool.
 if [ ! -f "$NEOFETCH_CONFIGURATION" ] || ! diff "$NEOFETCH_CONFIGURATION_TO_PASS" "$NEOFETCH_CONFIGURATION" &>/dev/null; then
-    echo -e "\n${BOLD_CYAN}Configuring system information tool...${NO_COLOR}"
+    log_info "Configuring system information tool..."
     mkdir -p "$NEOFETCH_DIRECTORY" && cp -f "$NEOFETCH_CONFIGURATION_TO_PASS" "$NEOFETCH_CONFIGURATION"
 fi

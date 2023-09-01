@@ -16,13 +16,13 @@ source "$SCRIPT_DIRECTORY/../../core/constants.sh"
 # Constant variables for changing and configuring shell.
 STARSHIP_DIRECTORY="~/.config"
 STARSHIP_CONFIGURATION="~/.config/starship.toml"
-STARSHIP_CONFIGURATION_TO_PASS="../../configurations/prompt/configuration.toml"
+STARSHIP_CONFIGURATION_TO_PASS="$SCRIPT_DIRECTORY/../../configurations/prompt/configuration.toml"
 
 # Installing prompt.
 install_packages "starship" "$AUR_PACKAGE_MANAGER" "Installing prompt..."
 
 # Configuring prompt.
 if [ ! -f "$STARSHIP_CONFIGURATION" ] || ! diff "$STARSHIP_CONFIGURATION_TO_PASS" "$STARSHIP_CONFIGURATION" &>/dev/null; then
-    echo -e "\n${BOLD_CYAN}Configuring prompt...${NO_COLOR}"
+    log_info "Configuring prompt..."
     mkdir -p "$STARSHIP_DIRECTORY" && cp -f "$STARSHIP_CONFIGURATION_TO_PASS" "$STARSHIP_CONFIGURATION"
 fi

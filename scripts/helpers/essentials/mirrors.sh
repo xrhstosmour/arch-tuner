@@ -16,14 +16,14 @@ source "$SCRIPT_DIRECTORY/../../core/constants.sh"
 # Constant variables for changing and configuring shell.
 REFLECTOR_DIRECTORY="/etc/xdg/reflector/"
 REFLECTOR_CONFIGURATION="/etc/xdg/reflector/reflector.conf"
-REFLECTOR_CONFIGURATION_TO_PASS="../../configurations/mirrors/reflector.conf"
+REFLECTOR_CONFIGURATION_TO_PASS="$SCRIPT_DIRECTORY/../../configurations/mirrors/reflector.conf"
 
 # Installing mirror list manager.
 install_packages "reflector" "$AUR_PACKAGE_MANAGER" "Installing mirror list manager..."
 
 # Copy the configuration file only if it is not the same as the current one.
 if [ ! -f "$REFLECTOR_CONFIGURATION" ] || ! diff "$REFLECTOR_CONFIGURATION_TO_PASS" "$REFLECTOR_CONFIGURATION" &>/dev/null; then
-    echo -e "\n${BOLD_CYAN}Configuring mirror list...${NO_COLOR}"
+    log_info "Configuring mirror list..."
     sudo mkdir -p "$REFLECTOR_DIRECTORY" && sudo cp -f "$REFLECTOR_CONFIGURATION_TO_PASS" "$REFLECTOR_CONFIGURATION"
 
     # Read the configuration file into a string, excluding comment lines.
