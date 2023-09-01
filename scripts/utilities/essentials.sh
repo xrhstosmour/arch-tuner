@@ -27,7 +27,7 @@ if ! are_packages_installed "$ESSENTIAL_PACKAGES" "$ARCH_PACKAGE_MANAGER"; then
 fi
 
 # Give execution permission to all needed scripts.
-log_info "Giving execution permission to all scripts..."
+log_info "Giving execution permission to all essential scripts..."
 chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/aur.sh
 chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/information.sh
 chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
@@ -56,3 +56,5 @@ sh $SCRIPT_DIRECTORY/../helpers/essentials/fonts.sh
 
 # Install and configure shell.
 sh $SCRIPT_DIRECTORY/../helpers/essentials/shell.sh
+
+# TODO: Restart device to apply changes and rerun script.
