@@ -16,7 +16,7 @@ source "$SCRIPT_DIRECTORY/../../core/constants.sh"
 # Constant variables for changing and configuring shell.
 REFLECTOR_DIRECTORY="/etc/xdg/reflector/"
 REFLECTOR_CONFIGURATION="/etc/xdg/reflector/reflector.conf"
-REFLECTOR_CONFIGURATION_TO_PASS="$SCRIPT_DIRECTORY/../../configurations/mirrors/reflector.conf"
+REFLECTOR_CONFIGURATION_TO_PASS="../../configurations/mirrors/reflector.conf"
 
 # Installing mirror list manager.
 install_packages "reflector" "$AUR_PACKAGE_MANAGER" "Installing mirror list manager..."
