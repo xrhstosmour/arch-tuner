@@ -89,10 +89,10 @@ are_packages_installed() {
     # Determine the installation command based on the chosen package manager.
     case "$package_manager" in
     "$AUR_PACKAGE_MANAGER")
-        local query_command="$AUR_PACKAGE_MANAGER -Qs"
+        local query_command="$AUR_PACKAGE_MANAGER -Q"
         ;;
     "$ARCH_PACKAGE_MANAGER")
-        local query_command="$ARCH_PACKAGE_MANAGER -Qs"
+        local query_command="$ARCH_PACKAGE_MANAGER -Q"
         ;;
     *)
         log_error "Unsupported package manager: $package_manager"
