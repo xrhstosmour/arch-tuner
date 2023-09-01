@@ -24,7 +24,7 @@ FISH_ALIASES="$HOME/.config/fish/conf.d/abbr.fish"
 FISH_ALIASES_TO_PASS="$SCRIPT_DIRECTORY/../../configurations/shell/aliases.fish"
 
 # Installing shell package.
-install_packages "$FISH_SHELL" "$AUR_PACKAGE_MANAGER" ""Installing shell...""
+install_packages "$FISH_SHELL" "$AUR_PACKAGE_MANAGER" "Installing shell..."
 
 # Configuring shell.
 if [ ! -f "$FISH_CONFIGURATION" ] || ! diff "$FISH_CONFIGURATION_TO_PASS" "$FISH_CONFIGURATION" &>/dev/null; then
