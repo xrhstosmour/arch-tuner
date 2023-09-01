@@ -14,7 +14,7 @@ source ../../core/constants.sh
 TERMINAL_TOOLS="bat exa rm-improved xcp eva zoxide fd sd xh topgrade"
 
 # Check if at least one terminal tool is not installed.
-if are_packages_installed "$TERMINAL_TOOLS" "$AUR_PACKAGE_MANAGER"; then
+if ! are_packages_installed "$TERMINAL_TOOLS" "$AUR_PACKAGE_MANAGER"; then
     log_info "Installing terminal tools..."
 
     # Installing terminal tools.

@@ -14,7 +14,7 @@ source ../../core/constants.sh
 FONTS="ttf-firacode-nerd"
 
 # Check if at least one font is not installed.
-if are_packages_installed "$FONTS" "$AUR_PACKAGE_MANAGER"; then
+if ! are_packages_installed "$FONTS" "$AUR_PACKAGE_MANAGER"; then
     log_info "Installing fonts..."
 
     # Installing fonts.

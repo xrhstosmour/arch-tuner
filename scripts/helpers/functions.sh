@@ -76,7 +76,7 @@ trim_string() {
     echo "$1" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
 }
 
-# Function to check if there is at least one missing package.
+# Function to check if all packages are installed.
 # The file should contain one package per line.
 # The variable should contain packages separated by spaces.
 # are_packages_installed "path/to/file.txt" "package_manager"
@@ -124,11 +124,11 @@ are_packages_installed() {
         fi
     done
 
-    # Return 0 (true) if at least one package is missing.
+    # Return 1 (false) if at least one package is missing.
     if [ $package_not_found -eq 1 ]; then
-        return 0
-    else
         return 1
+    else
+        return 0
     fi
 }
 
@@ -142,8 +142,8 @@ process_package() {
     # Skip if it's a comment or empty.
     [[ "$package" == \#* ]] || [[ -z "$package" ]] && return
 
-    # Check if the package is already installed.
-    if are_packages_installed "$package" "$manager"; then
+    # Install package if it is not already installed.
+    if ! are_packages_installed "$package" "$manager"; then
 
         # Print message if it is valid.
         if [ -n "$message" ]; then
