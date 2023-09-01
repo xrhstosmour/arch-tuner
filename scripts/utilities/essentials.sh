@@ -6,8 +6,11 @@ trap "exit" INT
 # Terminate script on error.
 set -e
 
+# Constant variable of the scripts' working directory to use for relative paths.
+SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+
 # Import functions.
-source ../helpers/functions.sh
+source "$SCRIPT_DIRECTORY/../helpers/functions.sh"
 
 # Update system.
 log_info "Updating system..."
@@ -25,31 +28,31 @@ fi
 
 # Give execution permission to all needed scripts.
 log_info "Giving execution permission to all scripts..."
-chmod +x ../helpers/essentials/aur.sh
-chmod +x ../helpers/essentials/information.sh
-chmod +x ../helpers/essentials/mirrors.sh
-chmod +x ../helpers/essentials/terminal.sh
-chmod +x ../helpers/essentials/prompt.sh
-chmod +x ../helpers/essentials/fonts.sh
-chmod +x ../helpers/essentials/shell.sh
+chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/aur.sh
+chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/information.sh
+chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
+chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/terminal.sh
+chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/prompt.sh
+chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/fonts.sh
+chmod +x $SCRIPT_DIRECTORY/../helpers/essentials/shell.sh
 
 # Install and configure AUR helper.
-../helpers/essentials/aur.sh
+sh $SCRIPT_DIRECTORY/../helpers/essentials/aur.sh
 
 # Install and configure system information tool.
-../helpers/essentials/information.sh
+sh $SCRIPT_DIRECTORY/../helpers/essentials/information.sh
 
 # Install and configure mirror list manager.
-../helpers/essentials/mirrors.sh
+sh $SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
 
 # Install terminal tools.
-../helpers/essentials/terminal.sh
+sh $SCRIPT_DIRECTORY/../helpers/essentials/terminal.sh
 
 # Install and configure prompt.
-../helpers/essentials/prompt.sh
+sh $SCRIPT_DIRECTORY/../helpers/essentials/prompt.sh
 
 # Install fonts.
-../helpers/essentials/fonts.sh
+sh $SCRIPT_DIRECTORY/../helpers/essentials/fonts.sh
 
 # Install and configure shell.
-../helpers/essentials/shell.sh
+sh $SCRIPT_DIRECTORY/../helpers/essentials/shell.sh

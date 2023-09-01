@@ -6,14 +6,17 @@ trap "exit" INT
 # Terminate script on error.
 set -e
 
+# Constant variable of the scripts' working directory to use for relative paths.
+SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+
 # Import functions and constant variables.
-source ../functions.sh
-source ../../core/constants.sh
+source "$SCRIPT_DIRECTORY/../functions.sh"
+source "$SCRIPT_DIRECTORY/../../core/constants.sh"
 
 # Constant variables for installing and configuring system information tool.
 NEOFETCH_DIRECTORY="~/.config/neofetch"
 NEOFETCH_CONFIGURATION="~/.config/neofetch/config.conf"
-NEOFETCH_CONFIGURATION_TO_PASS="../configurations/information/neofetch.conf"
+NEOFETCH_CONFIGURATION_TO_PASS="$SCRIPT_DIRECTORY/../configurations/information/neofetch.conf"
 
 # Installing system information tool package.
 install_packages "neofetch" "$AUR_PACKAGE_MANAGER" "Installing system information tool..."

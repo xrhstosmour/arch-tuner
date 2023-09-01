@@ -6,9 +6,12 @@ trap "exit" INT
 # Terminate script on error.
 set -e
 
+# Constant variable of the scripts' working directory to use for relative paths.
+SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+
 # Import functions and constant variables.
-source ../functions.sh
-source ../../core/constants.sh
+source "$SCRIPT_DIRECTORY/../functions.sh"
+source "$SCRIPT_DIRECTORY/../../core/constants.sh"
 
 # Constant variable for the terminal tools to install.
 TERMINAL_TOOLS="bat exa rm-improved xcp eva zoxide fd sd xh topgrade"

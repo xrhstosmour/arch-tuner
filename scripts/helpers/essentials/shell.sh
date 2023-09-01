@@ -6,9 +6,12 @@ trap "exit" INT
 # Terminate script on error.
 set -e
 
+# Constant variable of the scripts' working directory to use for relative paths.
+SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+
 # Import functions and constant variables.
-source ../functions.sh
-source ../../core/constants.sh
+source "$SCRIPT_DIRECTORY/../functions.sh"
+source "$SCRIPT_DIRECTORY/../../core/constants.sh"
 
 # Constant variables for changing and configuring shell.
 FISH_SHELL="fish"
@@ -16,9 +19,9 @@ FISH_BINARY_DIRECTORY="/usr/bin/fish"
 FISH_CONFIGURATION_DIRECTORY="~/.config/fish"
 FISH_ALIASES_DIRECTORY="~/.config/fish/conf.d/"
 FISH_CONFIGURATION="~/.config/fish/config.fish"
-FISH_CONFIGURATION_TO_PASS="../../configurations/shell/configuration.fish"
+FISH_CONFIGURATION_TO_PASS="$SCRIPT_DIRECTORY/../../configurations/shell/configuration.fish"
 FISH_ALIASES="~/.config/fish/conf.d/abbr.fish"
-FISH_ALIASES_TO_PASS="../../configurations/shell/aliases.fish"
+FISH_ALIASES_TO_PASS="$SCRIPT_DIRECTORY/../../configurations/shell/aliases.fish"
 
 # Installing shell package.
 install_packages "$FISH_SHELL" "$AUR_PACKAGE_MANAGER" ""Installing shell...""
