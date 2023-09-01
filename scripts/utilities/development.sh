@@ -9,7 +9,7 @@ set -e
 # Constant variable of the scripts' working directory to use for relative paths.
 SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-# Import functions and constant variables.
+# Import functions.
 source "$SCRIPT_DIRECTORY/../helpers/functions.sh"
 
 # Give execution permission to all needed scripts.

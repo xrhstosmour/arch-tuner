@@ -9,9 +9,8 @@ set -e
 # Constant variable of the scripts' working directory to use for relative paths.
 SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-# Import functions and constant variables.
+# Import functions.
 source "$SCRIPT_DIRECTORY/../helpers/functions.sh"
-source "$SCRIPT_DIRECTORY/../core/constants.sh"
 
 # Constant variable for the file path containing the desktop applications to install.
 DESKTOP_PACKAGES="$SCRIPT_DIRECTORY/../packages/desktop.txt"
