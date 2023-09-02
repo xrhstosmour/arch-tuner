@@ -219,8 +219,7 @@ compare_files() {
 # update_system
 update_system() {
 
-    # Update package database.
-    log_info "Synchronizing package database..."
+    # Update package databases.
     sudo pacman -Sy
 
     # Check if any package is upgradable.
