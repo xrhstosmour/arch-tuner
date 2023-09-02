@@ -36,8 +36,8 @@ fi
 # Enabling antivirus services.
 enable_service "clamav-freshclam" "Enabling antivirus update manager..."
 start_service "clamav-freshclam" "Starting antivirus update manager..."
-enable_service "clamd" "Enabling antivirus service..."
-start_service "clamd" "Starting antivirus service..."
+enable_service "clamav-daemon" "Enabling antivirus service..."
+start_service "clamav-daemon" "Starting antivirus service..."
 
 # Initialize a flag indicating if a antivirus change has been made.
 real_time_scanning_changes_made=1
