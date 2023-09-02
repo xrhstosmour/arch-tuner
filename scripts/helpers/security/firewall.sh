@@ -21,10 +21,10 @@ install_packages "iptables" "$AUR_PACKAGE_MANAGER" "Installing needed firewall p
 # Install firewall.
 install_packages "ufw" "$AUR_PACKAGE_MANAGER" "Installing firewall..."
 
-# Setting firewall.
+# Set firewall.
 start_service "ufw" "Starting firewall..."
 
-# Enabling firewall.
+# Enable firewall.
 enable_service "ufw" "Enabling firewall..."
 
 # Check if default deny rules are set and if not set them.

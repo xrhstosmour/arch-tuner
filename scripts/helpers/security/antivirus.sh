@@ -33,7 +33,7 @@ if [ "$database_timestamp" -lt "$current_timestamp" ]; then
     sudo freshclam
 fi
 
-# Enabling antivirus services.
+# Enable antivirus services.
 start_service "clamav-freshclam" "Starting antivirus update manager..."
 enable_service "clamav-freshclam" "Enabling antivirus update manager..."
 start_service "clamav-daemon" "Starting antivirus service..."
@@ -82,7 +82,7 @@ append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXC
 append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /var/run" "Excluding /var/run from real-time scanning..." && real_time_scanning_changes_made=0
 append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /var/lock" "Excluding /var/lock from real-time scanning..." && real_time_scanning_changes_made=0
 
-# Enabling real-time scanning.
+# Enable real-time scanning.
 if [ $real_time_scanning_changes_made -eq 0 ]; then
     stop_process "clamonacc" "Stopping antivirus real-time scanning..."
 fi

@@ -59,13 +59,13 @@ if ! grep -q '^Color' "$PACMAN_CONFIGURATION" || ! grep -qxF 'SkipReview' "$PARU
     log_info "Configuring $AUR_PACKAGE_MANAGER AUR helper..."
 fi
 
-# Enabling colors in terminal.
+# Enable colors in terminal.
 if ! grep -q '^Color' $PACMAN_CONFIGURATION; then
     log_info "Enabling colors in terminal..."
     sudo sed -i '/^#.*Color/s/^#//' $PACMAN_CONFIGURATION
 fi
 
-# Skipping review messages.
+# Skip review messages.
 if ! grep -qxF 'SkipReview' $PARU_CONFIGURATION; then
     log_info "Skipping review messages..."
     echo 'SkipReview' | sudo tee -a $PARU_CONFIGURATION >/dev/null
