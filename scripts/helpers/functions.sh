@@ -280,3 +280,35 @@ give_execution_permission_to_scripts() {
         fi
     done
 }
+
+# Function to enable a service.
+# enable_service "service_name" "message"
+enable_service() {
+    local service_name="$1"
+    local message="${2:-"Enabling $service_name service..."}"
+
+    # Check if the service is enabled
+    if ! systemctl is-enabled --quiet "$service_name"; then
+        log_info "$message"
+        sudo systemctl enable "$service_name"
+
+        # Return 0 (true) to indicate that the service was enabled.
+        return 0
+    else
+        # Return 1 (false) to indicate that the service was already enabled.
+        return 1
+    fi
+}
+
+# Function to start a service.
+# start_service "service_name" "message"
+start_service() {
+    local service_name="$1"
+    local message="${2:-"Starting $service_name service..."}"
+
+    # Check if the service is active
+    if ! systemctl is-active --quiet "$service_name"; then
+        log_info "$message"
+        sudo systemctl start "$service_name"
+    fi
+}

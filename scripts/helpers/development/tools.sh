@@ -26,6 +26,10 @@ fi
 # ! DOCKER SECTION.
 # Configuring Docker.
 if grep -q "^docker$" "$DEVELOPMENT_TOOLS"; then
-    log_info "Enabling and starting Docker service..."
-    sudo systemctl enable docker && sudo systemctl start docker
+
+    # Enable Docker service.
+    enable_service "docker"
+
+    # Start Docker service.
+    start_service "docker"
 fi
