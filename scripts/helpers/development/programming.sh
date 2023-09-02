@@ -26,6 +26,13 @@ fi
 # ! PYTHON SECTION.
 # Configuring Python poetry.
 if grep -q "^python-poetry$" "$PROGRAMMING_LANGUAGES"; then
-    log_info "Configuring Poetry to create virtual environments in the project directory..."
-    poetry config virtualenvs.in-project true
+
+    # Query the current setting for virtualenvs.in-project.
+    current_setting=$(poetry config virtualenvs.in-project)
+
+    # Check if it's already set to true.
+    if [[ "$current_setting" != "true" ]]; then
+        log_info "Configuring Poetry to create virtual environments in the project directory..."
+        poetry config virtualenvs.in-project true
+    fi
 fi
