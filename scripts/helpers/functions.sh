@@ -240,3 +240,18 @@ update_system() {
         sudo pacman -Su --noconfirm --needed
     fi
 }
+
+# Function to give execution permission to scripts.
+give_execution_permission_to_scripts() {
+
+    # Take the argument as an array.
+    local scripts=("$@")
+
+    # Give execute permission if not already set.
+    for script in "${scripts[@]}"; do
+        if [[ ! -x "$script" ]]; then
+            chmod +x "$script"
+            log_info "Granted execution permission to $script."
+        fi
+    done
+}

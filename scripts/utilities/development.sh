@@ -12,10 +12,14 @@ DEVELOPMENT_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import functions.
 source "$DEVELOPMENT_SCRIPT_DIRECTORY/../helpers/functions.sh"
 
+# Array of development scripts.
+development_scripts=(
+    $DEVELOPMENT_SCRIPT_DIRECTORY/../helpers/development/tools.sh
+    $DEVELOPMENT_SCRIPT_DIRECTORY/../helpers/development/programming.sh
+)
+
 # Give execution permission to all needed scripts.
-log_info "Giving execution permission to all development scripts..."
-chmod +x $DEVELOPMENT_SCRIPT_DIRECTORY/../helpers/development/tools.sh
-chmod +x $DEVELOPMENT_SCRIPT_DIRECTORY/../helpers/development/programming.sh
+give_execution_permission_to_scripts "${development_scripts[@]}"
 
 # Install and configure development tools.
 sh $DEVELOPMENT_SCRIPT_DIRECTORY/../helpers/development/tools.sh

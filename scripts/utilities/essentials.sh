@@ -24,15 +24,19 @@ if ! are_packages_installed "$ESSENTIAL_PACKAGES" "$ARCH_PACKAGE_MANAGER"; then
     install_packages "$ESSENTIAL_PACKAGES" "$ARCH_PACKAGE_MANAGER"
 fi
 
+# Array of essential scripts.
+essential_scripts=(
+    $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/aur.sh
+    $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/information.sh
+    $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
+    $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/terminal.sh
+    $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/prompt.sh
+    $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/fonts.sh
+    $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/shell.sh
+)
+
 # Give execution permission to all needed scripts.
-log_info "Giving execution permission to all essential scripts..."
-chmod +x $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/aur.sh
-chmod +x $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/information.sh
-chmod +x $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
-chmod +x $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/terminal.sh
-chmod +x $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/prompt.sh
-chmod +x $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/fonts.sh
-chmod +x $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/shell.sh
+give_execution_permission_to_scripts "${essential_scripts[@]}"
 
 # Install and configure AUR helper.
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/aur.sh
