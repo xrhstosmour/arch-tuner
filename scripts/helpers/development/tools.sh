@@ -27,9 +27,9 @@ fi
 # Configure Docker.
 if grep -q "^docker$" "$DEVELOPMENT_TOOLS"; then
 
-    # Enable Docker service.
-    enable_service "docker"
-
     # Start Docker service.
     start_service "docker"
+
+    # Enable Docker service.
+    enable_service "docker"
 fi

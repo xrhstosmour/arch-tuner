@@ -21,11 +21,11 @@ install_packages "iptables" "$AUR_PACKAGE_MANAGER" "Installing needed firewall p
 # Install firewall.
 install_packages "ufw" "$AUR_PACKAGE_MANAGER" "Installing firewall..."
 
-# Enabling firewall.
-enable_service "ufw" "Enabling firewall..."
-
 # Setting firewall.
 start_service "ufw" "Starting firewall..."
+
+# Enabling firewall.
+enable_service "ufw" "Enabling firewall..."
 
 # Check if default deny rules are set and if not set them.
 if ! sudo ufw status verbose | grep -q 'Default: deny (incoming), deny (outgoing), deny (routed)'; then

@@ -42,5 +42,5 @@ if [ $enable_reflector_result -eq 0 ]; then
     # The reflector service will show as inactive and run periodically, with the help of the reflector timer.
     start_service "reflector" "Running mirror list auto refresh service.."
 fi
-enable_service "reflector.timer" "Enabling mirror list auto refresh timer service..."
 start_service "reflector.timer" "Starting mirror list auto refresh timer service..."
+enable_service "reflector.timer" "Enabling mirror list auto refresh timer service..."

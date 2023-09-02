@@ -34,10 +34,10 @@ if [ "$database_timestamp" -lt "$current_timestamp" ]; then
 fi
 
 # Enabling antivirus services.
-enable_service "clamav-freshclam" "Enabling antivirus update manager..."
 start_service "clamav-freshclam" "Starting antivirus update manager..."
-enable_service "clamav-daemon" "Enabling antivirus service..."
+enable_service "clamav-freshclam" "Enabling antivirus update manager..."
 start_service "clamav-daemon" "Starting antivirus service..."
+enable_service "clamav-daemon" "Enabling antivirus service..."
 
 # Initialize a flag indicating if a antivirus change has been made.
 real_time_scanning_changes_made=1
