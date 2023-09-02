@@ -346,3 +346,21 @@ stop_process() {
         fi
     fi
 }
+
+# Function to check if a process is running by its name.
+# is_process_running "process_name"
+is_process_running() {
+    local process_name="$1"
+
+    # Find the process IDs of the process name.
+    local process_ids=$(ps aux | grep "$process_name" | grep -v 'grep' | awk '{print $2}')
+
+    # Check if any process IDs were found.
+    if [ -n "$process_ids" ]; then
+        # Return 0 (true) to indicate that the process is running.
+        return 0
+    else
+        # Return 1 (false) to indicate that the process is not running.
+        return 1
+    fi
+}
