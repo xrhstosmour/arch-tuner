@@ -12,6 +12,9 @@ USB_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import functions.
 source "$USB_SCRIPT_DIRECTORY/../functions.sh"
 
+# Constant variable for keeping the USB configuration.
+USB_CONFIGURATION="/etc/usbguard/rules.conf"
+
 # Initialize a flag indicating if a USB port protection change has been made.
 usb_chnages_made=1
 
@@ -28,11 +31,11 @@ enable_service "usbguard" "Enabling USB port protection..."
 # ? 2. Run 'sudo usbguard list-devices'.
 # ? 3. Find the DEVICE_ID of the device you want to allow.
 # ? 4. Run 'sudo usbguard generate-policy --device DEVICE_ID | sudo tee -a /etc/usbguard/rules.conf > /dev/null'.
-if [ ! -s /etc/usbguard/rules.conf ]; then
+if [ ! -s "$USB_CONFIGURATION" ]; then
     log_info "Configuring USB port protection..."
-    sudo usbguard generate-policy | sudo tee /etc/usbguard/rules.conf >/dev/null
-    sudo chmod 0600 /etc/usbguard/rules.conf
-    sudo chown root:root /etc/usbguard/rules.conf
+    sudo usbguard generate-policy | sudo tee "$USB_CONFIGURATION" >/dev/null
+    sudo chmod 0600 "$USB_CONFIGURATION"
+    sudo chown root:root "$USB_CONFIGURATION"
 
     # Set the usb_chnages_made flag to 0 (true).
     usb_chnages_made=0
