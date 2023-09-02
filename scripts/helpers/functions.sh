@@ -317,3 +317,32 @@ stop_service() {
         sudo systemctl stop "$service_name"
     fi
 }
+
+# Function to stop a process.
+# stop_process "process_name" "message"
+stop_process() {
+    local process_name="$1"
+    local message="${2:-"Stopping $process_name process..."}"
+
+    # Find the process IDs of the process name.
+    local process_ids=$(ps aux | grep "$process_name" | grep -v 'grep' | awk '{print $2}')
+
+    # Check if any process IDs were found.
+    if [ -n "$process_ids" ]; then
+        log_info "$message"
+
+        # Loop through each PID and try to gracefully kill it.
+        for process_id in $process_ids; do
+            kill "$process_id"
+            sleep 1 # Give it a second to terminate
+        done
+
+        # Check if any PIDs still exist, then forcefully kill them.
+        remaining_process_ids=$(ps aux | grep "$process_name" | grep -v 'grep' | awk '{print $2}')
+        if [ -n "$remaining_process_ids" ]; then
+            for remaining_process_id in $remaining_process_ids; do
+                kill -9 "$remaining_process_id"
+            done
+        fi
+    fi
+}
