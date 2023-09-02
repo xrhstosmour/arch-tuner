@@ -33,7 +33,7 @@ if ! compare_files "$REFLECTOR_CONFIGURATION" "$REFLECTOR_CONFIGURATION_TO_PASS"
 fi
 
 # Enable and start mirror list service and timer if they are not already active.
-if ! systemctl is-active --quiet reflector; then
+if ! systemctl is-enabled --quiet reflector; then
     log_info "Enabling and starting mirror list auto refresh service..."
     sudo systemctl enable reflector
     sudo systemctl start reflector
