@@ -304,3 +304,16 @@ start_service() {
         sudo systemctl start "$service_name"
     fi
 }
+
+# Function to stop a service.
+# stop_service "service_name" "message"
+stop_service() {
+    local service_name="$1"
+    local message="${2:-"Stoping $service_name service..."}"
+
+    # Check if the service is active
+    if systemctl is-active --quiet "$service_name"; then
+        log_info "$message"
+        sudo systemctl stop "$service_name"
+    fi
+}
