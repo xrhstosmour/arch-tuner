@@ -43,6 +43,4 @@ if [ "$current_shell" != "$FISH_SHELL" ]; then
     log_info "Setting default shell..."
     grep -qxF "$FISH_BINARY_DIRECTORY" /etc/shells || echo "$FISH_BINARY_DIRECTORY" | sudo tee -a /etc/shells >/dev/null
     sudo chsh -s "$FISH_BINARY_DIRECTORY" $USER
-else
-    log_warning "$FISH_SHELL is already the default shell!"
 fi

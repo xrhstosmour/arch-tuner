@@ -19,9 +19,7 @@ PACMAN_CONFIGURATION="/etc/pacman.conf"
 PARU_CONFIGURATION="/etc/paru.conf"
 
 # Install paru AUR helper.
-if command -v "$AUR_PACKAGE_MANAGER" &>/dev/null; then
-    log_warning "$AUR_PACKAGE_MANAGER AUR helper, is already installed!"
-else
+if ! command -v "$AUR_PACKAGE_MANAGER" &>/dev/null; then
 
     # Delete old paru directory, if it exists.
     if [ -d "$PARU_DIRECTORY" ]; then

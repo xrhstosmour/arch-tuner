@@ -157,8 +157,6 @@ process_package() {
 
         # Install the package.
         $install_command "$package"
-    else
-        log_warning "Package '$package' is already installed!"
     fi
 }
 
