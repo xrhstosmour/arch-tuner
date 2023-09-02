@@ -140,7 +140,7 @@ are_packages_installed() {
 process_package() {
     local package="$(trim_string "$1")"
     local install_command="$2"
-    local message="$4"
+    local message="${4:-"Installing '$package' package..."}"
 
     # Skip if it's a comment or empty.
     [[ "$package" == \#* ]] || [[ -z "$package" ]] && return
@@ -148,12 +148,8 @@ process_package() {
     # Install package if it is not already installed.
     if ! are_packages_installed "$package" "$manager"; then
 
-        # Print message if it is valid.
-        if [ -n "$message" ]; then
-            log_info "$message"
-        else
-            log_info "Installing '$package' package..."
-        fi
+        # Print message.
+        log_info "$message"
 
         # Install the package.
         $install_command "$package"
@@ -246,7 +242,7 @@ give_execution_permission_to_scripts() {
     local scripts=("$@")
 
     # Pop the last element from the array and assign it to message.
-    local message="${scripts[-1]}"
+    local message="${scripts[-1]:-"Giving execution permission to needed scripts."}"
 
     # Remove the last element from the array.
     unset 'scripts[${#scripts[@]}-1]'
@@ -266,11 +262,7 @@ give_execution_permission_to_scripts() {
 
     # Log only if at least one script needed permission change.
     if [ "$need_to_log" = true ]; then
-        if [ -z "$message" ]; then
-            log_info "Giving execution permission to scripts."
-        else
-            log_info "$message"
-        fi
+        log_info "$message"
     fi
 
     # Second loop to actually give execute permission if not already set.
