@@ -19,6 +19,6 @@ FONTS="ttf-firacode-nerd"
 if ! are_packages_installed "$FONTS" "$AUR_PACKAGE_MANAGER"; then
     log_info "Installing fonts..."
 
-    # Installing fonts.
+    # Install fonts.
     install_packages "$FONTS" "$AUR_PACKAGE_MANAGER"
 fi

@@ -17,10 +17,10 @@ STARSHIP_DIRECTORY="$HOME/.config"
 STARSHIP_CONFIGURATION="$HOME/.config/starship.toml"
 STARSHIP_CONFIGURATION_TO_PASS="$PROMPT_SCRIPT_DIRECTORY/../../configurations/prompt/configuration.toml"
 
-# Installing prompt.
+# Install prompt.
 install_packages "starship" "$AUR_PACKAGE_MANAGER" "Installing prompt..."
 
-# Configuring prompt.
+# Configure prompt.
 if ! compare_files "$STARSHIP_CONFIGURATION" "$STARSHIP_CONFIGURATION_TO_PASS"; then
     log_info "Configuring prompt..."
     mkdir -p "$STARSHIP_DIRECTORY"

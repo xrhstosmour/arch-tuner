@@ -19,12 +19,12 @@ DEVELOPMENT_TOOLS="$TOOLS_SCRIPT_DIRECTORY/../../packages/development.txt"
 if ! are_packages_installed "$DEVELOPMENT_TOOLS" "$AUR_PACKAGE_MANAGER"; then
     log_info "Installing development tools..."
 
-    # Installing development packages.
+    # Install development packages.
     install_packages "$DEVELOPMENT_TOOLS" "$AUR_PACKAGE_MANAGER"
 fi
 
 # ! DOCKER SECTION.
-# Configuring Docker.
+# Configure Docker.
 if grep -q "^docker$" "$DEVELOPMENT_TOOLS"; then
 
     # Enable Docker service.

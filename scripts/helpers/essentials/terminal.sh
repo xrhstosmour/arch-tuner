@@ -19,6 +19,6 @@ TERMINAL_TOOLS="bat exa rm-improved xcp eva zoxide fd sd xh topgrade"
 if ! are_packages_installed "$TERMINAL_TOOLS" "$AUR_PACKAGE_MANAGER"; then
     log_info "Installing terminal tools..."
 
-    # Installing terminal tools.
+    # Install terminal tools.
     install_packages "$TERMINAL_TOOLS" "$AUR_PACKAGE_MANAGER"
 fi

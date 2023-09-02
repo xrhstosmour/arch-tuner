@@ -19,12 +19,12 @@ PROGRAMMING_LANGUAGES="$PROGRAMMING_SCRIPT_DIRECTORY/../../packages/programming.
 if ! are_packages_installed "$PROGRAMMING_LANGUAGES" "$AUR_PACKAGE_MANAGER"; then
     log_info "Installing programming languages..."
 
-    # Installing programming languages packages.
+    # Install programming languages packages.
     install_packages "$PROGRAMMING_LANGUAGES" "$AUR_PACKAGE_MANAGER"
 fi
 
 # ! PYTHON SECTION.
-# Configuring Python poetry.
+# Configure Python poetry.
 if grep -q "^python-poetry$" "$PROGRAMMING_LANGUAGES"; then
 
     # Query the current setting for virtualenvs.in-project.

@@ -12,7 +12,7 @@ ANTIVIRUS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import functions.
 source "$ANTIVIRUS_SCRIPT_DIRECTORY/../functions.sh"
 
-# Installing antivirus.
+# Install antivirus.
 install_packages "clamav" "$AUR_PACKAGE_MANAGER" "Installing antivirus..."
 
 # Get the date from freshclam --version output.

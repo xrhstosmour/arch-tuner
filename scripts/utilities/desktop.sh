@@ -19,6 +19,6 @@ DESKTOP_PACKAGES="$DESKTOP_SCRIPT_DIRECTORY/../packages/desktop.txt"
 if ! are_packages_installed "$DESKTOP_PACKAGES" "$AUR_PACKAGE_MANAGER"; then
     log_info "Installing desktop applications..."
 
-    # Installing desktop packages.
+    # Install desktop packages.
     install_packages "$DESKTOP_PACKAGES" "$AUR_PACKAGE_MANAGER"
 fi

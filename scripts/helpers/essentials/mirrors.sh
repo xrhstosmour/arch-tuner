@@ -17,7 +17,7 @@ REFLECTOR_DIRECTORY="/etc/xdg/reflector/"
 REFLECTOR_CONFIGURATION="/etc/xdg/reflector/reflector.conf"
 REFLECTOR_CONFIGURATION_TO_PASS="$MIRRORS_SCRIPT_DIRECTORY/../../configurations/mirrors/reflector.conf"
 
-# Installing mirror list manager.
+# Install mirror list manager.
 install_packages "reflector" "$AUR_PACKAGE_MANAGER" "Installing mirror list manager..."
 
 # Copy the configuration file only if it is not the same as the current one.
@@ -37,6 +37,7 @@ fi
 enable_service "reflector" "Enabling mirror list auto refresh service..."
 enable_reflector_result=$?
 if [ $enable_reflector_result -eq 0 ]; then
+
     # Run reflector once to populate the mirror list.
     # The reflector service will show as inactive and run periodically, with the help of the reflector timer.
     start_service "reflector" "Running mirror list auto refresh service.."

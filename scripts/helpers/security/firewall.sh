@@ -15,10 +15,10 @@ source "$FIREWALL_SCRIPT_DIRECTORY/../functions.sh"
 # Initialize a flag indicating if a firewall change has been made.
 firewall_changes_made=1
 
-# Installing needed firewall packages.
+# Install needed firewall packages.
 install_packages "iptables" "$AUR_PACKAGE_MANAGER" "Installing needed firewall packages..."
 
-# Installing firewall.
+# Install firewall.
 install_packages "ufw" "$AUR_PACKAGE_MANAGER" "Installing firewall..."
 
 # Enabling firewall.

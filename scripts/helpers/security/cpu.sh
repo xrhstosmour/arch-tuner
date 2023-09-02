@@ -27,7 +27,7 @@ cpu_manufacturer=$(grep -m 1 -oP 'vendor_id\s*:\s*\K.*' /proc/cpuinfo)
 # Install the appropriate CPU updates based on the CPU manufacturer.
 if [[ $cpu_manufacturer == *"$INTEL_MANUFACTURER"* ]]; then
 
-    # Installing Intel CPU updates.
+    # Install Intel CPU updates.
     if ! are_packages_installed "$INTEL_CPU_UPDATES" "$AUR_PACKAGE_MANAGER"; then
         install_packages "$INTEL_CPU_UPDATES" "$AUR_PACKAGE_MANAGER" "Installing Intel CPU updates..."
 
@@ -36,7 +36,7 @@ if [[ $cpu_manufacturer == *"$INTEL_MANUFACTURER"* ]]; then
     fi
 elif [[ $cpu_manufacturer == *"$AMD_MANUFACTURER"* ]]; then
 
-    # Installing AMD CPU updates.
+    # Install AMD CPU updates.
     if ! are_packages_installed "$AMD_CPU_UPDATES" "$AUR_PACKAGE_MANAGER"; then
         install_packages "$AMD_CPU_UPDATES" "$AUR_PACKAGE_MANAGER" "Installing AMD CPU updates..."
 

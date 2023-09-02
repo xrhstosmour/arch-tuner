@@ -17,10 +17,10 @@ NEOFETCH_DIRECTORY="$HOME/.config/neofetch"
 NEOFETCH_CONFIGURATION="$HOME/.config/neofetch/config.conf"
 NEOFETCH_CONFIGURATION_TO_PASS="$INFROMATION_SCRIPT_DIRECTORY/../../configurations/information/neofetch.conf"
 
-# Installing system information tool package.
+# Install system information tool package.
 install_packages "neofetch" "$AUR_PACKAGE_MANAGER" "Installing system information tool..."
 
-# Configuring system information tool.
+# Configure system information tool.
 if ! compare_files "$NEOFETCH_CONFIGURATION" "$NEOFETCH_CONFIGURATION_TO_PASS"; then
     log_info "Configuring system information tool..."
     mkdir -p "$NEOFETCH_DIRECTORY"

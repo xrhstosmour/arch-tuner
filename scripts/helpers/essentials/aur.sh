@@ -54,7 +54,7 @@ if ! command -v "$AUR_PACKAGE_MANAGER" &>/dev/null; then
     rm -rf $PARU_DIRECTORY
 fi
 
-# Configuring paru AUR helper.
+# Configure paru AUR helper.
 if ! grep -q '^Color' "$PACMAN_CONFIGURATION" || ! grep -qxF 'SkipReview' "$PARU_CONFIGURATION"; then
     log_info "Configuring $AUR_PACKAGE_MANAGER AUR helper..."
 fi
