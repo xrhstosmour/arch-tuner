@@ -36,7 +36,7 @@ essential_scripts=(
 )
 
 # Give execution permission to all needed scripts.
-give_execution_permission_to_scripts "${essential_scripts[@]}"
+give_execution_permission_to_scripts "${essential_scripts[@]}" "Giving execution permission to all essential scripts..."
 
 # Install and configure AUR helper.
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/aur.sh

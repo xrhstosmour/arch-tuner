@@ -19,7 +19,7 @@ development_scripts=(
 )
 
 # Give execution permission to all needed scripts.
-give_execution_permission_to_scripts "${development_scripts[@]}"
+give_execution_permission_to_scripts "${development_scripts[@]}" "Giving execution permission to all development scripts..."
 
 # Install and configure development tools.
 sh $DEVELOPMENT_SCRIPT_DIRECTORY/../helpers/development/tools.sh

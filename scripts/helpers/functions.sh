@@ -242,14 +242,41 @@ update_system() {
 # Function to give execution permission to scripts.
 give_execution_permission_to_scripts() {
 
-    # Take the argument as an array.
+    # Take all the arguments as an array.
     local scripts=("$@")
 
-    # Give execute permission if not already set.
+    # Pop the last element from the array and assign it to message.
+    local message="${scripts[-1]}"
+
+    # Remove the last element from the array.
+    unset 'scripts[${#scripts[@]}-1]'
+
+    # Initialize a variable to track if logging is needed.
+    local need_to_log=false
+
+    # First loop to check if any script needs execute permission.
+    for script in "${scripts[@]}"; do
+        if [[ ! -x "$script" ]]; then
+
+            # Set the flag to true as at least one script needs permission.
+            need_to_log=true
+            break
+        fi
+    done
+
+    # Log only if at least one script needed permission change.
+    if [ "$need_to_log" = true ]; then
+        if [ -z "$message" ]; then
+            log_info "Giving execution permission to scripts."
+        else
+            log_info "$message"
+        fi
+    fi
+
+    # Second loop to actually give execute permission if not already set.
     for script in "${scripts[@]}"; do
         if [[ ! -x "$script" ]]; then
             chmod +x "$script"
-            log_info "Granted execution permission to $script."
         fi
     done
 }
