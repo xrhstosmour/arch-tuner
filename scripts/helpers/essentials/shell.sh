@@ -26,13 +26,13 @@ FISH_ALIASES_TO_PASS="$SHELL_SCRIPT_DIRECTORY/../../configurations/shell/aliases
 install_packages "$FISH_SHELL" "$AUR_PACKAGE_MANAGER" "Installing shell..."
 
 # Configuring shell.
-if [ ! -f "$FISH_CONFIGURATION" ] || ! diff "$FISH_CONFIGURATION_TO_PASS" "$FISH_CONFIGURATION" &>/dev/null; then
+if ! compare_files "$FISH_CONFIGURATION" "$FISH_CONFIGURATION_TO_PASS"; then
     log_info "Configuring shell..."
     mkdir -p "$FISH_CONFIGURATION_DIRECTORY" && cp -f "$FISH_CONFIGURATION_TO_PASS" "$FISH_CONFIGURATION"
 fi
 
 # Configuring shell aliases.
-if [ ! -f "$FISH_ALIASES" ] || ! diff "$FISH_ALIASES_TO_PASS" "$FISH_ALIASES" &>/dev/null; then
+if ! compare_files "$FISH_ALIASES" "$FISH_ALIASES_TO_PASS"; then
     log_info "Configuring shell aliases..."
     mkdir -p "$FISH_ALIASES_DIRECTORY" && cp -f "$FISH_ALIASES_TO_PASS" "$FISH_ALIASES"
 fi

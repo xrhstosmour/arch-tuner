@@ -199,3 +199,18 @@ install_packages() {
         done
     fi
 }
+
+# Function to compare two files.
+# compare_files "target_file" "source_file"
+compare_files() {
+    local target_file=$1
+    local source_file=$2
+
+    # If the target file does not exist or is different from the source file, return 1 (false).
+    # If the target file exists and is the same as the source file, return 0 (true).
+    if [ ! -f "$target_file" ] || ! diff "$source_file" "$target_file" &>/dev/null; then
+        return 1
+    else
+        return 0
+    fi
+}

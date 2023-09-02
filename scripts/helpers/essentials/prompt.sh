@@ -21,7 +21,7 @@ STARSHIP_CONFIGURATION_TO_PASS="$PROMPT_SCRIPT_DIRECTORY/../../configurations/pr
 install_packages "starship" "$AUR_PACKAGE_MANAGER" "Installing prompt..."
 
 # Configuring prompt.
-if [ ! -f "$STARSHIP_CONFIGURATION" ] || ! diff "$STARSHIP_CONFIGURATION_TO_PASS" "$STARSHIP_CONFIGURATION" &>/dev/null; then
+if ! compare_files "$STARSHIP_CONFIGURATION" "$STARSHIP_CONFIGURATION_TO_PASS"; then
     log_info "Configuring prompt..."
     mkdir -p "$STARSHIP_DIRECTORY" && cp -f "$STARSHIP_CONFIGURATION_TO_PASS" "$STARSHIP_CONFIGURATION"
 fi
