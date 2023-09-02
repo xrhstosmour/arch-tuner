@@ -224,10 +224,10 @@ update_system() {
     sudo pacman -Sy
 
     # Check if any package is upgradable.
-    upgradable=$(pacman -Qu)
+    upgradable=$(pacman -Qu) || true
 
     # Check if 'archlinux-keyring' package is upgradable.
-    upgradable_keyring=$(echo "$upgradable" | grep archlinux-keyring)
+    upgradable_keyring=$(echo "$upgradable" | grep archlinux-keyring) || true
 
     # Update 'archlinux-keyring' package if it needs an update.
     if [[ -n "$upgradable_keyring" ]]; then
