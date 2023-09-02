@@ -47,7 +47,11 @@ if ! command -v "$AUR_PACKAGE_MANAGER" &>/dev/null; then
 
     # Proceed with installation.
     log_info "Installing $AUR_PACKAGE_MANAGER AUR helper..."
-    git clone $PARU_GIT_URL && cd $PARU_DIRECTORY && makepkg -si --noconfirm && cd .. && rm -rf $PARU_DIRECTORY
+    git clone $PARU_GIT_URL
+    cd $PARU_DIRECTORY
+    makepkg -si --noconfirm
+    cd ..
+    rm -rf $PARU_DIRECTORY
 fi
 
 # Configuring paru AUR helper.

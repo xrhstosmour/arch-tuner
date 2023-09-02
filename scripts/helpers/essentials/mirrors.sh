@@ -23,7 +23,8 @@ install_packages "reflector" "$AUR_PACKAGE_MANAGER" "Installing mirror list mana
 # Copy the configuration file only if it is not the same as the current one.
 if ! compare_files "$REFLECTOR_CONFIGURATION" "$REFLECTOR_CONFIGURATION_TO_PASS"; then
     log_info "Configuring mirror list..."
-    sudo mkdir -p "$REFLECTOR_DIRECTORY" && sudo cp -f "$REFLECTOR_CONFIGURATION_TO_PASS" "$REFLECTOR_CONFIGURATION"
+    sudo mkdir -p "$REFLECTOR_DIRECTORY"
+    sudo cp -f "$REFLECTOR_CONFIGURATION_TO_PASS" "$REFLECTOR_CONFIGURATION"
 
     # Read the configuration file into a string, excluding comment lines.
     args=$(grep -v '^#' "$REFLECTOR_CONFIGURATION")

@@ -23,5 +23,6 @@ install_packages "neofetch" "$AUR_PACKAGE_MANAGER" "Installing system informatio
 # Configuring system information tool.
 if ! compare_files "$NEOFETCH_CONFIGURATION" "$NEOFETCH_CONFIGURATION_TO_PASS"; then
     log_info "Configuring system information tool..."
-    mkdir -p "$NEOFETCH_DIRECTORY" && cp -f "$NEOFETCH_CONFIGURATION_TO_PASS" "$NEOFETCH_CONFIGURATION"
+    mkdir -p "$NEOFETCH_DIRECTORY"
+    cp -f "$NEOFETCH_CONFIGURATION_TO_PASS" "$NEOFETCH_CONFIGURATION"
 fi

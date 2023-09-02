@@ -28,13 +28,15 @@ install_packages "$FISH_SHELL" "$AUR_PACKAGE_MANAGER" "Installing shell..."
 # Configuring shell.
 if ! compare_files "$FISH_CONFIGURATION" "$FISH_CONFIGURATION_TO_PASS"; then
     log_info "Configuring shell..."
-    mkdir -p "$FISH_CONFIGURATION_DIRECTORY" && cp -f "$FISH_CONFIGURATION_TO_PASS" "$FISH_CONFIGURATION"
+    mkdir -p "$FISH_CONFIGURATION_DIRECTORY"
+    cp -f "$FISH_CONFIGURATION_TO_PASS" "$FISH_CONFIGURATION"
 fi
 
 # Configuring shell aliases.
 if ! compare_files "$FISH_ALIASES" "$FISH_ALIASES_TO_PASS"; then
     log_info "Configuring shell aliases..."
-    mkdir -p "$FISH_ALIASES_DIRECTORY" && cp -f "$FISH_ALIASES_TO_PASS" "$FISH_ALIASES"
+    mkdir -p "$FISH_ALIASES_DIRECTORY"
+    cp -f "$FISH_ALIASES_TO_PASS" "$FISH_ALIASES"
 fi
 
 # Setting default shell.
