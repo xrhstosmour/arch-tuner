@@ -2,8 +2,6 @@ wezterm
 dolphin
 brave-bin
 gimp
-veracrypt
-keepassxc
 spotify
 thunderbird
 vlc

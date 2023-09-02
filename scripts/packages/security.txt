@@ -1,0 +1,5 @@
+veracrypt
+keepassxc
+gufw
+clamav-desktop-bin
+clamtk

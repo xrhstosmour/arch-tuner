@@ -6,4 +6,3 @@ postman-bin
 etcher-bin
 docker
 docker-compose
-gufw
