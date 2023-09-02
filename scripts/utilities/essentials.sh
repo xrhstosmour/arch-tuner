@@ -13,9 +13,7 @@ ESSENTIALS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$ESSENTIALS_SCRIPT_DIRECTORY/../helpers/functions.sh"
 
 # Update system.
-log_info "Updating system..."
-sudo pacman -S --noconfirm --needed archlinux-keyring &&
-    sudo pacman -Syu --noconfirm --needed
+update_system
 
 # Essential packages.
 ESSENTIAL_PACKAGES="base-devel git networkmanager neovim btop"

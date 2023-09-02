@@ -214,3 +214,30 @@ compare_files() {
         return 0
     fi
 }
+
+# Function to update system.
+# update_system
+update_system() {
+
+    # Update package database.
+    log_info "Synchronizing package database..."
+    sudo pacman -Sy
+
+    # Check if any package is upgradable.
+    upgradable=$(pacman -Qu)
+
+    # Check if 'archlinux-keyring' package is upgradable.
+    upgradable_keyring=$(echo "$upgradable" | grep archlinux-keyring)
+
+    # Update 'archlinux-keyring' package if it needs an update.
+    if [[ -n "$upgradable_keyring" ]]; then
+        log_info "Updating archlinux-keyring..."
+        sudo pacman -S --noconfirm --needed archlinux-keyring
+    fi
+
+    # Update system if any package is upgradable.
+    if [[ -n "$upgradable" ]]; then
+        log_info "Updating system..."
+        sudo pacman -Su --noconfirm --needed
+    fi
+}
