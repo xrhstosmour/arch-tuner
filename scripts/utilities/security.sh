@@ -47,7 +47,7 @@ sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/antivirus.sh
 # Install and configure cpu updates.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/cpu.sh
 
-# Install and configure memory updates.
+# Install and configure memory allocator.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/memory.sh
 
 # Configure DNS.
@@ -67,5 +67,5 @@ sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/nts.sh
 # Configure mount options.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/mount.sh
 
-# Configure owner User ID.
+# Configure owner user IDs.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/uid.sh
