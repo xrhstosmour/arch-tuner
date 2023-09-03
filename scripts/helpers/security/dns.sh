@@ -12,11 +12,11 @@ DNS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import functions.
 source "$DNS_SCRIPT_DIRECTORY/../functions.sh"
 
+# Initialize a flag to track whether a change was made.
+dns_changes_made=1
+
 # Constant variables for keeping the resolved configuration.
 RESOLVED_CONFIGURATION="/etc/systemd/resolved.conf"
-
-# Initialize a variable to track whether a change was made.
-dns_changes_made=1
 
 # Check if the 'DNSSEC' line already exists in the 'resolved.conf' file.
 if grep -q '^DNSSEC=' "$RESOLVED_CONFIGURATION"; then
