@@ -1,5 +1,6 @@
 veracrypt
 keepassxc
 gufw
+# TODO: Choose one of the following to keep: clamav-desktop-bin or clamtk
 clamav-desktop-bin
 clamtk
