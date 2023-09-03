@@ -31,6 +31,13 @@ fi
 security_scripts=(
     $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
     $SECURITY_SCRIPT_DIRECTORY/../helpers/security/antivirus.sh
+    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/cpu.sh
+    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/memory.sh
+    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/dns.sh
+    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/usb.sh
+    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/nts.sh
+    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/mount.sh
+    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/uid.sh
 )
 
 # Give execution permission to all needed scripts.
