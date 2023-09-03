@@ -18,14 +18,14 @@ install_packages "clamav" "$AUR_PACKAGE_MANAGER" "Installing antivirus..."
 # Get the date from freshclam --version output.
 database_date=$(sudo freshclam --version | awk -F'/' '{print $3}' | cut -d ' ' -f1-4)
 
-# Convert to UNIX timestamp.
-database_timestamp=$(date --date="$database_date" +%s)
+# Convert to a simple YYYYMMDD date string.
+database_date_simple=$(date --date="$database_date" +%Y%m%d)
 
-# Get the current date's UNIX timestamp minus one day (86400 seconds).
-current_timestamp=$(date --date="yesterday" +%s)
+# Get "yesterday's" date in simple YYYYMMDD format.
+current_date_simple=$(date --date="yesterday" +%Y%m%d)
 
-# Check if the database date is earlier than the current date minus one day
-if [ "$database_timestamp" -lt "$current_timestamp" ]; then
+# Check if the database date is earlier than "yesterday"
+if [ "$database_date_simple" -lt "$current_date_simple" ]; then
 
     # Updating virus database.
     stop_service "clamav-freshclam" "Stopping antivirus update manager..."
