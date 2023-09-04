@@ -97,6 +97,10 @@ are_packages_installed() {
     "$ARCH_PACKAGE_MANAGER")
         local query_command="$ARCH_PACKAGE_MANAGER -Q"
         ;;
+    "")
+        # If no package manager is specified, we'll use `command -V`.
+        query_command="command -v"
+        ;;
     *)
         log_error "Unsupported package manager: '$package_manager'"
         return 1
