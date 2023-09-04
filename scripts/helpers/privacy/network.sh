@@ -14,6 +14,7 @@ source "$NETWORK_SCRIPT_DIRECTORY/../functions.sh"
 
 # Constant variables for reducing trackability configuration.
 NETWORK_MANAGER_PACKAGE="NetworkManager"
+NETWORK_MANAGER_CONFIGURATION_DIRECTORY="/etc/NetworkManager/conf.d"
 NETWORK_MANAGER_CONFIGURATION="/etc/NetworkManager/conf.d/00-macrandomize.conf"
 NETWORK_MANAGER_WIFI_SCAN_RAND_MAC_ADDRESS="wifi.scan-rand-mac-address=yes"
 NETWORK_MANAGER_WIFI_CLONED_MAC_ADDRESS="wifi.cloned-mac-address=random"
@@ -21,6 +22,19 @@ NETWORK_MANAGER_ETHERNET_CLONED_MAC_ADDRESS="ethernet.cloned-mac-address=random"
 
 # Check if NetworkManager is installed and active.
 if are_packages_installed "$NETWORK_MANAGER_PACKAGE" && is_service_active "$NETWORK_MANAGER_PACKAGE"; then
+
+    # Create network manager directory if it does not exist.
+    if [ ! -d "$NETWORK_MANAGER_CONFIGURATION_DIRECTORY" ]; then
+        log_info "Creating $NETWORK_MANAGER_PACKAGE directory..."
+        sudo mkdir -p "$NETWORK_MANAGER_CONFIGURATION_DIRECTORY"
+    fi
+
+    # Create the configuration file with the desired settings if it does not exist.
+    if [ ! -f "$NETWORK_MANAGER_CONFIGURATION" ]; then
+        log_info "Creating $NETWORK_MANAGER_PACKAGE configuration file..."
+        log_info "Reducing trackability..."
+        echo -e "[device]\n$NETWORK_MANAGER_WIFI_SCAN_RAND_MAC_ADDRESS\n\n[connection]\n$NETWORK_MANAGER_WIFI_CLONED_MAC_ADDRESS\n$NETWORK_MANAGER_ETHERNET_CLONED_MAC_ADDRESS" | sudo tee "$NETWORK_MANAGER_CONFIGURATION" >/dev/null
+    fi
 
     # Check if the settings are already set to reduce trackability.
     if ! grep -q "$NETWORK_MANAGER_WIFI_SCAN_RAND_MAC_ADDRESS" "$NETWORK_MANAGER_CONFIGURATION" ||
