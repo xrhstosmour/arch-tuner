@@ -20,7 +20,7 @@ NETWORK_MANAGER_WIFI_CLONED_MAC_ADDRESS="wifi.cloned-mac-address=random"
 NETWORK_MANAGER_ETHERNET_CLONED_MAC_ADDRESS="ethernet.cloned-mac-address=random"
 
 # Check if NetworkManager is installed and active.
-if are_packages_installed "$NETWORK_MANAGER_PACKAGE" "$AUR_PACKAGE_MANAGER" && is_service_active "$NETWORK_MANAGER_PACKAGE"; then
+if are_packages_installed "$NETWORK_MANAGER_PACKAGE" && is_service_active "$NETWORK_MANAGER_PACKAGE"; then
 
     # Check if the settings are already set to reduce trackability.
     if ! grep -q "$NETWORK_MANAGER_WIFI_SCAN_RAND_MAC_ADDRESS" "$NETWORK_MANAGER_CONFIGURATION" ||
