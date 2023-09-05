@@ -12,6 +12,7 @@ DISPLAY_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import functions.
 source "$DISPLAY_SCRIPT_DIRECTORY/../functions.sh"
 
+# TODO: Maybe change with sddm later on.
 # Constant variables for display manager configuration.
 DISPLAY_MANAGER_PACKAGE="ly"
 DISPLAY_MANAGER_CONFIGURATION="/etc/ly/config.ini"
