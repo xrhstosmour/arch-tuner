@@ -29,7 +29,7 @@ if [ ! -f "$KEYSTROKE_ANONYMIZATION_CONFIGURATION" ]; then
         ExecStart=/usr/bin/$KEYSTROKE_ANONYMIZATION_PACKAGE
 
         [Install]
-        WantedBy=multi-user.target" | sudo tee "$KEYSTROKE_ANONYMIZATION_CONFIGURATION"
+        WantedBy=multi-user.target" | sudo tee "$KEYSTROKE_ANONYMIZATION_CONFIGURATION" >/dev/null
 fi
 
 # Start and enable the service.
