@@ -37,7 +37,7 @@ security_scripts=(
     $SECURITY_SCRIPT_DIRECTORY/../helpers/security/usb.sh
     $SECURITY_SCRIPT_DIRECTORY/../helpers/security/nts.sh
     $SECURITY_SCRIPT_DIRECTORY/../helpers/security/mount.sh
-    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/uid.sh
+    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/ids.sh
 )
 
 # Give execution permission to all needed scripts.
@@ -75,4 +75,4 @@ sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/nts.sh
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/mount.sh
 
 # Configure owner user IDs.
-sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/uid.sh
+sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/ids.sh

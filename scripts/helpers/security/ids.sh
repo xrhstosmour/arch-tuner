@@ -7,10 +7,10 @@ trap "exit" INT
 set -e
 
 # Constant variable of the scripts' working directory to use for relative paths.
-UID_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+IDS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$UID_SCRIPT_DIRECTORY/../functions.sh"
+source "$IDS_SCRIPT_DIRECTORY/../functions.sh"
 
 # SUID constant configuration variables.
 SBIN_DIRECTORY="/sbin"
@@ -22,7 +22,7 @@ BOOT_DIRECTORY="/boot"
 SUID_PERMISSION="4000"
 SGID_PERMISSION="2000"
 
-# Find command to locate all files with SUID enabled outside the specified directories
+# Find command to locate all files with SUID and SGID enabled outside the specified directories.
 FIND_SUID_AND_SGID_COMMAND="sudo find / \( -path \"$SBIN_DIRECTORY\" -o -path \"$USR_DIRECTORY\" -o -path \"$BIN_DIRECTORY\" -o -path \"$OPT_DIRECTORY\" -o -path \"$ROOT_DIRECTORY\" -o -path \"$BOOT_DIRECTORY\" \) -prune -o \( -perm /$SUID_PERMISSION -o -perm /$SGID_PERMISSION \) -type f -print"
 
 # Check if any file has SUID enabled outside the specified directories.
