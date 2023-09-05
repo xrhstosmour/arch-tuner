@@ -13,7 +13,7 @@ NVIDIA_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$NVIDIA_SCRIPT_DIRECTORY/../../functions.sh"
 
 # TODO: Check if this is working or not.
-# Constant variable containing all the NVIDIA graphics drivers.
+# Constant variable containing the NVIDIA 32 bit graphics drivers.
 NVIDIA_32_BIT_DRIVERS="lib32-nvidia-libgl lib32-nvidia-utils"
 
 # Keep the linux kernel header in a variable, to use it later.
