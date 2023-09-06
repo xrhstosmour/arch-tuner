@@ -42,6 +42,8 @@ if ! groups $USER | grep -q '\binput\b'; then
     sudo usermod -aG input $USER
 fi
 
+# TODO: Restart device to apply changes and rerun script.
+
 # Start and enable the service.
 start_service "$KEYSTROKE_ANONYMIZATION_PACKAGE" "Starting $KEYSTROKE_ANONYMIZATION_PACKAGE service..."
 enable_service "$KEYSTROKE_ANONYMIZATION_PACKAGE" "Enabling $KEYSTROKE_ANONYMIZATION_PACKAGE service..."
