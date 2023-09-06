@@ -4,7 +4,7 @@
 SYSTEM_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import log functions.
-source "$PACKAGES_SCRIPT_DIRECTORY/logs.sh"
+source "$SYSTEM_SCRIPT_DIRECTORY/logs.sh"
 
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 
