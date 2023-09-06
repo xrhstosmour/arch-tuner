@@ -3,11 +3,10 @@
 # Constant variable of the scripts' working directory to use for relative paths.
 SYSTEM_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-# Import constant variables.
-source "$SYSTEM_SCRIPT_DIRECTORY/../../core/constants.sh"
-
 # Import log functions.
 source "$PACKAGES_SCRIPT_DIRECTORY/logs.sh"
+
+# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 
 # Function to update system.
 # update_system

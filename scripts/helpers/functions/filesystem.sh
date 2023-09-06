@@ -3,11 +3,10 @@
 # Constant variable of the scripts' working directory to use for relative paths.
 FILESYSTEM_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-# Import constant variables.
-source "$FILESYSTEM_SCRIPT_DIRECTORY/../../core/constants.sh"
-
 # Import log functions.
 source "$FILESYSTEM_SCRIPT_DIRECTORY/logs.sh"
+
+# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 
 # Function to check if a line exists in a file and add it if it does not.
 # append_line_to_file "/file/path/with.extension" "Line To Append" "Message to print if the line is appended."
