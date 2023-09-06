@@ -10,7 +10,10 @@ set -e
 MOUNT_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$MOUNT_SCRIPT_DIRECTORY/../functions.sh"
+source "$MOUNT_SCRIPT_DIRECTORY/../functions/filesystem.sh"
+
+# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
+# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Initialize a flag indicating if a mount options change has been made.
 mount_changes_made=1
@@ -26,6 +29,7 @@ ROOT_DIRECTORY="/root"
 VAR_SUBFOLDERS_DIRECTORY="/var/*"
 VAR_TMP_DIRECTORY="/var/tmp"
 
+# TODO: Check if this is working or not.
 # To each function execution proceed to change the && mount_changes_made flag to 0 (true), only if the mount point option changed (function returned 0 (true)).
 # Add nodev, noexec, and nosuid options to /boot and /boot/efi.
 add_mount_options "$BOOT_DIRECTORY" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION" && mount_changes_made=0

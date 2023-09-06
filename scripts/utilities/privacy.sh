@@ -10,7 +10,10 @@ set -e
 PRIVACY_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$PRIVACY_SCRIPT_DIRECTORY/../helpers/functions.sh"
+source "$PRIVACY_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
+
+# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
+# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Array of privacy scripts.
 privacy_scripts=(

@@ -10,7 +10,13 @@ set -e
 ANTIVIRUS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$ANTIVIRUS_SCRIPT_DIRECTORY/../functions.sh"
+source "$ANTIVIRUS_SCRIPT_DIRECTORY/../functions/packages.sh"
+source "$ANTIVIRUS_SCRIPT_DIRECTORY/../functions/services.sh"
+source "$ANTIVIRUS_SCRIPT_DIRECTORY/../functions/filesystem.sh"
+source "$ANTIVIRUS_SCRIPT_DIRECTORY/../functions/system.sh"
+
+# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
+# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Install antivirus.
 install_packages "clamav" "$AUR_PACKAGE_MANAGER" "Installing antivirus..."

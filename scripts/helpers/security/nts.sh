@@ -10,7 +10,12 @@ set -e
 NTS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$NTS_SCRIPT_DIRECTORY/../functions.sh"
+source "$NTS_SCRIPT_DIRECTORY/../functions/packages.sh"
+source "$NTS_SCRIPT_DIRECTORY/../functions/filesystem.sh"
+source "$NTS_SCRIPT_DIRECTORY/../functions/services.sh"
+
+# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
+# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Initialize a flag indicating if an encrypted network time security change has been made.
 nts_changes_made=1

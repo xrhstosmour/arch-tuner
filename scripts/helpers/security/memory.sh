@@ -10,7 +10,10 @@ set -e
 MEMORY_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$MEMORY_SCRIPT_DIRECTORY/../functions.sh"
+source "$MEMORY_SCRIPT_DIRECTORY/../functions/packages.sh"
+
+# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
+# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Constant variables for keeping the hardened memory allocator configuration.
 HARDENED_MEMORY_ALLOCATOR_CONFIGURATION="LD_PRELOAD=/usr/lib/libhardened_malloc.so"

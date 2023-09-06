@@ -10,7 +10,10 @@ set -e
 CPU_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$CPU_SCRIPT_DIRECTORY/../functions.sh"
+source "$CPU_SCRIPT_DIRECTORY/../functions/packages.sh"
+
+# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
+# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Initialize a flag indicating if a microcode update was installed.
 cpu_update_installed=1

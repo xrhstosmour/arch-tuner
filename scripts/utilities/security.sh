@@ -14,7 +14,11 @@ set -e
 SECURITY_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions.sh"
+source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/packages.sh"
+source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
+
+# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
+# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Constant variable for the file path containing the security applications to install.
 SECURITY_PACKAGES="$SECURITY_SCRIPT_DIRECTORY/../packages/security.txt"

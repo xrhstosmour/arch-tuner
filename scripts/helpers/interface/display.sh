@@ -10,7 +10,11 @@ set -e
 DISPLAY_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$DISPLAY_SCRIPT_DIRECTORY/../functions.sh"
+source "$DISPLAY_SCRIPT_DIRECTORY/../functions/packages.sh"
+source "$DISPLAY_SCRIPT_DIRECTORY/../functions/services.sh"
+
+# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
+# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # TODO: Maybe change with sddm later on.
 # Constant variables for display manager configuration.

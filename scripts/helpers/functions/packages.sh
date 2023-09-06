@@ -3,8 +3,9 @@
 # Constant variable of the scripts' working directory to use for relative paths.
 PACKAGES_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-# Import log functions.
+# Import functions.
 source "$PACKAGES_SCRIPT_DIRECTORY/logs.sh"
+source "$PACKAGES_SCRIPT_DIRECTORY/strings.sh"
 
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 

@@ -1,3 +1,4 @@
+# TODO: Finalize starship configuration.
 command_timeout = 10000
 
 # Inserts a blank line between shell prompts

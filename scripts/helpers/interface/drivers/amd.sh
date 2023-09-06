@@ -10,7 +10,10 @@ set -e
 AMD_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$AMD_SCRIPT_DIRECTORY/../../functions.sh"
+source "$AMD_SCRIPT_DIRECTORY/../../functions/packages.sh"
+
+# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
+# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # TODO: Check if this is working or not.
 # Constant variable containing the AMD graphics drivers.

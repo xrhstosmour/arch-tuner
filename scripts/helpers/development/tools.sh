@@ -9,8 +9,12 @@ set -e
 # Constant variable of the scripts' working directory to use for relative paths.
 TOOLS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-# Import functions variables.
-source "$TOOLS_SCRIPT_DIRECTORY/../functions.sh"
+# Import functions.
+source "$TOOLS_SCRIPT_DIRECTORY/../functions/packages.sh"
+source "$TOOLS_SCRIPT_DIRECTORY/../functions/services.sh"
+
+# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
+# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Constant variable for the file path containing the development tools to install.
 DEVELOPMENT_TOOLS="$TOOLS_SCRIPT_DIRECTORY/../../packages/development.txt"
