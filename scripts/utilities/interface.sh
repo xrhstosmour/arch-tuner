@@ -15,15 +15,6 @@ source "$INTERFACE_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
-# Array of interface scripts.
-interface_scripts=(
-    $INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/display.sh
-    $INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/gpu.sh
-)
-
-# Give execution permission to all needed scripts.
-give_execution_permission_to_scripts "${interface_scripts[@]}" "Giving execution permission to all interface scripts..."
-
 # Install and configure display manager.
 sh $INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/display.sh
 

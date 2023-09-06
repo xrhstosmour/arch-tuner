@@ -15,16 +15,6 @@ source "$PRIVACY_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
-# Array of privacy scripts.
-privacy_scripts=(
-    $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/network.sh
-    $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/keyboard.sh
-    $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/umask.sh
-)
-
-# Give execution permission to all needed scripts.
-give_execution_permission_to_scripts "${privacy_scripts[@]}" "Giving execution permission to all privacy scripts..."
-
 # Configure network.
 sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/network.sh
 

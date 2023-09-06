@@ -31,22 +31,6 @@ if ! are_packages_installed "$SECURITY_PACKAGES" "$AUR_PACKAGE_MANAGER"; then
     install_packages "$SECURITY_PACKAGES" "$AUR_PACKAGE_MANAGER"
 fi
 
-# Array of security scripts.
-security_scripts=(
-    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
-    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/antivirus.sh
-    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/cpu.sh
-    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/memory.sh
-    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/dns.sh
-    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/usb.sh
-    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/nts.sh
-    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/mount.sh
-    $SECURITY_SCRIPT_DIRECTORY/../helpers/security/ids.sh
-)
-
-# Give execution permission to all needed scripts.
-give_execution_permission_to_scripts "${security_scripts[@]}" "Giving execution permission to all security scripts..."
-
 # Install and configure firewall.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
 
