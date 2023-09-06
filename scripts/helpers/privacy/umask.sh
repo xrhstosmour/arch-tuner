@@ -19,7 +19,6 @@ UMASK_VALUE="077"
 LOGIN_FILE="/etc/login.defs"
 UMASK_FILES=("/etc/profile" "/etc/bash.bashrc" "$LOGIN_FILE")
 
-# TODO: Check if this is working or not.
 # Iterate over the files.
 for file in ${UMASK_FILES[@]}; do
 

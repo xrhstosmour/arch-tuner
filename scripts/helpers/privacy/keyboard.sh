@@ -36,6 +36,12 @@ if [ ! -f "$KEYSTROKE_ANONYMIZATION_CONFIGURATION" ]; then
         WantedBy=multi-user.target" | sudo tee "$KEYSTROKE_ANONYMIZATION_CONFIGURATION" >/dev/null
 fi
 
+# Add the user to the input group.
+if ! groups $USER | grep -q '\binput\b'; then
+    log_info "Adding $USER to the input group..."
+    sudo usermod -aG input $USER
+fi
+
 # Start and enable the service.
 start_service "$KEYSTROKE_ANONYMIZATION_PACKAGE" "Starting $KEYSTROKE_ANONYMIZATION_PACKAGE service..."
 enable_service "$KEYSTROKE_ANONYMIZATION_PACKAGE" "Enabling $KEYSTROKE_ANONYMIZATION_PACKAGE service..."
