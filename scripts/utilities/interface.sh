@@ -18,7 +18,5 @@ source "$INTERFACE_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 # Install and configure display manager.
 sh $INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/display.sh
 
-# TODO: Restart device to apply changes and rerun script.
-
 # Install and configure GPU drivers.
 sh $INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/gpu.sh

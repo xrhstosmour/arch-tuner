@@ -49,5 +49,3 @@ sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/fonts.sh
 
 # Install and configure shell.
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/shell.sh
-
-# TODO: Restart device to apply changes and rerun script.
