@@ -28,9 +28,6 @@ if ! read -t 10; then
 fi
 log_info "Starting installing procedure..."
 
-# Give execution permissions to all scripts.
-find $INSTALL_SCRIPT_DIRECTORY/../scripts -type f -name "*.sh" -exec chmod +x {} \;
-
 # Start by executing the essentials script.
 log_info "Executing essentials script..."
 sh $INSTALL_SCRIPT_DIRECTORY/utilities/essentials.sh
