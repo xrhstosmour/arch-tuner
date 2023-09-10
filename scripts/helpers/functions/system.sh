@@ -91,7 +91,7 @@ reboot_system() {
     local log_rerun_warning="${3:-0}"
 
     # Constant variable for the constant script path.
-    local constant_script_path="$SYSTEM_SCRIPT_DIRECTORY/../../core/constant.sh"
+    local constant_script_path="$SYSTEM_SCRIPT_DIRECTORY/../../core/constants.sh"
 
     # Check the value is not equal to 0 (true) and reboot.
     if [ "$value_to_check" -ne 0 ]; then
