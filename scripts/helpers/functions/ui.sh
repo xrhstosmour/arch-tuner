@@ -25,9 +25,9 @@ ask_for_user_approval() {
         answer=${answer,,}
 
         if [[ "$answer" == "y" ]]; then
-            log_info "Executing $script_name scipt..."
+            log_info "Executing $script_name script..."
             sh "$script_path"
-            log_info "$capitalized_script_name execution finished!"
+            log_info "$capitalized_script_name script execution finished!"
         elif [[ "$answer" != "n" ]]; then
             log_error "Invalid input!"
         fi
