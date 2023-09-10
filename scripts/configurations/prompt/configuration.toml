@@ -1,12 +1,114 @@
-# TODO: Finalize starship configuration.
+# Base configuration.
 command_timeout = 10000
-
-# Inserts a blank line between shell prompts
 add_newline = true
 
+# Command duration.
 [cmd_duration]
 min_time = 4
 show_milliseconds = false
-disabled = false
-format = " 🕙 $duration($style) "
+format = " 🕙 $duration "
 style = "bold italic #87A752"
+
+# Directory.
+[directory]
+truncation_length = 3
+style = "bold cyan"
+
+# Hostname.
+[hostname]
+ssh_only = true
+style = "bold yellow"
+
+# Character.
+[character]
+success_symbol = "[➜](bold green) "
+error_symbol = "[✖](bold red) "
+
+# Username.
+[username]
+show_always = false
+style_user = "bold green"
+style_root = "bold red"
+
+# Packages.
+[package]
+disabled = false
+
+# Time.
+[time]
+disabled = false
+format = "%H:%M | "
+
+# Memory.
+[memory_usage]
+threshold = 70
+format = "using [$ram]($style) "
+style = "bold red"
+
+# Background jobs.
+[jobs]
+format = "[$symbol$jobs]($style) "
+symbol = "🔃 "
+style = "bold blue"
+
+# Git.
+[git_branch]
+format = "on [$symbol$branch]($style) "
+symbol = " "
+style = "bold green"
+
+[git_status]
+conflicted = "✖"
+ahead = "↑"
+behind = "↓"
+diverged = "↕"
+stashed = "💼"
+modified = "*"
+staged = "+"
+renamed = "»"
+deleted = "✘"
+
+# Languages & Tools.
+[nodejs]
+format = "⬢ $version "
+style = "bold green"
+
+[rust]
+format = "🦀 $version "
+style = "bold red"
+
+[python]
+format = "🐍 $version "
+style = "bold blue"
+
+[go]
+format = "🐹 $version "
+style = "bold cyan"
+
+[java]
+format = "☕ $version "
+style = "bold purple"
+
+[kubernetes]
+format = "☸️ $context "
+style = "bold blue"
+
+[docker_context]
+format = "🐳 $context "
+style = "blue bold"
+
+[c]
+format = "⚙️ $version "
+style = "bold orange"
+
+[dotnet]
+format = "☁️ $version "
+style = "bold blue"
+
+[dart]
+format = "🎯 $version "
+style = "bold cyan"
+
+[flutter]
+format = "🦋 $version "
+style = "bold magenta"
