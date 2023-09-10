@@ -80,3 +80,27 @@ is_process_running() {
         return 1
     fi
 }
+
+# Function to reboot system if needed.
+# reboot_system "value_to_check" "variable_to_change"
+reboot_system() {
+    local value_to_check="$1"
+    local variable_to_change="$2"
+
+    # Constant variable for the constant script path.
+    local constant_script_path="$SYSTEM_SCRIPT_DIRECTORY/../../core/constant.sh"
+
+    # Check the value is not equal to 0 (true) and reboot.
+    if [ "$value_to_check" -ne 0 ]; then
+        log_error "System requires a reboot to apply changes!"
+        log_warning "After the system restarts, please rerun the entire script!"
+        log_info "Initiating system reboot..."
+
+        # Use sed to set variable_to_change to 0 in the constant.sh file
+        # Match any value after the equals sign and replace with 0
+        sed -i "s/^$variable_to_change=[0-9]*\$/$variable_to_change=0/" "$constant_script_path"
+
+        # Reboot the system.
+        sudo reboot
+    fi
+}
