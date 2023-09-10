@@ -32,10 +32,18 @@ log_info "Executing essentials script..."
 sh $INSTALL_SCRIPT_DIRECTORY/utilities/essentials.sh
 log_info "Essentials script execution finished!"
 
+# Reboot system if needed.
+reboot_system "$REBOOTED_AFTER_ESSENTIALS" "REBOOTED_AFTER_ESSENTIALS"
+
 # Use the function to ask user and run scripts.
 declare -A scripts=(["interface"]="Do you want to install display manager and GPU drivers?" ["desktop"]="Do you want to install desktop applications?" ["development"]="Do you want to install development tools and programming languages?")
 for script in "${!scripts[@]}"; do
     ask_for_user_approval "${scripts[$script]}" "$INSTALL_SCRIPT_DIRECTORY/utilities/$script.sh"
+
+    # Reboot system if needed.
+    if [ "$script" == "interface" ]; then
+        reboot_system "$REBOOTED_AFTER_INTERFACE" "REBOOTED_AFTER_INTERFACE"
+    fi
 done
 
 # Run the privacy script.
@@ -43,7 +51,16 @@ log_info "Executing privacy script..."
 sh $INSTALL_SCRIPT_DIRECTORY/utilities/privacy.sh
 log_info "Privacy script execution finished!"
 
+# Reboot system if needed.
+reboot_system "$REBOOTED_AFTER_PRIVACY" "REBOOTED_AFTER_PRIVACY"
+
 # Run the security script at the end.
 log_info "Executing security script..."
 sh $INSTALL_SCRIPT_DIRECTORY/utilities/security.sh
 log_info "Security script execution finished!"
+
+log_info "Installation procedure finished!"
+log_info "Your system is ready to use!"
+
+# Reboot system if needed and do not log the rerun warning.
+reboot_system "$REBOOTED_AFTER_SECURITY" "REBOOTED_AFTER_SECURITY" 1
