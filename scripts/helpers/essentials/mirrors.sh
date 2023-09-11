@@ -39,10 +39,9 @@ if ! compare_files "$REFLECTOR_CONFIGURATION" "$REFLECTOR_CONFIGURATION_TO_PASS"
 fi
 
 # Enable and start mirror list service and timer if they are not already active.
-enable_service "reflector" "Enabling mirror list auto refresh service..."
-enable_reflector_result=$?
-if [ $enable_reflector_result -eq 0 ]; then
+if enable_service "reflector" "Enabling mirror list auto refresh service..."; then
 
+    # If we are here it means that the service was not enabled at first.
     # Run reflector once to populate the mirror list.
     # The reflector service will show as inactive and run periodically, with the help of the reflector timer.
     start_service "reflector" "Running mirror list auto refresh service.."
