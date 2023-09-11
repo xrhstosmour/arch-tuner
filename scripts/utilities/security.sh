@@ -24,7 +24,8 @@ source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 SECURITY_PACKAGES="$SECURITY_SCRIPT_DIRECTORY/../packages/security.txt"
 
 # Check if at least one security package is not installed.
-if ! are_packages_installed "$SECURITY_PACKAGES" "$AUR_PACKAGE_MANAGER"; then
+are_security_packages_installed=$(are_packages_installed "$SECURITY_PACKAGES" "$AUR_PACKAGE_MANAGER")
+if [ "$are_security_packages_installed" = "false" ]; then
     log_info "Installing security applications..."
 
     # Install security packages.

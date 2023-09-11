@@ -20,7 +20,8 @@ source "$TOOLS_SCRIPT_DIRECTORY/../functions/services.sh"
 DEVELOPMENT_TOOLS="$TOOLS_SCRIPT_DIRECTORY/../../packages/development.txt"
 
 # Check if at least one development package is not installed.
-if ! are_packages_installed "$DEVELOPMENT_TOOLS" "$AUR_PACKAGE_MANAGER"; then
+are_development_packages_installed=$(are_packages_installed "$DEVELOPMENT_TOOLS" "$AUR_PACKAGE_MANAGER")
+if [ "$are_development_packages_installed" = "false" ]; then
     log_info "Installing development tools..."
 
     # Install development packages.

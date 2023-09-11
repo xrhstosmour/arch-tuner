@@ -19,7 +19,8 @@ source "$PROGRAMMING_SCRIPT_DIRECTORY/../functions/packages.sh"
 PROGRAMMING_LANGUAGES="$PROGRAMMING_SCRIPT_DIRECTORY/../../packages/programming.txt"
 
 # Check if at least one programming language package is not installed.
-if ! are_packages_installed "$PROGRAMMING_LANGUAGES" "$AUR_PACKAGE_MANAGER"; then
+are_programming_packages_installed=$(are_packages_installed "$PROGRAMMING_LANGUAGES" "$AUR_PACKAGE_MANAGER")
+if [ "$are_programming_packages_installed" = "false" ]; then
     log_info "Installing programming languages..."
 
     # Install programming languages packages.

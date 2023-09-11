@@ -30,7 +30,8 @@ if [[ $GENERATION =~ ([0-9]+) ]]; then
         INTEL_7TH_AND_OLDER_DRIVERS="mesa-amber"
 
         # Check if at least one INTEL graphics driver is not installed.
-        if ! are_packages_installed "$INTEL_7TH_AND_OLDER_DRIVERS" "$AUR_PACKAGE_MANAGER"; then
+        are_intel_7th_and_older_drivers_installed=$(are_packages_installed "$INTEL_7TH_AND_OLDER_DRIVERS" "$AUR_PACKAGE_MANAGER")
+        if [ "$are_intel_7th_and_older_drivers_installed" = "false" ]; then
             log_info "Installing INTEL drivers..."
         fi
 
@@ -42,7 +43,8 @@ if [[ $GENERATION =~ ([0-9]+) ]]; then
         INTEL_8TH_AND_NEWER_DRIVERS="mesa"
 
         # Check if at least one INTEL graphics driver is not installed.
-        if ! are_packages_installed "$INTEL_8TH_AND_NEWER_DRIVERS" "$AUR_PACKAGE_MANAGER"; then
+        are_intel_8th_and_newer_drivers_installed=$(are_packages_installed "$INTEL_8TH_AND_NEWER_DRIVERS" "$AUR_PACKAGE_MANAGER")
+        if [ "$are_intel_8th_and_newer_drivers_installed" = "false" ]; then
             log_info "Installing INTEL drivers..."
         fi
 

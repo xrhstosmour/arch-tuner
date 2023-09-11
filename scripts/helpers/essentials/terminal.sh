@@ -19,7 +19,8 @@ source "$TERMINAL_SCRIPT_DIRECTORY/../functions/packages.sh"
 TERMINAL_TOOLS="bat exa rm-improved xcp eva zoxide fd sd xh topgrade"
 
 # Check if at least one terminal tool is not installed.
-if ! are_packages_installed "$TERMINAL_TOOLS" "$AUR_PACKAGE_MANAGER"; then
+are_terminal_packages_installed=$(are_packages_installed "$TERMINAL_TOOLS" "$AUR_PACKAGE_MANAGER")
+if [ "$are_terminal_packages_installed" = "false" ]; then
     log_info "Installing terminal tools..."
 
     # Install terminal tools.

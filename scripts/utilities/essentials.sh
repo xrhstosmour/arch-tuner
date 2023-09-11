@@ -24,7 +24,8 @@ update_system
 ESSENTIAL_PACKAGES="base-devel git networkmanager neovim btop"
 
 # Install essential packages.
-if ! are_packages_installed "$ESSENTIAL_PACKAGES" "$ARCH_PACKAGE_MANAGER"; then
+are_essential_packages_installed=$(are_packages_installed "$ESSENTIAL_PACKAGES" "$ARCH_PACKAGE_MANAGER")
+if [ "$are_essential_packages_installed" = "false" ]; then
     log_info "Installing essential packages..."
     install_packages "$ESSENTIAL_PACKAGES" "$ARCH_PACKAGE_MANAGER"
 fi

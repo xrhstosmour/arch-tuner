@@ -19,7 +19,8 @@ source "$DESKTOP_SCRIPT_DIRECTORY/../helpers/functions/packages.sh"
 DESKTOP_PACKAGES="$DESKTOP_SCRIPT_DIRECTORY/../packages/desktop.txt"
 
 # Check if at least one desktop package is not installed.
-if ! are_packages_installed "$DESKTOP_PACKAGES" "$AUR_PACKAGE_MANAGER"; then
+are_desktop_packages_installed=$(are_packages_installed "$DESKTOP_PACKAGES" "$AUR_PACKAGE_MANAGER")
+if [ "$are_desktop_packages_installed" = "false" ]; then
     log_info "Installing desktop applications..."
 
     # Install desktop packages.

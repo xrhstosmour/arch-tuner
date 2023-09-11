@@ -38,7 +38,8 @@ case "$CODE_NAME" in
     NVIDIA_MAXWELL_DRIVERS="nvidia nvidia-lts nvidia-dkms"
 
     # Check if at least one NVIDIA Maxwell graphics driver is not installed.
-    if ! are_packages_installed "$NVIDIA_MAXWELL_DRIVERS" "$AUR_PACKAGE_MANAGER"; then
+    are_nvidia_maxwell_drivers_installed=$(are_packages_installed "$NVIDIA_MAXWELL_DRIVERS" "$AUR_PACKAGE_MANAGER")
+    if [ "$are_nvidia_maxwell_drivers_installed" = "false" ]; then
         log_info "Installing NVIDIA drivers..."
     fi
 
@@ -61,7 +62,8 @@ case "$CODE_NAME" in
     NVIDIA_TURING_DRIVERS="nvidia-open nvidia-open-dkms"
 
     # Check if at least one NVIDIA Turing graphics driver is not installed.
-    if ! are_packages_installed "$NVIDIA_TURING_DRIVERS" "$AUR_PACKAGE_MANAGER"; then
+    are_nvidia_turing_drivers_installed=$(are_packages_installed "$NVIDIA_TURING_DRIVERS" "$AUR_PACKAGE_MANAGER")
+    if [ "$are_nvidia_turing_drivers_installed" = "false" ]; then
         log_info "Installing NVIDIA drivers..."
     fi
 
@@ -81,7 +83,8 @@ case "$CODE_NAME" in
     NVIDIA_KEPLER_DRIVERS="nvidia-470xx-dkms"
 
     # Check if at least one NVIDIA Kepler graphics driver is not installed.
-    if ! are_packages_installed "$NVIDIA_KEPLER_DRIVERS" "$AUR_PACKAGE_MANAGER"; then
+    are_nvidia_kepler_drivers_installed=$(are_packages_installed "$NVIDIA_KEPLER_DRIVERS" "$AUR_PACKAGE_MANAGER")
+    if [ "$are_nvidia_kepler_drivers_installed" = "false" ]; then
         log_info "Installing NVIDIA drivers..."
     fi
 

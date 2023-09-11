@@ -19,7 +19,8 @@ source "$FONTS_SCRIPT_DIRECTORY/../functions/packages.sh"
 FONTS="ttf-firacode-nerd"
 
 # Check if at least one font is not installed.
-if ! are_packages_installed "$FONTS" "$AUR_PACKAGE_MANAGER"; then
+are_font_packages_installed=$(are_packages_installed "$FONTS" "$AUR_PACKAGE_MANAGER")
+if [ "$are_font_packages_installed" = "false" ]; then
     log_info "Installing fonts..."
 
     # Install fonts.

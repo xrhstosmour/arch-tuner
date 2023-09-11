@@ -61,11 +61,11 @@ are_packages_installed() {
         fi
     done
 
-    # Return 1 (false) if at least one package is missing.
+    # Return false if at least one package is missing.
     if [ $package_not_found -eq 1 ]; then
-        return 1
+        echo "false"
     else
-        return 0
+        echo "true"
     fi
 }
 
@@ -80,7 +80,8 @@ process_package() {
     [[ "$package" == \#* ]] || [[ -z "$package" ]] && return
 
     # Install package if it is not already installed.
-    if ! are_packages_installed "$package" "$manager"; then
+    is_package_installed=$(are_packages_installed "$package" "$manager")
+    if [ "$is_package_installed" = "false" ]; then
 
         # Print message.
         log_info "$message"
