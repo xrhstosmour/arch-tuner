@@ -33,7 +33,7 @@ are_packages_installed() {
         ;;
     *)
         log_error "Unsupported package manager: '$package_manager'"
-        return 1
+        exit 1
         ;;
     esac
 
@@ -111,7 +111,7 @@ install_packages() {
         ;;
     *)
         log_error "Unsupported package manager: '$manager'"
-        return 1
+        exit 1
         ;;
     esac
 

@@ -60,11 +60,11 @@ compare_files() {
     local target_file=$1
     local source_file=$2
 
-    # If the target file does not exist or is different from the source file, return 1 (false).
-    # If the target file exists and is the same as the source file, return 0 (true).
+    # If the target file does not exist or is different from the source file, return false.
+    # If the target file exists and is the same as the source file, return true.
     if [ ! -f "$target_file" ] || ! diff "$source_file" "$target_file" &>/dev/null; then
-        return 1
+        echo "false"
     else
-        return 0
+        echo "true"
     fi
 }

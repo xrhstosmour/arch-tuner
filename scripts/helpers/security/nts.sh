@@ -31,7 +31,8 @@ NTS_SYSTEM_CONFIGURATION="/etc/sysconfig/chronyd"
 install_packages "chrony" "$AUR_PACKAGE_MANAGER" "Installing encrypted network time security..."
 
 # Copy the configuration file only if it is not the same as the current one.
-if ! compare_files "$NTS_CONFIGURATION" "$NTS_CONFIGURATION_TO_PASS"; then
+are_nts_files_the_same=$(compare_files "$NTS_CONFIGURATION" "$NTS_CONFIGURATION_TO_PASS")
+if [ "$are_nts_files_the_same" = "false" ]; then
     log_info "Configuring encrypted network time security..."
     sudo mkdir -p "$NTS_CONFIGURATION_DIRECTORY"
     sudo cp -f "$NTS_CONFIGURATION_TO_PASS" "$NTS_CONFIGURATION"

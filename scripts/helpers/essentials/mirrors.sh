@@ -26,7 +26,8 @@ REFLECTOR_CONFIGURATION_TO_PASS="$MIRRORS_SCRIPT_DIRECTORY/../../configurations/
 install_packages "reflector" "$AUR_PACKAGE_MANAGER" "Installing mirror list manager..."
 
 # Copy the configuration file only if it is not the same as the current one.
-if ! compare_files "$REFLECTOR_CONFIGURATION" "$REFLECTOR_CONFIGURATION_TO_PASS"; then
+are_reflector_files_the_same=$(compare_files "$REFLECTOR_CONFIGURATION" "$REFLECTOR_CONFIGURATION_TO_PASS")
+if [ "$are_reflector_files_the_same" = "false" ]; then
     log_info "Configuring mirror list..."
     sudo mkdir -p "$REFLECTOR_DIRECTORY"
     sudo cp -f "$REFLECTOR_CONFIGURATION_TO_PASS" "$REFLECTOR_CONFIGURATION"

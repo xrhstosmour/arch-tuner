@@ -25,7 +25,8 @@ NEOFETCH_CONFIGURATION_TO_PASS="$INFROMATION_SCRIPT_DIRECTORY/../../configuratio
 install_packages "neofetch" "$AUR_PACKAGE_MANAGER" "Installing system information tool..."
 
 # Configure system information tool.
-if ! compare_files "$NEOFETCH_CONFIGURATION" "$NEOFETCH_CONFIGURATION_TO_PASS"; then
+are_neofetch_files_the_same=$(compare_files "$NEOFETCH_CONFIGURATION" "$NEOFETCH_CONFIGURATION_TO_PASS")
+if [ "$are_neofetch_files_the_same" = "false" ]; then
     log_info "Configuring system information tool..."
     mkdir -p "$NEOFETCH_DIRECTORY"
     cp -f "$NEOFETCH_CONFIGURATION_TO_PASS" "$NEOFETCH_CONFIGURATION"
