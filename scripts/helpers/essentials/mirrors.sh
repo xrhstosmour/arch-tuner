@@ -39,14 +39,14 @@ if ! compare_files "$REFLECTOR_CONFIGURATION" "$REFLECTOR_CONFIGURATION_TO_PASS"
 fi
 
 # Before enabling the service, check if it is already enabled and keep it for later use.
-was_service_already_enabled=$(is_service_enabled "reflector")
+is_reflector_already_enabled=$(is_service_enabled "reflector")
 
 # Enable and start mirror list service if they are not already active.
 enable_service "reflector" "Enabling mirror list auto refresh service..."
 
 # Run reflector once to populate the mirror list.
 # The reflector service will show as inactive and run periodically, with the help of the reflector timer.
-if [ "$was_service_already_enabled" = "false" ]; then
+if [ "$is_reflector_already_enabled" = "false" ]; then
     start_service "reflector" "Running mirror list auto refresh service.."
 fi
 
