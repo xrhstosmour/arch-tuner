@@ -34,11 +34,6 @@ style_root = "bold red"
 [package]
 disabled = false
 
-# Time.
-[time]
-disabled = false
-format = "%H:%M | "
-
 # Memory.
 [memory_usage]
 threshold = 70
