@@ -73,9 +73,9 @@ is_process_running() {
 
     # Check if any process IDs were found.
     if [ -n "$process_ids" ]; then
-        return "true"
+        echo "true"
     else
-        return "false"
+        echo "false"
     fi
 }
 
