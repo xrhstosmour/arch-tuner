@@ -9,22 +9,18 @@ source "$SERVICES_SCRIPT_DIRECTORY/logs.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 
 # Function to check if a service is active or not.
-# Returns 0 if the service is active, 1 otherwise.
 # is_service_active "service_name"
 is_service_active() {
     local service_name="$1"
 
     if sudo systemctl is-active --quiet "$service_name"; then
-        # Return 0 (true) to indicate that the service is active.
-        return 0
+        echo "true"
     else
-        # Return 1 (false) to indicate that the service is not active.
-        return 1
+        echo "false"
     fi
 }
 
 # Function to check if a service is enabled or not.
-# Returns 0 if the service is enabled, 1 otherwise.
 # is_service_enabled "service_name"
 is_service_enabled() {
     local service_name="$1"
