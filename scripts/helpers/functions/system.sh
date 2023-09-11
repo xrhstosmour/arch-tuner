@@ -100,6 +100,7 @@ reboot_system() {
             log_warning "After the system restarts, please rerun the entire script!"
         fi
         log_info "Initiating system reboot..."
+        sleep 10
 
         # Use sed to set variable_to_change to 0 in the constant.sh file
         # Match any value after the equals sign and replace with 0
