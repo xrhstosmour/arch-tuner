@@ -73,11 +73,9 @@ is_process_running() {
 
     # Check if any process IDs were found.
     if [ -n "$process_ids" ]; then
-        # Return 0 (true) to indicate that the process is running.
-        return 0
+        return "true"
     else
-        # Return 1 (false) to indicate that the process is not running.
-        return 1
+        return "false"
     fi
 }
 

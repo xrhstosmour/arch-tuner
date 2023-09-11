@@ -92,7 +92,8 @@ append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXC
 if [ $real_time_scanning_changes_made -eq 0 ]; then
     stop_process "clamonacc" "Stopping antivirus real-time scanning..."
 fi
-if ! is_process_running "clamonacc"; then
+is_clamonacc_running=$(is_process_running "clamonacc")
+if [ "$is_clamonacc_running" = "false" ]; then
     log_info "Enabling and starting antivirus real-time scanning in the background..."
     sudo clamonacc --move="$REAL_TIME_SCANNING_QUARANTINE_FOLDER"
 fi
