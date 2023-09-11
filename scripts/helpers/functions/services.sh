@@ -14,7 +14,7 @@ source "$SERVICES_SCRIPT_DIRECTORY/logs.sh"
 is_service_active() {
     local service_name="$1"
 
-    if systemctl is-active --quiet "$service_name"; then
+    if sudo systemctl is-active --quiet "$service_name"; then
         # Return 0 (true) to indicate that the service is active.
         return 0
     else
@@ -29,7 +29,7 @@ is_service_active() {
 is_service_enabled() {
     local service_name="$1"
 
-    if systemctl is-enabled --quiet "$service_name"; then
+    if sudo systemctl is-enabled --quiet "$service_name"; then
         # Return 0 (true) to indicate that the service is enabled.
         return 0
     else
@@ -48,12 +48,9 @@ enable_service() {
     if ! is_service_enabled "$service_name"; then
         log_info "$message"
         sudo systemctl enable "$service_name"
-
-        # Return 0 (true) to indicate that the service was enabled.
-        return 0
+        echo "enabled"
     else
-        # Return 1 (false) to indicate that the service was already enabled.
-        return 1
+        echo "already_enabled"
     fi
 }
 
