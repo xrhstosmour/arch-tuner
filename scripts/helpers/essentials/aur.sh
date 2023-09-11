@@ -31,7 +31,8 @@ if ! command -v "$AUR_PACKAGE_MANAGER" &>/dev/null; then
     fi
 
     # Delete rust package manager, if it exists.
-    if are_packages_installed "rust" "$ARCH_PACKAGE_MANAGER"; then
+    is_rust_installed=$(are_packages_installed "rust" "$ARCH_PACKAGE_MANAGER")
+    if [ "$is_rust_installed" = "true" ]; then
         log_info "Deleting rust package manager..."
         sudo "$ARCH_PACKAGE_MANAGER" -R --noconfirm rust
     fi

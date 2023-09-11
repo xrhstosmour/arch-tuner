@@ -25,8 +25,9 @@ NETWORK_MANAGER_WIFI_CLONED_MAC_ADDRESS="wifi.cloned-mac-address=random"
 NETWORK_MANAGER_ETHERNET_CLONED_MAC_ADDRESS="ethernet.cloned-mac-address=random"
 
 # Check if NetworkManager is installed and active.
+is_network_manager_installed=$(are_packages_installed "$NETWORK_MANAGER_PACKAGE")
 is_network_manager_already_active=$(is_service_active "$NETWORK_MANAGER_PACKAGE")
-if are_packages_installed "$NETWORK_MANAGER_PACKAGE" && [ "$is_network_manager_already_active" = "true" ]; then
+if [ "$is_network_manager_installed" = "true" ] && [ "$is_network_manager_already_active" = "true" ]; then
 
     # Create network manager directory if it does not exist.
     if [ ! -d "$NETWORK_MANAGER_CONFIGURATION_DIRECTORY" ]; then
