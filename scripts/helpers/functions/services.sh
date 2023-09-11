@@ -30,9 +30,9 @@ is_service_enabled() {
     local service_name="$1"
 
     if sudo systemctl is-enabled --quiet "$service_name"; then
-        return "true"
+        echo "true"
     else
-        return "false"
+        echo "false"
     fi
 }
 
