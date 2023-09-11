@@ -74,19 +74,45 @@ if [ ! -d "$REAL_TIME_SCANNING_QUARANTINE_FOLDER" ]; then
 fi
 
 # To each function execution proceed to change the real_time_scanning_changes_made flag to 0 (true), only if the line was appended (function returned 0 (true)).
-append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_ACCESS_PREVENTION Yes" "Allowing real-time scanning..." && real_time_scanning_changes_made=0
-append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_USER $REAL_TIME_SCANNING_USERNAME" "Setting clamav as the user for real-time scanning..." && real_time_scanning_changes_made=0
-append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_USER $REAL_TIME_SCANNING_USERNAME" "Excluding clamav user from real-time scanning..." && real_time_scanning_changes_made=0
-append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_INCLUDE_PATH /" "Allowing real-time scanning at root folder..." && real_time_scanning_changes_made=0
-append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /proc" "Excluding /proc from real-time scanning..." && real_time_scanning_changes_made=0
-append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /sys" "Excluding /sys from real-time scanning..." && real_time_scanning_changes_made=0
-append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /dev" "Excluding /dev from real-time scanning..." && real_time_scanning_changes_made=0
-append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /run" "Excluding /run from real-time scanning..." && real_time_scanning_changes_made=0
-append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /tmp" "Excluding /tmp from real-time scanning..." && real_time_scanning_changes_made=0
-append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH $REAL_TIME_SCANNING_QUARANTINE_FOLDER" "Excluding $REAL_TIME_SCANNING_QUARANTINE_FOLDER from real-time scanning..." && real_time_scanning_changes_made=0
-append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /var/tmp" "Excluding /var/tmp from real-time scanning..." && real_time_scanning_changes_made=0
-append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /var/run" "Excluding /var/run from real-time scanning..." && real_time_scanning_changes_made=0
-append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /var/lock" "Excluding /var/lock from real-time scanning..." && real_time_scanning_changes_made=0
+if [ "$(append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_ACCESS_PREVENTION Yes" "Allowing real-time scanning...")" = "true" ]; then
+    real_time_scanning_changes_made=0
+fi
+if [ "$(append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_USER $REAL_TIME_SCANNING_USERNAME" "Setting clamav as the user for real-time scanning...")" = "true" ]; then
+    real_time_scanning_changes_made=0
+fi
+if [ "$(append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_USER $REAL_TIME_SCANNING_USERNAME" "Excluding clamav user from real-time scanning...")" = "true" ]; then
+    real_time_scanning_changes_made=0
+fi
+if [ "$(append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_INCLUDE_PATH /" "Allowing real-time scanning at root folder...")" = "true" ]; then
+    real_time_scanning_changes_made=0
+fi
+if [ "$(append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /proc" "Excluding /proc from real-time scanning...")" = "true" ]; then
+    real_time_scanning_changes_made=0
+fi
+if [ "$(append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /sys" "Excluding /sys from real-time scanning...")" = "true" ]; then
+    real_time_scanning_changes_made=0
+fi
+if [ "$(append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /dev" "Excluding /dev from real-time scanning...")" = "true" ]; then
+    real_time_scanning_changes_made=0
+fi
+if [ "$(append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /run" "Excluding /run from real-time scanning...")" = "true" ]; then
+    real_time_scanning_changes_made=0
+fi
+if [ "$(append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /tmp" "Excluding /tmp from real-time scanning...")" = "true" ]; then
+    real_time_scanning_changes_made=0
+fi
+if [ "$(append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH $REAL_TIME_SCANNING_QUARANTINE_FOLDER" "Excluding $REAL_TIME_SCANNING_QUARANTINE_FOLDER from real-time scanning...")" = "true" ]; then
+    real_time_scanning_changes_made=0
+fi
+if [ "$(append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /var/tmp" "Excluding /var/tmp from real-time scanning...")" = "true" ]; then
+    real_time_scanning_changes_made=0
+fi
+if [ "$(append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /var/run" "Excluding /var/run from real-time scanning...")" = "true" ]; then
+    real_time_scanning_changes_made=0
+fi
+if [ "$(append_line_to_file "$REAL_TIME_SCANNING_CONFIGURATION" "$REAL_TIME_SCANNING_EXCLUDE_PATH /var/lock" "Excluding /var/lock from real-time scanning...")" = "true" ]; then
+    real_time_scanning_changes_made=0
+fi
 
 # Enable real-time scanning.
 if [ $real_time_scanning_changes_made -eq 0 ]; then

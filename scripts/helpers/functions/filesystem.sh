@@ -25,12 +25,12 @@ append_line_to_file() {
         # Append line to file.
         echo "$line_to_append" | sudo tee -a "$file_path" >/dev/null
 
-        # Return 0 (true) to indicate that a change was made.
-        return 0
+        # Return true to indicate that a change was made.
+        echo "true"
     fi
 
-    # Return 1 (false) to indicate that no change was made.
-    return 1
+    # Return false to indicate that no change was made.
+    echo "false"
 }
 
 # Function to add options to a mount point.
