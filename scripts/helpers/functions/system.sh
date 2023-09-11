@@ -97,9 +97,9 @@ reboot_system() {
     if [ "$value_to_check" -ne 0 ]; then
         log_error "System requires a reboot to apply changes!"
         if [ "$log_rerun_warning" -eq 0 ]; then
-            log_warning "After the system restarts, please rerun the entire script!"
+            log_error "After the system restarts, please rerun the entire script!"
         fi
-        log_info "Initiating system reboot..."
+        log_error "Initiating system reboot..."
         sleep 10
 
         # Use sed to set variable_to_change to 0 in the constant.sh file
