@@ -10,19 +10,19 @@ source "$LOGS_SCRIPT_DIRECTORY/../../core/constants.sh"
 # log_info "Info message to log"
 log_info() {
     info="$1"
-    echo -e "\n${BOLD_CYAN}""$info""${NO_COLOR}"
+    echo -e "\n${BOLD_CYAN}""$info""${NO_COLOR}" >&2
 }
 
 # Function to log a warning message.
 # log_warning "Warning message to log"
 log_warning() {
     warning="$1"
-    echo -e "\n${BOLD_YELLOW}""$warning""${NO_COLOR}"
+    echo -e "\n${BOLD_YELLOW}""$warning""${NO_COLOR}" >&2
 }
 
 # Function to log an error message.
 # log_error "Warning message to log"
 log_error() {
     error="$1"
-    echo -e "\n${BOLD_RED}""$error""${NO_COLOR}"
+    echo -e "\n${BOLD_RED}""$error""${NO_COLOR}" >&2
 }
