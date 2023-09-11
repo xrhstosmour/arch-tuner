@@ -32,17 +32,27 @@ VAR_TMP_DIRECTORY="/var/tmp"
 # TODO: Check if this is working or not.
 # To each function execution proceed to change the && mount_changes_made flag to 0 (true), only if the mount point option changed (function returned 0 (true)).
 # Add nodev, noexec, and nosuid options to /boot and /boot/efi.
-add_mount_options "$BOOT_DIRECTORY" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION" && mount_changes_made=0
-add_mount_options "$BOOT_EFI_DIRECTORY" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION" && mount_changes_made=0
+if [ "$(add_mount_options "$BOOT_DIRECTORY" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION")" = "true" ]; then
+    mount_changes_made=0
+fi
+if [ "$(add_mount_options "$BOOT_EFI_DIRECTORY" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION")" = "true" ]; then
+    mount_changes_made=0
+fi
 
 # Add nodev and nosuid options to /home and /root.
-add_mount_options "$HOME_DIRECTORY" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION" && mount_changes_made=0
-add_mount_options "$ROOT_DIRECTORY" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION" && mount_changes_made=0
+if [ "$(add_mount_options "$HOME_DIRECTORY" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION")" = "true" ]; then
+    mount_changes_made=0
+fi
+if [ "$(add_mount_options "$ROOT_DIRECTORY" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION")" = "true" ]; then
+    mount_changes_made=0
+fi
 
 # Add nodev, noexec, and nosuid options to directories under /var excluding /var/tmp.
 for dir in "$VAR_SUBFOLDERS_DIRECTORY"; do
     if [[ $dir != "$VAR_TMP_DIRECTORY" ]]; then
-        add_mount_options "$dir" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION" && mount_changes_made=0
+        if [ "$(add_mount_options "$dir" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION")" = "true" ]; then
+            mount_changes_made=0
+        fi
     fi
 done
 

@@ -45,13 +45,13 @@ add_mount_options() {
             log_info "Adding options $options to mount point $mount_point..."
             sudo sed -i "s|\($mount_point .*\) defaults |\1 defaults,$options |" /etc/fstab
 
-            # Return 0 (true) to indicate that a change was made.
-            return 0
+            # Return true to indicate that a change was made.
+            return true
         fi
     fi
 
-    # Return 1 (false) to indicate that no change was made.
-    return 1
+    # Return false to indicate that no change was made.
+    return false
 }
 
 # Function to compare two files.
