@@ -38,13 +38,18 @@ if ! compare_files "$REFLECTOR_CONFIGURATION" "$REFLECTOR_CONFIGURATION_TO_PASS"
     sudo reflector ${args} >/dev/null
 fi
 
-# Enable and start mirror list service and timer if they are not already active.
-enable_reflector_result=$(enable_service "reflector" "Enabling mirror list auto refresh service...")
-if [ "$enable_reflector_result" = "enabled" ]; then
+# Before enabling the service, check if it is already enabled and keep it for later use.
+was_service_already_enabled=$(is_service_enabled "reflector")
 
-    # Run reflector once to populate the mirror list.
-    # The reflector service will show as inactive and run periodically, with the help of the reflector timer.
+# Enable and start mirror list service if they are not already active.
+enable_service "reflector" "Enabling mirror list auto refresh service..."
+
+# Run reflector once to populate the mirror list.
+# The reflector service will show as inactive and run periodically, with the help of the reflector timer.
+if [ "$was_service_already_enabled" = "false" ]; then
     start_service "reflector" "Running mirror list auto refresh service.."
 fi
+
+# Start and enable mirror list timer if they are not already active.
 start_service "reflector.timer" "Starting mirror list auto refresh timer service..."
 enable_service "reflector.timer" "Enabling mirror list auto refresh timer service..."

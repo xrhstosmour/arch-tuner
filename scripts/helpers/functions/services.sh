@@ -30,11 +30,9 @@ is_service_enabled() {
     local service_name="$1"
 
     if sudo systemctl is-enabled --quiet "$service_name"; then
-        # Return 0 (true) to indicate that the service is enabled.
-        return 0
+        return "true"
     else
-        # Return 1 (false) to indicate that the service is not enabled.
-        return 1
+        return "false"
     fi
 }
 
@@ -45,12 +43,10 @@ enable_service() {
     local message="${2:-"Enabling $service_name service..."}"
 
     # Check if the service is enabled
-    if ! is_service_enabled "$service_name"; then
+    is_service_already_enabled=$(is_service_enabled "$service_name")
+    if [ "$is_service_already_enabled" = "false" ]; then
         log_info "$message"
         sudo systemctl enable "$service_name"
-        echo "enabled"
-    else
-        echo "already_enabled"
     fi
 }
 
