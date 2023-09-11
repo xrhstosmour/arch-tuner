@@ -1,3 +1,4 @@
+# TODO: Finilize the starshi configuration.
 # Base configuration.
 command_timeout = 10000
 add_newline = true
@@ -11,13 +12,17 @@ style = "bold italic #87A752"
 
 # Directory.
 [directory]
-truncation_length = 3
+truncation_length = 5
+format = "[$path]($style)[$lock_symbol]($lock_style) "
 style = "bold cyan"
 
 # Hostname.
 [hostname]
-ssh_only = true
-style = "bold yellow"
+ssh_only = false
+format = "<$hostname>"
+trim_at = "-"
+style = "bold dimmed white"
+disabled = true
 
 # Character.
 [character]
@@ -27,8 +32,8 @@ error_symbol = "[✖](bold red) "
 # Username.
 [username]
 show_always = false
-style_user = "bold green"
-style_root = "bold red"
+style_user = "bold dimmed blue"
+style_root = "bold dimmed red"
 
 # Packages.
 [package]
@@ -36,9 +41,10 @@ disabled = false
 
 # Memory.
 [memory_usage]
+format = "$symbol[${ram}( | ${swap})]($style) "
 threshold = 70
-format = "using [$ram]($style) "
-style = "bold red"
+style = "bold dimmed white"
+disabled = false
 
 # Background jobs.
 [jobs]
@@ -49,19 +55,29 @@ style = "bold blue"
 # Git.
 [git_branch]
 format = "on [$symbol$branch]($style) "
-symbol = " "
-style = "bold green"
+symbol = "🍣 "
+style = "bold yellow"
+
+[git_commit]
+commit_hash_length = 8
+style = "bold white"
+
+[git_state]
+format = '[\($state( $progress_current of $progress_total)\)]($style) '
 
 [git_status]
-conflicted = "✖"
-ahead = "↑"
-behind = "↓"
-diverged = "↕"
-stashed = "💼"
-modified = "*"
-staged = "+"
-renamed = "»"
-deleted = "✘"
+conflicted = "⚔️ "
+ahead = "🏎️ 💨 ×${count}"
+behind = "🐢 ×${count}"
+diverged = "🔱 🏎️ 💨 ×${ahead_count} 🐢 ×${behind_count}"
+untracked = "🛤️  ×${count}"
+stashed = "📦 "
+modified = "📝 ×${count}"
+staged = "🗃️  ×${count}"
+renamed = "📛 ×${count}"
+deleted = "🗑️  ×${count}"
+style = "bright-white"
+format = "$all_status$ahead_behind"
 
 # Languages & Tools.
 [nodejs]
