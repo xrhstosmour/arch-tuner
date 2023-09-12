@@ -119,7 +119,3 @@ style = "bold blue"
 [dart]
 format = "🎯 $version "
 style = "bold cyan"
-
-[flutter]
-format = "🦋 $version "
-style = "bold magenta"
