@@ -52,8 +52,9 @@ start_service() {
     local service_name="$1"
     local message="${2:-"Starting $service_name service..."}"
 
-    # Check if the service is active
-    if ! is_service_active "$service_name"; then
+    # Check if the service is already active.
+    is_service_already_active=$(is_service_active "$service_name")
+    if [ "$is_service_already_active" = "false" ]; then
         log_info "$message"
         sudo systemctl start "$service_name"
     fi
@@ -65,8 +66,9 @@ stop_service() {
     local service_name="$1"
     local message="${2:-"Stoping $service_name service..."}"
 
-    # Check if the service is active
-    if systemctl is-active --quiet "$service_name"; then
+    # Check if the service is already active.
+    is_service_already_active=$(is_service_active "$service_name")
+    if [ "$is_service_already_active" = "true" ]; then
         log_info "$message"
         sudo systemctl stop "$service_name"
     fi
