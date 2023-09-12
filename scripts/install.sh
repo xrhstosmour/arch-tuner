@@ -34,12 +34,10 @@ log_info "Starting installing procedure..."
 FIND_SCRIPTS_COMMAND="find \"$INSTALL_SCRIPT_DIRECTORY\" -type f -name \"*.sh\""
 
 # Give execution permission to all the scripts.
-if $FIND_SCRIPTS_COMMAND | while read -r script; do
-    if [[ ! -x "$script" ]]; then
-        log_info "Setting execution permissions to: $script..."
-        chmod +x "$script"
-    fi
-done
+if $FIND_SCRIPTS_COMMAND ! -executable | grep -q .; then
+    log_info "Setting execution permissions to all the scripts..."
+    $FIND_SCRIPTS_COMMAND -exec chmod +x {} \;
+fi
 
 # Start by executing the essentials script.
 if [ "$ESSENTIALS_COMPLETED" -eq 1 ]; then
