@@ -1,4 +1,4 @@
-# TODO: Finilize the starshi configuration.
+# TODO: Finilize the starship configuration.
 # Base configuration.
 command_timeout = 10000
 add_newline = true
