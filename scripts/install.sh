@@ -30,15 +30,26 @@ log_info "Starting installing procedure..."
 
 # TODO: Ask user if wants to run the script as initial setup or rerun.
 
-# Define the common find scripts command.
-FIND_SCRIPTS_COMMAND="find \"$INSTALL_SCRIPT_DIRECTORY\" -type f -name \"*.sh\""
+# Store the original globstar setting
+shopt -q globstar
+original_globstar=$?
 
-# Check if there's any non-executable .sh script.
-NON_EXECUTABLE_SCRIPTS=$($FIND_SCRIPTS_COMMAND ! -executable -print -quit)
+# Enable globstar
+shopt -s globstar
 
-if [[ -n $NON_EXECUTABLE_SCRIPTS ]]; then
-    log_info "Setting execution permissions to the scripts..."
-    $FIND_SCRIPTS_COMMAND -exec chmod +x {} \;
+# Give execution permissions to all needed scripts.
+for script in **/*.sh; do
+
+    # Check if the script isn't executable
+    if [[ ! -x "$script" ]]; then
+        log_info "Setting execution permissions for script '$script'..."
+        chmod +x "$script"
+    fi
+done
+
+# Restore the original globstar setting
+if (($original_globstar == 0)); then
+    shopt -u globstar
 fi
 
 # Start by executing the essentials script.
