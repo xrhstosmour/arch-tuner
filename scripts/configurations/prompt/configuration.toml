@@ -92,7 +92,7 @@ style = "bold red"
 format = "🐍 $version "
 style = "bold blue"
 
-[go]
+[golang]
 format = "🐹 $version "
 style = "bold cyan"
 
