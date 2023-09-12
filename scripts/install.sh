@@ -31,7 +31,7 @@ log_info "Starting installing procedure..."
 # TODO: Ask user if wants to run the script as initial setup or rerun.
 
 # Define the common find scripts command.
-FIND_SCRIPTS_COMMAND="find \"$INSTALL_SCRIPT_DIRECTORY/../scripts\" -type f -name \"*.sh\""
+FIND_SCRIPTS_COMMAND="find \"$INSTALL_SCRIPT_DIRECTORY\" -type f -name \"*.sh\""
 
 # Give execution permission to all the scripts.
 if $FIND_SCRIPTS_COMMAND ! -executable | grep -q .; then
