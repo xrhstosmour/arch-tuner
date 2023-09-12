@@ -33,9 +33,11 @@ log_info "Starting installing procedure..."
 # Define the common find scripts command.
 FIND_SCRIPTS_COMMAND="find \"$INSTALL_SCRIPT_DIRECTORY\" -type f -name \"*.sh\""
 
-# Give execution permissions to all the scripts needed.
-if $FIND_SCRIPTS_COMMAND | grep -q . && ! $FIND_SCRIPTS_COMMAND -executable | grep -q .; then
-    log_info "Setting execution permissions to all the scripts..."
+# Check if there's any non-executable .sh script.
+NON_EXECUTABLE_SCRIPTS=$($FIND_SCRIPTS_COMMAND ! -executable -print -quit)
+
+if [[ -n $NON_EXECUTABLE_SCRIPTS ]]; then
+    log_info "Setting execution permissions to the scripts..."
     $FIND_SCRIPTS_COMMAND -exec chmod +x {} \;
 fi
 
