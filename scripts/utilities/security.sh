@@ -37,7 +37,7 @@ fi
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
 
 # Reboot system if needed and do not log the rerun warning.
-reboot_system "$REBOOTED_AFTER_FIREWALL" "REBOOTED_AFTER_FIREWALL"
+reboot_system "$COMPLETED_UP_TO_FIREWALL" "COMPLETED_UP_TO_FIREWALL"
 
 # Install and configure antivirus.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/antivirus.sh
