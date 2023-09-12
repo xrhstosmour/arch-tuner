@@ -16,6 +16,7 @@ SECURITY_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import functions.
 source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/packages.sh"
 source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
+source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/system.sh"
 
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
@@ -35,7 +36,8 @@ fi
 # Install and configure firewall.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
 
-# TODO: Restart device to apply changes and rerun script.
+# Reboot system if needed and do not log the rerun warning.
+reboot_system "$REBOOTED_AFTER_FIREWALL" "REBOOTED_AFTER_FIREWALL"
 
 # Install and configure antivirus.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/antivirus.sh
