@@ -11,7 +11,7 @@ source "$UI_SCRIPT_DIRECTORY/logs.sh"
 ask_for_user_backup_before_proceeding() {
     log_error -n "BACKUP EVERYTHING BEFORE PROCEEDING!"
     log_warning -n "If not, exit script and re-run after backup!"
-    log_info "Press ENTER to continue within next 10 seconds!"
+    log_info -n "Press ENTER to continue within next 10 seconds!"
 
     # Read user input with a 10 second timeout.
     if ! read -t 10; then
