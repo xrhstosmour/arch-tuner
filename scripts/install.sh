@@ -31,14 +31,8 @@ source "$INSTALL_SCRIPT_DIRECTORY/helpers/functions/strings.sh"
 source "$FLAGS_SCRIPT_PATH"
 
 # Ask user for backup confirmation before proceeding.
-ask_for_user_backup_before_proceeding
-
-# Ask user if wants to run the script as initial setup or rerun.
-is_initial_setup_or_rerun=$(ask_user_for_setup_type "${SCRIPTS[@]}" "$FLAGS_SCRIPT_PATH")
-if [ "$is_initial_setup_or_rerun" = "initial" ]; then
-    change_flag_value "$IS_INITIAL_SETUP" 0 "$FLAGS_SCRIPT_PATH"
-else
-    change_flag_value "$IS_INITIAL_SETUP" 1 "$FLAGS_SCRIPT_PATH"
+if [[ "$INITIAL_SETUP" -eq 0 ]]; then
+    ask_for_user_backup_before_proceeding
 fi
 
 # Iterate over the scripts and execute them accordingly.
@@ -66,6 +60,13 @@ for script in "${!SCRIPTS[@]}"; do
 
         # Reboot system for the rest of the scripts.
         if [[ "$script" == "essentials" || "$script" == "interface" || "$script" == "privacy" ]]; then
+
+            # Before rebooting, if the script is the first one the "essentials" one, change the INITIAL_SETUP flag to 1 (false).
+            if [ "$script" == "essentials" ]; then
+                change_flag_value "$INITIAL_SETUP" 1 "$FLAGS_SCRIPT_PATH"
+            fi
+
+            # Proceed with rebooting the system.
             reboot_system "${!completion_flag}" "$completion_flag"
         elif [ "$script" == "security" ]; then
             log_info "Installation procedure finished!"

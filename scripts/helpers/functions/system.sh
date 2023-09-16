@@ -18,7 +18,7 @@ update_system() {
     local WORLDWIDE_MIRROR='https://geo.mirror.pkgbuild.com/$repo/os/$arch'
 
     # Reset mirrors to the worldwide one before updating/upgrading.
-    if [[ "$IS_INITIAL_SETUP" -eq 0 ]]; then
+    if [[ "$INITIAL_SETUP" -eq 0 ]]; then
         log_info "Resetting mirrors to the worldwide one before updating/upgrading..."
         echo 'Server = '"$WORLDWIDE_MIRROR" | sudo tee /etc/pacman.d/mirrorlist >/dev/null
     fi
