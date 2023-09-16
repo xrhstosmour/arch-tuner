@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # TODO: There are open issues with the kloak package, so this script is not working properly, and it is not recommended to use for now.
-# ? When enabling the service, every password input is wrong.
-# ? https://github.com/vmonaco/kloak/issues/12
+# ! When enabling the service, every password input is wrong: https://github.com/vmonaco/kloak/issues/12.
 
 # Catch exit signal (CTRL + C), to terminate the whole script.
 trap "exit" INT
@@ -19,6 +18,18 @@ source "$KEYBOARD_SCRIPT_DIRECTORY/../functions/services.sh"
 
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
+
+# Constant variable containing the keystroke anonymization needed packages to install.
+KEYSTROKE_ANONYMIZATION_PACKAGES="libedev xorg-xset"
+
+# Check if at least one security package is not installed.
+are_security_packages_installed=$(are_packages_installed "$KEYSTROKE_ANONYMIZATION_PACKAGES" "$AUR_PACKAGE_MANAGER")
+if [ "$are_security_packages_installed" = "false" ]; then
+    log_info "Installing keystroke anonymization needed packages..."
+
+    # Install security packages.
+    install_packages "$KEYSTROKE_ANONYMIZATION_PACKAGES" "$AUR_PACKAGE_MANAGER"
+fi
 
 # Constant variables for keystroke anonymization configuration.
 KEYSTROKE_ANONYMIZATION_PACKAGE="kloak"

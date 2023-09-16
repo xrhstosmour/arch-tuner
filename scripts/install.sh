@@ -68,6 +68,7 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
                 change_flag_value "INITIAL_SETUP" 1 "$FLAGS_SCRIPT_PATH"
             fi
 
+            # TODO: Reboot if interface script is executed.
             # Proceed with rebooting the system.
             reboot_system "${!completion_flag}" "$completion_flag"
         elif [ "$script" == "security" ]; then
