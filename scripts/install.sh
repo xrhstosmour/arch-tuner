@@ -12,6 +12,9 @@ INSTALL_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Constant variable for the flags script path.
 FLAGS_SCRIPT_PATH="$INSTALL_SCRIPT_DIRECTORY/core/flags.sh"
 
+# Define the scripts' order explicitly.
+declare -a SCRIPTS_ORDER=("essentials" "interface" "desktop" "development" "privacy" "security")
+
 # Scripts to run containing their completion flag, initial setup value and optional message, splitted by "|".
 declare -A SCRIPTS=(
     ["essentials"]="ESSENTIALS_COMPLETED|1"
@@ -36,7 +39,7 @@ if [[ "$INITIAL_SETUP" -eq 0 ]]; then
 fi
 
 # Iterate over the scripts and execute them accordingly.
-for script in "${!SCRIPTS[@]}"; do
+for script in "${!SCRIPTS_ORDER[@]}"; do
 
     # Split the script info based on the delimiter "|".
     IFS="|" read -ra script_info <<<"${SCRIPTS[$script]}"
