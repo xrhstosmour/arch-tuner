@@ -12,22 +12,17 @@ INSTALL_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Constant variable for the flags script path.
 FLAGS_SCRIPT_PATH="$INSTALL_SCRIPT_DIRECTORY/core/flags.sh"
 
-# Scripts to run and their completion flags
+# Scripts to run containing their completion flag, initial setup value and optional message, splitted by "|".
 declare -A SCRIPTS=(
-    ["essentials"]="ESSENTIALS_COMPLETED"
-    ["interface"]="INTERFACE_COMPLETED"
-    ["desktop"]="DESKTOP_COMPLETED"
-    ["development"]="DEVELOPMENT_COMPLETED"
-    ["privacy"]="PRIVACY_COMPLETED"
-    ["security"]="SECURITY_COMPLETED"
+    ["essentials"]="ESSENTIALS_COMPLETED|1"
+    ["interface"]="INTERFACE_COMPLETED|1|Do you want to install display manager and GPU drivers?"
+    ["desktop"]="DESKTOP_COMPLETED|1|Do you want to install desktop applications?"
+    ["development"]="DEVELOPMENT_COMPLETED|1|Do you want to install development tools and programming languages?"
+    ["privacy"]="PRIVACY_COMPLETED|1"
+    ["security"]="SECURITY_COMPLETED|1"
 )
 
-# Prompt messages for the scripts which the user can choose to skip.
-declare -A SCRIPT_MESSAGES=(
-    ["interface"]="Do you want to install display manager and GPU drivers?"
-    ["desktop"]="Do you want to install desktop applications?"
-    ["development"]="Do you want to install development tools and programming languages?"
-)
+# TODO: Give execution permission to all the needed scripts.
 
 # Import functions and flags.
 source "$INSTALL_SCRIPT_DIRECTORY/helpers/functions/ui.sh"
@@ -38,21 +33,23 @@ source "$FLAGS_SCRIPT_PATH"
 # Ask user for backup confirmation before proceeding.
 ask_for_user_backup_before_proceeding
 
-# TODO: Ask user if wants to run the script as initial setup or rerun.
-# TODO: Give execution permission to all the needed scripts.
+# Ask user if wants to run the script as initial setup or rerun.
+ask_user_for_setup_type "${SCRIPTS[@]}" "$FLAGS_SCRIPT_PATH"
 
 # Iterate over the scripts and execute them accordingly.
 for script in "${!SCRIPTS[@]}"; do
 
-    # Get the completion flag for the script.
-    local completion_flag=${SCRIPTS[$script]}
+    # Split the script info based on the delimiter "|".
+    IFS="|" read -ra script_info <<<"${SCRIPTS[$script]}"
+    local completion_flag="${script_info[0]}"
+    local message="${script_info[2]}"
 
     # Check if script has not already been completed.
     if [ "${!completion_flag}" -eq 1 ]; then
 
         # Check if there's a prompt message for the script.
-        if [[ "${SCRIPT_MESSAGES[$script]}" ]]; then
-            ask_for_user_approval_before_executing_script "${SCRIPT_MESSAGES[$script]}" "$INSTALL_SCRIPT_DIRECTORY/utilities/$script.sh"
+        if [[ "$message" ]]; then
+            ask_for_user_approval_before_executing_script "$message" "$INSTALL_SCRIPT_DIRECTORY/utilities/$script.sh"
         else
             log_info "Executing $script script..."
             sh "$INSTALL_SCRIPT_DIRECTORY/utilities/$script.sh"
