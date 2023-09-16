@@ -13,6 +13,9 @@ source "$SYSTEM_SCRIPT_DIRECTORY/strings.sh"
 # update_system
 update_system() {
 
+    # Reset mirrors to the worldwide one before updating.
+    echo "Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch" | sudo tee /etc/pacman.d/mirrorlist >/dev/null
+
     # Upgrade package database format if needed.
     sudo pacman-db-upgrade
 
