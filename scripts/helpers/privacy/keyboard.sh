@@ -24,7 +24,7 @@ KEYSTROKE_ANONYMIZATION_PACKAGE="kloak"
 KEYSTROKE_ANONYMIZATION_CONFIGURATION="/etc/systemd/system/kloak.service"
 
 # Constant variable containing the keystroke anonymization packages to install.
-KEYSTROKE_ANONYMIZATION_PACKAGES="libedev xorg-xset $KEYSTROKE_ANONYMIZATION_PACKAGE"
+KEYSTROKE_ANONYMIZATION_PACKAGES="libevdev xorg-xset $KEYSTROKE_ANONYMIZATION_PACKAGE"
 
 # Check if at least one keystroke anonymization package is not installed.
 are_keystroke_anonymization_packages_installed=$(are_packages_installed "$KEYSTROKE_ANONYMIZATION_PACKAGES" "$AUR_PACKAGE_MANAGER")
