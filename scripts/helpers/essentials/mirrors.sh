@@ -9,10 +9,11 @@ set -e
 # Constant variable of the scripts' working directory to use for relative paths.
 MIRRORS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-# Import functions.
+# Import functions and flags.
 source "$MIRRORS_SCRIPT_DIRECTORY/../functions/packages.sh"
 source "$MIRRORS_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 source "$MIRRORS_SCRIPT_DIRECTORY/../functions/services.sh"
+source "$MIRRORS_SCRIPT_DIRECTORY/../../core/flags.sh"
 
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
@@ -47,7 +48,7 @@ enable_service "reflector" "Enabling mirror list auto refresh service..."
 
 # Run reflector once to populate the mirror list.
 # The reflector service will show as inactive and run periodically, with the help of the reflector timer.
-if [ "$is_reflector_already_enabled" = "false" ]; then
+if [[ "$is_reflector_already_enabled" = "false" ]] || [[ "$INITIAL_SETUP" -eq 0 ]]; then
     start_service "reflector" "Running mirror list auto refresh service.."
 fi
 
