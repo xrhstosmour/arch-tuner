@@ -9,8 +9,8 @@ source "$UI_SCRIPT_DIRECTORY/logs.sh"
 # Function to ask for user approval before proceeding.
 # ask_for_user_backup_before_proceeding
 ask_for_user_backup_before_proceeding() {
-    log_error "BACKUP EVERYTHING BEFORE PROCEEDING!"
-    log_warning "If not, exit script and re-run after backup!"
+    log_error -n "BACKUP EVERYTHING BEFORE PROCEEDING!"
+    log_warning -n "If not, exit script and re-run after backup!"
     log_info "Press ENTER to continue within next 10 seconds!"
 
     # Read user input with a 10 second timeout.
@@ -61,9 +61,9 @@ ask_user_for_setup_type() {
     unset 'flags[-1]'
 
     # Ask user if wants to run the script as initial setup or rerun.
-    log_error "Do you want to run the script as:"
-    log_warning "1. Initial Setup"
-    log_warning "2. Rerun"
+    log_error -n "Do you want to run the script as:"
+    log_warning -n "1. Initial Setup"
+    log_warning -n "2. Rerun"
     read -p "Enter your choice (1/2): " choice
 
     # If choice is "Initial Setup" reset the flags.
