@@ -40,7 +40,7 @@ fi
 # Install and configure firewall.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
 
-# Reboot system if needed and do not log the rerun warning.
+# Reboot system if needed.
 reboot_system "$COMPLETED_UP_TO_FIREWALL" "COMPLETED_UP_TO_FIREWALL" "$FLAGS_SCRIPT_PATH"
 
 # Install and configure antivirus.
