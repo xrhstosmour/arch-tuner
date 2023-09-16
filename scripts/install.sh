@@ -41,8 +41,8 @@ for script in "${!SCRIPTS[@]}"; do
 
     # Split the script info based on the delimiter "|".
     IFS="|" read -ra script_info <<<"${SCRIPTS[$script]}"
-    local completion_flag="${script_info[0]}"
-    local message="${script_info[2]}"
+    completion_flag="${script_info[0]}"
+    message="${script_info[2]}"
 
     # Check if script has not already been completed.
     if [ "${!completion_flag}" -eq 1 ]; then
