@@ -13,6 +13,9 @@ source "$SYSTEM_SCRIPT_DIRECTORY/strings.sh"
 # update_system
 update_system() {
 
+    # Upgrade package database format if needed.
+    sudo pacman-db-upgrade
+
     # Update package databases.
     sudo pacman -Sy
 
