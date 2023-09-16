@@ -10,10 +10,3 @@ BOLD_RED='\e[1;31m'
 # Package managers to use.
 ARCH_PACKAGE_MANAGER="pacman"
 AUR_PACKAGE_MANAGER="paru"
-
-# Variables to keep if the script ran up to a specific point before rebooting.
-ESSENTIALS_COMPLETED=1
-INTERFACE_COMPLETED=1
-PRIVACY_COMPLETED=1
-COMPLETED_UP_TO_FIREWALL=1
-SECURITY_COMPLETED=1
