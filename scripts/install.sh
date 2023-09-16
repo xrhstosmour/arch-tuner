@@ -43,10 +43,10 @@ for script in "${!SCRIPTS_ORDER[@]}"; do
 
     # Split the script info based on the delimiter "|".
     IFS="|" read -ra script_info <<<"${SCRIPTS[$script]}"
-    completion_flag="${script_info[0]}"
-    message="${script_info[2]}"
+    completion_flag=${script_info[0]}
+    message=${script_info[2]}
 
-    # Get the value of the completion flag.
+    # Using eval to get the value of the completion flag.
     current_flag_value=$(eval echo \$$completion_flag)
 
     # Check if script has not already been completed.
