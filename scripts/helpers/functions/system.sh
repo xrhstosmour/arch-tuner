@@ -15,7 +15,7 @@ update_system() {
 
     # Reset mirrors to the worldwide one before updating.
     log_info "Resetting mirrors to the worldwide one before updating/upgrading..."
-    echo "Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch" | sudo tee /etc/pacman.d/mirrorlist >/dev/null
+    echo 'Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch' | sudo tee /etc/pacman.d/mirrorlist >/dev/null
 
     # Upgrade package database format if needed.
     sudo pacman-db-upgrade
