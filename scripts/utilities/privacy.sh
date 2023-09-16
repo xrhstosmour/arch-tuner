@@ -18,8 +18,9 @@ source "$PRIVACY_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 # Configure network.
 sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/network.sh
 
+# TODO: Disable keystroke anonymization for now, because it is not working properly.
 # Install and configure keystroke anonymization.
-sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/keyboard.sh
+# sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/keyboard.sh
 
 # Configure umask.
 sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/umask.sh
