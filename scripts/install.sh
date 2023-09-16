@@ -46,8 +46,11 @@ for script in "${!SCRIPTS_ORDER[@]}"; do
     completion_flag="${script_info[0]}"
     message="${script_info[2]}"
 
+    # Get the value of the completion flag.
+    current_flag_value=$(eval echo \$$completion_flag)
+
     # Check if script has not already been completed.
-    if [ "${!completion_flag}" -eq 1 ]; then
+    if [ "$current_flag_value" -eq 1 ]; then
 
         # Check if there's a prompt message for the script.
         if [[ "$message" ]]; then
