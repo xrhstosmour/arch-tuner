@@ -23,7 +23,7 @@ REFLECTOR_CONFIGURATION="/etc/xdg/reflector/reflector.conf"
 REFLECTOR_CONFIGURATION_TO_PASS="$MIRRORS_SCRIPT_DIRECTORY/../../configurations/mirrors/reflector.conf"
 
 # Install mirror list manager.
-install_packages "reflector" "$AUR_PACKAGE_MANAGER" "Installing mirror list manager..."
+install_packages "reflector" "$ARCH_PACKAGE_MANAGER" "Installing mirror list manager..."
 
 # Copy the configuration file only if it is not the same as the current one.
 are_reflector_files_the_same=$(compare_files "$REFLECTOR_CONFIGURATION" "$REFLECTOR_CONFIGURATION_TO_PASS")

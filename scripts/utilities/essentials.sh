@@ -17,6 +17,9 @@ source "$ESSENTIALS_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
+# Install and configure mirror list manager.
+sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
+
 # Update system.
 update_system
 
@@ -35,9 +38,6 @@ sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/aur.sh
 
 # Install and configure system information tool.
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/information.sh
-
-# Install and configure mirror list manager.
-sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
 
 # Install terminal tools.
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/terminal.sh
