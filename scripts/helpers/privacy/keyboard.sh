@@ -19,24 +19,21 @@ source "$KEYBOARD_SCRIPT_DIRECTORY/../functions/services.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
-# Constant variable containing the keystroke anonymization needed packages to install.
-KEYSTROKE_ANONYMIZATION_PACKAGES="libedev xorg-xset"
-
-# Check if at least one security package is not installed.
-are_security_packages_installed=$(are_packages_installed "$KEYSTROKE_ANONYMIZATION_PACKAGES" "$AUR_PACKAGE_MANAGER")
-if [ "$are_security_packages_installed" = "false" ]; then
-    log_info "Installing keystroke anonymization needed packages..."
-
-    # Install security packages.
-    install_packages "$KEYSTROKE_ANONYMIZATION_PACKAGES" "$AUR_PACKAGE_MANAGER"
-fi
-
 # Constant variables for keystroke anonymization configuration.
 KEYSTROKE_ANONYMIZATION_PACKAGE="kloak"
 KEYSTROKE_ANONYMIZATION_CONFIGURATION="/etc/systemd/system/kloak.service"
 
-# Install keystroke anonymization package.
-install_packages "$KEYSTROKE_ANONYMIZATION_PACKAGE-git" "$AUR_PACKAGE_MANAGER" "Installing keystroke anonymization..."
+# Constant variable containing the keystroke anonymization packages to install.
+KEYSTROKE_ANONYMIZATION_PACKAGES="libedev xorg-xset $KEYSTROKE_ANONYMIZATION_PACKAGE"
+
+# Check if at least one keystroke anonymization package is not installed.
+are_keystroke_anonymization_packages_installed=$(are_packages_installed "$KEYSTROKE_ANONYMIZATION_PACKAGES" "$AUR_PACKAGE_MANAGER")
+if [ "$are_keystroke_anonymization_packages_installed" = "false" ]; then
+    log_info "Installing keystroke anonymization packages..."
+
+    # Install security packages.
+    install_packages "$KEYSTROKE_ANONYMIZATION_PACKAGES" "$AUR_PACKAGE_MANAGER"
+fi
 
 # Create a systemd service to run keystroke anonymization at startup.
 if [ ! -f "$KEYSTROKE_ANONYMIZATION_CONFIGURATION" ]; then
