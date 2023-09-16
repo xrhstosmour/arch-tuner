@@ -2,6 +2,7 @@
 
 # TODO: There are open issues with the kloak package, so this script is not working properly, and it is not recommended to use for now.
 # ! When enabling the service, every password input is wrong: https://github.com/vmonaco/kloak/issues/12.
+# ! I do not know if it is related to the kloak, kloak-git or at adding the user to input group.
 
 # Catch exit signal (CTRL + C), to terminate the whole script.
 trap "exit" INT
@@ -24,7 +25,7 @@ KEYSTROKE_ANONYMIZATION_PACKAGE="kloak"
 KEYSTROKE_ANONYMIZATION_CONFIGURATION="/etc/systemd/system/kloak.service"
 
 # Constant variable containing the keystroke anonymization packages to install.
-KEYSTROKE_ANONYMIZATION_PACKAGES="libevdev xorg-xset $KEYSTROKE_ANONYMIZATION_PACKAGE"
+KEYSTROKE_ANONYMIZATION_PACKAGES="libevdev $KEYSTROKE_ANONYMIZATION_PACKAGE"
 
 # Check if at least one keystroke anonymization package is not installed.
 are_keystroke_anonymization_packages_installed=$(are_packages_installed "$KEYSTROKE_ANONYMIZATION_PACKAGES" "$AUR_PACKAGE_MANAGER")
@@ -52,12 +53,6 @@ fi
 if ! groups $USER | grep -q '\binput\b'; then
     log_info "Adding $USER to the input group..."
     sudo usermod -aG input $USER
-fi
-
-# Set the keyboard repeat rate to 300ms and delay to 25ms.
-if ! xset q | grep -q "rate:  300    delay:  25"; then
-    log_info "Setting keyboard repeat rate to 300ms and delay to 25ms..."
-    xset r rate 300 25
 fi
 
 # Start and enable the service.
