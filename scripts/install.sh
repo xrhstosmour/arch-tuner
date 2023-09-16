@@ -63,7 +63,7 @@ for script in "${!SCRIPTS[@]}"; do
 
             # Before rebooting, if the script is the first one the "essentials" one, change the INITIAL_SETUP flag to 1 (false).
             if [ "$script" == "essentials" ]; then
-                change_flag_value "$INITIAL_SETUP" 1 "$FLAGS_SCRIPT_PATH"
+                change_flag_value "INITIAL_SETUP" 1 "$FLAGS_SCRIPT_PATH"
             fi
 
             # Proceed with rebooting the system.
