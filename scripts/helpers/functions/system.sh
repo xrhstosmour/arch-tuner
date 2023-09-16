@@ -5,6 +5,7 @@ SYSTEM_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import log functions.
 source "$SYSTEM_SCRIPT_DIRECTORY/logs.sh"
+source "$SYSTEM_SCRIPT_DIRECTORY/strings.sh"
 
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 
@@ -80,19 +81,17 @@ is_process_running() {
 }
 
 # Function to reboot system if needed.
-# reboot_system "value_to_check" "variable_to_change" "0_or_1_to_log_warning"
+# reboot_system "flag" "flag_name" "script_path" "0_or_1_to_log_warning"
 reboot_system() {
-    local value_to_check="$1"
-    local variable_to_change="$2"
+    local flag="$1"
+    local flag_name="$2"
+    local script_path="$3"
 
     # Defaults to 0 (true) to log the warning.
-    local log_rerun_warning="${3:-0}"
-
-    # Constant variable for the constant script path.
-    local constant_script_path="$SYSTEM_SCRIPT_DIRECTORY/../../core/constants.sh"
+    local log_rerun_warning="${4:-0}"
 
     # Check the value is not equal to 0 (true) and reboot.
-    if [ "$value_to_check" -ne 0 ]; then
+    if [ "$flag" -ne 0 ]; then
         log_error "System requires a reboot to apply changes!"
         if [ "$log_rerun_warning" -eq 0 ]; then
             log_error "After the system restarts, please rerun the entire script!"
@@ -100,9 +99,8 @@ reboot_system() {
         log_error "Initiating system reboot..."
         sleep 10
 
-        # Use sed to set variable_to_change to 0 in the constant.sh file
-        # Match any value after the equals sign and replace with 0
-        sed -i "s/^$variable_to_change=[0-9]*\$/$variable_to_change=0/" "$constant_script_path"
+        # Change the value of the flag to 0 (true), before rebooting.
+        change_flag_value "$flag_name" 0 "$script_path"
 
         # Reboot the system.
         sudo reboot
