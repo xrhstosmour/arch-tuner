@@ -19,13 +19,16 @@ are_packages_installed() {
     local package_manager="$2"
     local package_not_found=0
 
+    # Initialize the query command.
+    local query_command=""
+
     # Determine the installation command based on the chosen package manager.
     case "$package_manager" in
     "$AUR_PACKAGE_MANAGER")
-        local query_command="$AUR_PACKAGE_MANAGER -Q"
+        query_command="$AUR_PACKAGE_MANAGER -Qq | grep -w -q"
         ;;
     "$ARCH_PACKAGE_MANAGER")
-        local query_command="$ARCH_PACKAGE_MANAGER -Q"
+        query_command="$ARCH_PACKAGE_MANAGER -Qq | grep -w -q"
         ;;
     "")
         # If no package manager is specified, we'll use `command -V`.
