@@ -88,14 +88,16 @@ is_process_running() {
 }
 
 # Function to reboot system if needed.
-# reboot_system "flag" "flag_name" "script_path" "0_or_1_to_log_warning"
+# reboot_system "flag" "flag_name" "0_or_1_to_log_warning"
 reboot_system() {
     local flag="$1"
     local flag_name="$2"
-    local script_path="$3"
 
     # Defaults to 0 (true) to log the warning.
-    local log_rerun_warning="${4:-0}"
+    local log_rerun_warning="${3:-0}"
+
+    # Constant variable for the flags script path.
+    local flags_path="$SYSTEM_SCRIPT_DIRECTORY/../../core/flags.sh"
 
     # Check the value is not equal to 0 (true) and reboot.
     if [ "$flag" -ne 0 ]; then
@@ -107,7 +109,7 @@ reboot_system() {
         sleep 10
 
         # Change the value of the flag to 0 (true), before rebooting.
-        change_flag_value "$flag_name" 0 "$script_path"
+        change_flag_value "$flag_name" 0 "$flags_path"
 
         # Reboot the system.
         sudo reboot

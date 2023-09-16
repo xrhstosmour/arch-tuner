@@ -13,14 +13,11 @@ set -e
 # Constant variable of the scripts' working directory to use for relative paths.
 SECURITY_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-# Constant variable for the flags script path.
-local FLAGS_SCRIPT_PATH="$SECURITY_SCRIPT_DIRECTORY/../core/flags.sh"
-
 # Import functions and flags.
 source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/packages.sh"
 source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/system.sh"
-source "$FLAGS_SCRIPT_PATH"
+source "$SECURITY_SCRIPT_DIRECTORY/../core/flags.sh"
 
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
@@ -41,7 +38,7 @@ fi
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
 
 # Reboot system if needed.
-reboot_system "$COMPLETED_UP_TO_FIREWALL" "COMPLETED_UP_TO_FIREWALL" "$FLAGS_SCRIPT_PATH"
+reboot_system "${!COMPLETED_UP_TO_FIREWALL}" "$COMPLETED_UP_TO_FIREWALL"
 
 # Install and configure antivirus.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/antivirus.sh
