@@ -25,10 +25,10 @@ are_packages_installed() {
     # Determine the installation command based on the chosen package manager.
     case "$package_manager" in
     "$AUR_PACKAGE_MANAGER")
-        query_command="$AUR_PACKAGE_MANAGER -Qq | grep -w -q"
+        query_command="$AUR_PACKAGE_MANAGER -Qq"
         ;;
     "$ARCH_PACKAGE_MANAGER")
-        query_command="$ARCH_PACKAGE_MANAGER -Qq | grep -w -q"
+        query_command="$ARCH_PACKAGE_MANAGER -Qq"
         ;;
     "")
         # If no package manager is specified, we'll use `command -V`.
