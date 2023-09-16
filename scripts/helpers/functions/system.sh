@@ -101,9 +101,9 @@ reboot_system() {
     if [ "$flag" -ne 0 ]; then
         log_error "System requires a reboot to apply changes!"
         if [ "$log_rerun_warning" -eq 0 ]; then
-            log_error "After the system restarts, please rerun the entire script!"
+            log_error -n "After the system restarts, please rerun the entire script!"
         fi
-        log_error "Initiating system reboot..."
+        log_error -n "Initiating system reboot..."
         sleep 10
 
         # Change the value of the flag to 0 (true), before rebooting.
