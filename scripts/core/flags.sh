@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Flags to keep if the script ran up to a specific point or comppleted.
+# Flags to mark the completion of each section.
+IS_INITIAL_SETUP=0
 ESSENTIALS_COMPLETED=1
 INTERFACE_COMPLETED=1
 PRIVACY_COMPLETED=1

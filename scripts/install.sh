@@ -34,7 +34,12 @@ source "$FLAGS_SCRIPT_PATH"
 ask_for_user_backup_before_proceeding
 
 # Ask user if wants to run the script as initial setup or rerun.
-ask_user_for_setup_type "${SCRIPTS[@]}" "$FLAGS_SCRIPT_PATH"
+is_initial_setup_or_rerun=$(ask_user_for_setup_type "${SCRIPTS[@]}" "$FLAGS_SCRIPT_PATH")
+if [ "$is_initial_setup_or_rerun" = "initial" ]; then
+    change_flag_value "$IS_INITIAL_SETUP" 0 "$FLAGS_SCRIPT_PATH"
+else
+    change_flag_value "$IS_INITIAL_SETUP" 1 "$FLAGS_SCRIPT_PATH"
+fi
 
 # Iterate over the scripts and execute them accordingly.
 for script in "${!SCRIPTS[@]}"; do

@@ -76,6 +76,13 @@ ask_user_for_setup_type() {
             initial_value="${flag_data[1]}"
             change_flag_value "$completion_flag" "$initial_value" "$FLAGS_SCRIPT_PATH"
         done
+
+        # Return the user's choice.
+        echo "initial"
+    elif [ "$choice" == "2" ]; then
+
+        # Return the user's choice.
+        echo "rerun"
     elif [ "$choice" != "2" ]; then
         log_error "Invalid input!"
         exit 1

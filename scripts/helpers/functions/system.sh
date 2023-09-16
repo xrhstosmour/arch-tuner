@@ -3,9 +3,10 @@
 # Constant variable of the scripts' working directory to use for relative paths.
 SYSTEM_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-# Import log functions.
+# Import log functions and flags.
 source "$SYSTEM_SCRIPT_DIRECTORY/logs.sh"
 source "$SYSTEM_SCRIPT_DIRECTORY/strings.sh"
+source "$SYSTEM_SCRIPT_DIRECTORY/../../core/flags.sh"
 
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 
@@ -13,9 +14,14 @@ source "$SYSTEM_SCRIPT_DIRECTORY/strings.sh"
 # update_system
 update_system() {
 
-    # Reset mirrors to the worldwide one before updating.
-    log_info "Resetting mirrors to the worldwide one before updating/upgrading..."
-    echo 'Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch' | sudo tee /etc/pacman.d/mirrorlist >/dev/null
+    # Constant variable for the world wide mirror.
+    local WORLDWIDE_MIRROR='https://geo.mirror.pkgbuild.com/$repo/os/$arch'
+
+    # Reset mirrors to the worldwide one before updating/upgrading.
+    if [[ "$IS_INITIAL_SETUP" -eq 0 ]]; then
+        log_info "Resetting mirrors to the worldwide one before updating/upgrading..."
+        echo 'Server = '"$WORLDWIDE_MIRROR" | sudo tee /etc/pacman.d/mirrorlist >/dev/null
+    fi
 
     # Upgrade package database format if needed.
     sudo pacman-db-upgrade
