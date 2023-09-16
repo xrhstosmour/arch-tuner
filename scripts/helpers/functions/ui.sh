@@ -6,9 +6,24 @@ UI_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import log functions.
 source "$UI_SCRIPT_DIRECTORY/logs.sh"
 
+# Function to ask for user approval before proceeding.
+# ask_for_user_backup_before_proceeding
+ask_for_user_backup_before_proceeding() {
+    log_error "BACKUP EVERYTHING BEFORE PROCEEDING!"
+    log_warning "If not, exit script and re-run after backup!"
+    log_info "Press ENTER to continue within next 10 seconds!"
+
+    # Read user input with a 10 second timeout.
+    if ! read -t 10; then
+        log_info "Terminating script..."
+        exit 1
+    fi
+    log_info "Starting installing procedure..."
+}
+
 # Function to ask for user approval and proceed with script execution.
-# ask_for_user_approval "prompt_message" "script_path"
-ask_for_user_approval() {
+# ask_for_user_approval_before_executing_script "prompt_message" "script_path"
+ask_for_user_approval_before_executing_script() {
     local prompt="$1"
     local script_path="$2"
     local script_name=$(basename "$script_path" .sh)
