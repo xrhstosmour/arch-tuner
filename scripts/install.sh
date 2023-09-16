@@ -53,7 +53,7 @@ for script in "${!SCRIPTS[@]}"; do
         else
             log_info "Executing $script script..."
             sh "$INSTALL_SCRIPT_DIRECTORY/utilities/$script.sh"
-            log_info "$script script execution finished!"
+            log_info "${script^} script execution finished!"
         fi
 
         # Set completion flag to 0 (true) if it's "desktop" or "development".
