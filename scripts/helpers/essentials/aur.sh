@@ -34,7 +34,7 @@ if ! command -v "$AUR_PACKAGE_MANAGER" &>/dev/null; then
     is_rust_installed=$(are_packages_installed "rust" "$ARCH_PACKAGE_MANAGER")
     if [ "$is_rust_installed" = "true" ]; then
         log_info "Deleting rust package manager..."
-        sudo "$ARCH_PACKAGE_MANAGER" -R --noconfirm rust
+        sudo "$ARCH_PACKAGE_MANAGER" -Rns --noconfirm rust 2>/dev/null || true
     fi
 
     # Install rustup package.
