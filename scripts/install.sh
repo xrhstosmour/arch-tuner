@@ -12,8 +12,7 @@ INSTALL_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Constant variable for the flags script path.
 FLAGS_SCRIPT_PATH="$INSTALL_SCRIPT_DIRECTORY/core/flags.sh"
 
-# Define the scripts' order explicitly.
-declare -a SCRIPTS_ORDER=("essentials" "interface" "desktop" "development" "privacy" "security")
+declare -a ORDERED_SCRIPTS=("essentials" "interface" "desktop" "development" "privacy" "security")
 
 # Scripts to run containing their completion flag, initial setup value and optional message, splitted by "|".
 declare -A SCRIPTS=(
@@ -39,18 +38,15 @@ if [[ "$INITIAL_SETUP" -eq 0 ]]; then
 fi
 
 # Iterate over the scripts and execute them accordingly.
-for script in "${!SCRIPTS_ORDER[@]}"; do
+for script in "${ORDERED_SCRIPTS[@]}"; do
 
     # Split the script info based on the delimiter "|".
     IFS="|" read -ra script_info <<<"${SCRIPTS[$script]}"
-    completion_flag=${script_info[0]}
-    message=${script_info[2]}
-
-    # Using eval to get the value of the completion flag.
-    current_flag_value=$(eval echo \$$completion_flag)
+    completion_flag="${script_info[0]}"
+    message="${script_info[2]}"
 
     # Check if script has not already been completed.
-    if [ "$current_flag_value" -eq 1 ]; then
+    if [ "${!completion_flag}" -eq 1 ]; then
 
         # Check if there's a prompt message for the script.
         if [[ "$message" ]]; then
