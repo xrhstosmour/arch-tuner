@@ -1,7 +1,11 @@
 vscodium-bin
 remmina-git
+remmina-plugin-teamviewer
+remmina-plugin-anydesk-git
+remmina-plugin-rdesktop
+remmina-plugin-rustdesk
 gitkraken
-obsidian
+obsidian-bin
 postman-bin
 etcher-bin
 docker
