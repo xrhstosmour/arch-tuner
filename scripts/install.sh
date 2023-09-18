@@ -48,35 +48,43 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
     # Check if script has not already been completed.
     if [ "${!completion_flag}" -eq 1 ]; then
 
+        # Flag to track if the user executed a script, 1 (false) by default.
+        local user_executed_script=1
+
         # Check if there's a prompt message for the script.
         if [[ "$message" ]]; then
-            ask_for_user_approval_before_executing_script "$message" "$INSTALL_SCRIPT_DIRECTORY/utilities/$script.sh"
+
+            # Ask user for approval before executing script and change the flag value accordingly.
+            user_choice=$(ask_for_user_approval_before_executing_script "$message" "$INSTALL_SCRIPT_DIRECTORY/utilities/$script.sh")
+            [[ "$user_choice" == "y" ]] && user_executed_script=0
         else
             log_info "Executing $script script..."
             sh "$INSTALL_SCRIPT_DIRECTORY/utilities/$script.sh"
             log_info "${script^} script execution finished!"
+            user_executed_script=0
         fi
 
-        # Set completion flag to 0 (true) if it's "desktop" or "development".
-        [[ "$script" == "desktop" || "$script" == "development" ]] && change_flag_value "$completion_flag" 0 "$FLAGS_SCRIPT_PATH"
+        # Check if the user executed the script before marking as complete and reboot.
+        if [[ "$user_executed_script" -eq 1 ]]; then
 
-        # Reboot system for the rest of the scripts.
-        if [[ "$script" == "essentials" || "$script" == "interface" || "$script" == "privacy" ]]; then
+            # Set completion flag to 0 (true) if it's "desktop" or "development".
+            [[ "$script" == "desktop" || "$script" == "development" ]] && change_flag_value "$completion_flag" 0 "$FLAGS_SCRIPT_PATH"
 
-            # Before rebooting, if the script is the first one the "essentials" one, change the INITIAL_SETUP flag to 1 (false).
-            if [ "$script" == "essentials" ]; then
-                change_flag_value "INITIAL_SETUP" 1 "$FLAGS_SCRIPT_PATH"
+            # Reboot system for the rest of the scripts.
+            if [[ "$script" == "essentials" || "$script" == "interface" || "$script" == "privacy" ]]; then
+
+                # Before rebooting, if the script is the first one the "essentials" one, change the INITIAL_SETUP flag to 1 (false).
+                [[ "$script" == "essentials" ]] && change_flag_value "INITIAL_SETUP" 1 "$FLAGS_SCRIPT_PATH"
+
+                # Proceed with rebooting the system.
+                reboot_system "${!completion_flag}" "$completion_flag"
+            elif [ "$script" == "security" ]; then
+                log_info "Installation procedure finished!"
+                log_info "Your system is ready to use!"
+
+                # Do not log the rerun warning.
+                reboot_system "${!completion_flag}" "$completion_flag" 1
             fi
-
-            # TODO: Reboot if interface script is executed.
-            # Proceed with rebooting the system.
-            reboot_system "${!completion_flag}" "$completion_flag"
-        elif [ "$script" == "security" ]; then
-            log_info "Installation procedure finished!"
-            log_info "Your system is ready to use!"
-
-            # Do not log the rerun warning.
-            reboot_system "${!completion_flag}" "$completion_flag" 1
         fi
     fi
 done

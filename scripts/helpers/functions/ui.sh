@@ -47,4 +47,7 @@ ask_for_user_approval_before_executing_script() {
             log_error "Invalid input!"
         fi
     done
+
+    # return the answer.
+    echo "$answer"
 }
