@@ -49,7 +49,7 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
     if [ "${!completion_flag}" -eq 1 ]; then
 
         # Flag to track if the user executed a script, 1 (false) by default.
-        local user_executed_script=1
+        user_executed_script=1
 
         # Check if there's a prompt message for the script.
         if [[ "$message" ]]; then
