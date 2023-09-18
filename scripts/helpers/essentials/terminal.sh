@@ -16,7 +16,7 @@ source "$TERMINAL_SCRIPT_DIRECTORY/../functions/packages.sh"
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Constant variable for the terminal tools to install.
-TERMINAL_TOOLS="bat exa rm-improved xcp eva zoxide fd sd xh topgrade"
+TERMINAL_TOOLS="bat exa rm-improved xcp eva zoxide fd jless sd xh topgrade"
 
 # Check if at least one terminal tool is not installed.
 are_terminal_packages_installed=$(are_packages_installed "$TERMINAL_TOOLS" "$AUR_PACKAGE_MANAGER")
