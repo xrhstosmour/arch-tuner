@@ -1,0 +1,11 @@
+bat
+exa
+rm-improved
+xcp
+eva
+zoxide
+fd
+jless
+sd
+xh
+topgrade-bin
