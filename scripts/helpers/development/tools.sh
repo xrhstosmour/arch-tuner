@@ -17,7 +17,7 @@ source "$TOOLS_SCRIPT_DIRECTORY/../functions/services.sh"
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Constant variable for the file path containing the development tools to install.
-DEVELOPMENT_TOOLS="$TOOLS_SCRIPT_DIRECTORY/../../packages/development.txt"
+DEVELOPMENT_TOOLS="$TOOLS_SCRIPT_DIRECTORY/../../packages/development/tools.txt"
 
 # Check if at least one development package is not installed.
 are_development_packages_installed=$(are_packages_installed "$DEVELOPMENT_TOOLS" "$AUR_PACKAGE_MANAGER")
