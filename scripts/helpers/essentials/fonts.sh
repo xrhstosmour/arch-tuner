@@ -15,8 +15,8 @@ source "$FONTS_SCRIPT_DIRECTORY/../functions/packages.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
-# Constant variable for the fonts to install.
-FONTS="ttf-firacode-nerd"
+# Constant variable for the file path containing the fonts to install.
+FONTS="$FONTS_SCRIPT_DIRECTORY/../../packages/essentials/fonts.txt"
 
 # Check if at least one font is not installed.
 are_font_packages_installed=$(are_packages_installed "$FONTS" "$AUR_PACKAGE_MANAGER")

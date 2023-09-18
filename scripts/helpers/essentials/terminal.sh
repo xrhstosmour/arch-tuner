@@ -16,7 +16,7 @@ source "$TERMINAL_SCRIPT_DIRECTORY/../functions/packages.sh"
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Constant variable for the file path containing the terminal tools to install.
-TERMINAL_TOOLS="$TERMINAL_SCRIPT_DIRECTORY/../../packages/terminal.txt"
+TERMINAL_TOOLS="$TERMINAL_SCRIPT_DIRECTORY/../../packages/essentials/terminal.txt"
 
 # Check if at least one terminal tool is not installed.
 are_terminal_packages_installed=$(are_packages_installed "$TERMINAL_TOOLS" "$AUR_PACKAGE_MANAGER")
