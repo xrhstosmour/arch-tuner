@@ -55,8 +55,8 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
         if [[ "$message" ]]; then
 
             # Ask user for approval before executing script and change the flag value accordingly.
-            user_choice=$(ask_for_user_approval_before_executing_script "$message" "$INSTALL_SCRIPT_DIRECTORY/utilities/$script.sh")
-            [[ "$user_choice" == "y" ]] && user_choice=0
+            user_answer=$(ask_for_user_approval_before_executing_script "$message" "$INSTALL_SCRIPT_DIRECTORY/utilities/$script.sh")
+            [[ "$user_answer" == "y" ]] && user_choice=0 || [[ "$user_answer" == "n" ]] && user_choice=1
         else
             log_info "Executing $script script..."
             sh "$INSTALL_SCRIPT_DIRECTORY/utilities/$script.sh"
