@@ -49,7 +49,7 @@ enable_service "reflector" "Enabling mirror list auto refresh service..."
 # Run reflector once to populate the mirror list.
 # The reflector service will show as inactive and run periodically, with the help of the reflector timer.
 if [[ "$is_reflector_already_enabled" = "false" ]] || [[ "$INITIAL_SETUP" -eq 0 ]]; then
-    start_service "reflector" "Running mirror list auto refresh service.."
+    start_service "reflector" "Running mirror list auto refresh service..."
 fi
 
 # Start and enable mirror list timer if they are not already active.
