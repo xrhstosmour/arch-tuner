@@ -65,7 +65,7 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
         fi
 
         # Check if the user executed the script before marking as complete and reboot.
-        if [[ "$user_executed_script" -eq 1 ]]; then
+        if [[ "$user_executed_script" -eq 0 ]]; then
 
             # Set completion flag to 0 (true) if it's "desktop" or "development".
             [[ "$script" == "desktop" || "$script" == "development" ]] && change_flag_value "$completion_flag" 0 "$FLAGS_SCRIPT_PATH"
