@@ -117,7 +117,7 @@ reboot_system() {
         # Change the value of the flag to 0 (true), before rebooting.
         change_flag_value "$flag_name" 0 "$flags_path"
 
-        # Reboot the system.
-        sudo reboot
+        # Reboot the system immediately.
+        exec sudo reboot
     fi
 }
