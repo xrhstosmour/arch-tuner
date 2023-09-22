@@ -21,10 +21,10 @@ PARU_GIT_URL="https://aur.archlinux.org/paru.git"
 PACMAN_CONFIGURATION="/etc/pacman.conf"
 PARU_CONFIGURATION="/etc/paru.conf"
 
-# Install paru AUR helper.
+# Install AUR helper.
 if ! command -v "$AUR_PACKAGE_MANAGER" &>/dev/null; then
 
-    # Delete old paru directory, if it exists.
+    # Delete old AUR directory, if it exists.
     if [ -d "$PARU_DIRECTORY" ]; then
         log_info "Deleting old $PARU_DIRECTORY directory..."
         rm -rf "$PARU_DIRECTORY"
@@ -59,7 +59,7 @@ if ! command -v "$AUR_PACKAGE_MANAGER" &>/dev/null; then
 fi
 
 # Configure paru AUR helper.
-if ! grep -q '^Color' "$PACMAN_CONFIGURATION" || ! grep -qxF 'SkipReview' "$PARU_CONFIGURATION"; then
+if ! grep -q '^Color' "$PACMAN_CONFIGURATION" || ! grep -qxF 'ParallelDownloads' "$PACMAN_CONFIGURATION" || ! grep -qxF 'SkipReview' "$PARU_CONFIGURATION"; then
     log_info "Configuring $AUR_PACKAGE_MANAGER AUR helper..."
 fi
 
@@ -67,6 +67,12 @@ fi
 if ! grep -q '^Color' $PACMAN_CONFIGURATION; then
     log_info "Enabling colors in terminal..."
     sudo sed -i '/^#.*Color/s/^#//' $PACMAN_CONFIGURATION
+fi
+
+# Enable parallel downloads.
+if ! grep -qxF 'ParallelDownloads' $PACMAN_CONFIGURATION; then
+    log_info "Enabling parallel downloads..."
+    echo 'ParallelDownloads = 5' | sudo tee -a $PACMAN_CONFIGURATION >/dev/null
 fi
 
 # Skip review messages.
