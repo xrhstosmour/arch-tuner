@@ -11,6 +11,7 @@ PRIVACY_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
 source "$PRIVACY_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
+source "$PRIVACY_SCRIPT_DIRECTORY/../helpers/functions/packages.sh"
 
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
@@ -30,7 +31,7 @@ fi
 # Configure network.
 sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/network.sh
 
-# TODO: Disable keystroke anonymization for now, because it is not working properly.
+# TODO: Keystroke anonymization is disabled for now, because it is not working properly.
 # Install and configure keystroke anonymization.
 # sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/keyboard.sh
 
