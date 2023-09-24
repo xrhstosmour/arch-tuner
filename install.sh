@@ -10,7 +10,7 @@ set -e
 INSTALL_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Constant variable for the flags script path.
-FLAGS_SCRIPT_PATH="$INSTALL_SCRIPT_DIRECTORY/core/flags.sh"
+FLAGS_SCRIPT_PATH="$INSTALL_SCRIPT_DIRECTORY/scripts/core/flags.sh"
 
 declare -a ORDERED_SCRIPTS=("essentials" "interface" "desktop" "development" "privacy" "security")
 
@@ -27,15 +27,18 @@ declare -A SCRIPTS=(
 # TODO: Give execution permission to all the needed scripts.
 
 # Import functions and flags.
-source "$INSTALL_SCRIPT_DIRECTORY/helpers/functions/ui.sh"
-source "$INSTALL_SCRIPT_DIRECTORY/helpers/functions/system.sh"
-source "$INSTALL_SCRIPT_DIRECTORY/helpers/functions/strings.sh"
+source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/ui.sh"
+source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh"
+source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/strings.sh"
 source "$FLAGS_SCRIPT_PATH"
 
 # Ask user for backup confirmation before proceeding.
 if [[ "$INITIAL_SETUP" -eq 0 ]]; then
     ask_for_user_backup_before_proceeding
 fi
+
+# Update system.
+update_system
 
 # Iterate over the scripts and execute them accordingly.
 for script in "${ORDERED_SCRIPTS[@]}"; do
@@ -55,11 +58,11 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
         if [[ "$message" ]]; then
 
             # Ask user for approval before executing script and change the flag value accordingly.
-            user_answer=$(ask_for_user_approval_before_executing_script "$message" "$INSTALL_SCRIPT_DIRECTORY/utilities/$script.sh")
+            user_answer=$(ask_for_user_approval_before_executing_script "$message" "$INSTALL_SCRIPT_DIRECTORY/scripts/utilities/$script.sh")
             [[ "$user_answer" == "y" ]] && user_choice=0 || [[ "$user_answer" == "n" ]] && user_choice=1
         else
             log_info "Executing $script script..."
-            sh "$INSTALL_SCRIPT_DIRECTORY/utilities/$script.sh"
+            sh "$INSTALL_SCRIPT_DIRECTORY/scripts/utilities/$script.sh"
             log_info "${script^} script execution finished!"
             user_choice=0
         fi
@@ -70,6 +73,7 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
             # Set completion flag to 0 (true) if it's "desktop" or "development".
             [[ "$script" == "desktop" || "$script" == "development" ]] && change_flag_value "$completion_flag" 0 "$FLAGS_SCRIPT_PATH"
 
+            # TODO: Fix why the reboot is not working properly when the script is "interface".
             # Reboot system for the rest of the scripts.
             if [[ "$script" == "essentials" || "$script" == "interface" || "$script" == "privacy" ]]; then
 
