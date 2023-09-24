@@ -59,7 +59,7 @@ if ! command -v "$AUR_PACKAGE_MANAGER" &>/dev/null; then
 fi
 
 # Configure AUR helper.
-if ! grep -q '^Color' "$PACMAN_CONFIGURATION" || ! grep -qxF 'ParallelDownloads' "$PACMAN_CONFIGURATION" || ! grep -qxF 'SkipReview' "$PARU_CONFIGURATION"; then
+if ! grep -q '^Color' "$PACMAN_CONFIGURATION" || ! grep -q '^ParallelDownloads' "$PACMAN_CONFIGURATION" || ! grep -qxF 'SkipReview' "$PARU_CONFIGURATION"; then
     log_info "Configuring $AUR_PACKAGE_MANAGER AUR helper..."
 fi
 
@@ -70,9 +70,9 @@ if ! grep -q '^Color' $PACMAN_CONFIGURATION; then
 fi
 
 # Enable parallel downloads.
-if ! grep -qxF 'ParallelDownloads' $PACMAN_CONFIGURATION; then
+if ! grep -q '^ParallelDownloads' $PACMAN_CONFIGURATION; then
     log_info "Enabling parallel downloads..."
-    echo 'ParallelDownloads = 5' | sudo tee -a $PACMAN_CONFIGURATION >/dev/null
+    sudo sed -i '/^#.*ParallelDownloads/s/^#//' $PACMAN_CONFIGURATION
 fi
 
 # Skip review messages.
