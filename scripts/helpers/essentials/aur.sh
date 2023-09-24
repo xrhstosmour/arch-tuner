@@ -15,9 +15,9 @@ source "$AUR_SCRIPT_DIRECTORY/../functions/packages.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
-# Constant variables for installing and configuring the paru AUR helper.
-PARU_DIRECTORY="paru"
-PARU_GIT_URL="https://aur.archlinux.org/paru.git"
+# Constant variables for installing and configuring the AUR helper.
+AUR_DIRECTORY="paru"
+AUR_GIT_URL="https://aur.archlinux.org/paru.git"
 PACMAN_CONFIGURATION="/etc/pacman.conf"
 PARU_CONFIGURATION="/etc/paru.conf"
 
@@ -25,9 +25,9 @@ PARU_CONFIGURATION="/etc/paru.conf"
 if ! command -v "$AUR_PACKAGE_MANAGER" &>/dev/null; then
 
     # Delete old AUR directory, if it exists.
-    if [ -d "$PARU_DIRECTORY" ]; then
-        log_info "Deleting old $PARU_DIRECTORY directory..."
-        rm -rf "$PARU_DIRECTORY"
+    if [ -d "$AUR_DIRECTORY" ]; then
+        log_info "Deleting old $AUR_DIRECTORY directory..."
+        rm -rf "$AUR_DIRECTORY"
     fi
 
     # Delete rust package manager, if it exists.
@@ -51,14 +51,14 @@ if ! command -v "$AUR_PACKAGE_MANAGER" &>/dev/null; then
 
     # Proceed with installation.
     log_info "Installing $AUR_PACKAGE_MANAGER AUR helper..."
-    git clone $PARU_GIT_URL
-    cd $PARU_DIRECTORY
+    git clone $AUR_GIT_URL
+    cd $AUR_DIRECTORY
     makepkg -si --noconfirm
     cd ..
-    rm -rf $PARU_DIRECTORY
+    rm -rf $AUR_DIRECTORY
 fi
 
-# Configure paru AUR helper.
+# Configure AUR helper.
 if ! grep -q '^Color' "$PACMAN_CONFIGURATION" || ! grep -qxF 'ParallelDownloads' "$PACMAN_CONFIGURATION" || ! grep -qxF 'SkipReview' "$PARU_CONFIGURATION"; then
     log_info "Configuring $AUR_PACKAGE_MANAGER AUR helper..."
 fi
