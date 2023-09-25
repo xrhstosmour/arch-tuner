@@ -38,7 +38,7 @@ fi
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
 
 # Reboot system if needed.
-reboot_system "${!COMPLETED_UP_TO_FIREWALL}" "$COMPLETED_UP_TO_FIREWALL"
+reboot_system $COMPLETED_UP_TO_FIREWALL "COMPLETED_UP_TO_FIREWALL"
 
 # Install and configure antivirus.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/antivirus.sh
