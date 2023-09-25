@@ -34,11 +34,15 @@ if [ "$are_security_packages_installed" = "false" ]; then
     install_packages "$SECURITY_PACKAGES" "$AUR_PACKAGE_MANAGER"
 fi
 
-# Install and configure firewall.
-sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
+# Check if script has not already been completed.
+if [ $COMPLETED_UP_TO_FIREWALL -eq 1 ]; then
 
-# Reboot system if needed.
-reboot_system $COMPLETED_UP_TO_FIREWALL "COMPLETED_UP_TO_FIREWALL"
+    # Install and configure firewall.
+    sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
+
+    # Reboot system if needed.
+    reboot_system $COMPLETED_UP_TO_FIREWALL "COMPLETED_UP_TO_FIREWALL"
+fi
 
 # Install and configure antivirus.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/antivirus.sh
