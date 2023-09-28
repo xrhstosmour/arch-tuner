@@ -48,26 +48,31 @@ add_mount_options() {
 
         # Return false to indicate that no change was made.
         echo "false"
+        return
     fi
 
     # Get the UUID and filesystem type.
     local uuid=$(sudo blkid -o value -s UUID "$device")
     local fs_type=$(sudo blkid -o value -s TYPE "$device")
 
-    # Check if the options are already present and if not, add them.
-    if ! grep -q " $mount_point .* $options" /etc/fstab; then
-        if grep -q " $mount_point " /etc/fstab; then
+    # Check if the options are already present.
+    if ! grep -qE "^UUID=$uuid\s+$mount_point\s+$fs_type\s+.*$options" /etc/fstab; then
+        # Check if the mount point exists but doesn't have the desired options.
+        if grep -qE "^UUID=$uuid\s+$mount_point\s+$fs_type\s+" /etc/fstab; then
             log_info "Adding options $options to mount point $mount_point..."
-            sudo sed -i "s|\($mount_point [^ ]* [^ ]* \)\(.*\)|\1\2,$options|" /etc/fstab
+            sudo sed -i "s|^\(UUID=$uuid\s+$mount_point\s+$fs_type\s+\)\(.*\)|\1\2,$options|" /etc/fstab
 
             # Return true to indicate that a change was made.
             echo "true"
+            return
         else
+            # If the mount point doesn't exist, add a new entry.
             log_info "Creating $mount_point mount point with options $options..."
-            echo "UUID=$uuid  $mount_point  $fs_type  $options  0 2" | sudo tee -a /etc/fstab
+            echo "UUID=$uuid  $mount_point  $fs_type  defaults,$options  0 2" | sudo tee -a /etc/fstab
 
             # Return true to indicate that a change was made.
             echo "true"
+            return
         fi
     fi
 
