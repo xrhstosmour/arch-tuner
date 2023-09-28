@@ -57,8 +57,9 @@ add_mount_options() {
 
     # Check if the options are already present.
     if ! grep -qE "^UUID=$uuid\s+$mount_point\s+$fs_type\s+.*$options" /etc/fstab; then
+
         # Check if the mount point exists but doesn't have the desired options.
-        if grep -qE "^UUID=$uuid\s+$mount_point\s+$fs_type\s+" /etc/fstab; then
+        if grep -qE "^UUID=$uuid\s+$mount_point\s+" /etc/fstab; then
             log_info "Adding options $options to mount point $mount_point..."
             sudo sed -i "s|^\(UUID=$uuid\s+$mount_point\s+$fs_type\s+\)\(.*\)|\1\2,$options|" /etc/fstab
 
@@ -66,6 +67,7 @@ add_mount_options() {
             echo "true"
             return
         else
+
             # If the mount point doesn't exist, add a new entry.
             log_info "Creating $mount_point mount point with options $options..."
             echo "UUID=$uuid  $mount_point  $fs_type  defaults,$options  0 2" | sudo tee -a /etc/fstab
