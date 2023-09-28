@@ -39,11 +39,32 @@ add_mount_options() {
     local mount_point="$1"
     local options="$2"
 
-    # Check if the options are already present and if not add them.
-    if ! grep -q " $mount_point .*defaults,.*$options" /etc/fstab; then
+    # Get the device associated with the mount point.
+    local device=$(findmnt -n -o SOURCE --target "$mount_point")
+
+    # If no device found for the given mount point, exit the function
+    if [ -z "$device" ]; then
+        log_info "No device found for mount point $mount_point!"
+
+        # Return false to indicate that no change was made.
+        echo "false"
+    fi
+
+    # Get the UUID and filesystem type.
+    local uuid=$(sudo blkid -o value -s UUID "$device")
+    local fs_type=$(sudo blkid -o value -s TYPE "$device")
+
+    # Check if the options are already present and if not, add them.
+    if ! grep -q " $mount_point .* $options" /etc/fstab; then
         if grep -q " $mount_point " /etc/fstab; then
             log_info "Adding options $options to mount point $mount_point..."
-            sudo sed -i "s|\($mount_point .*\) defaults |\1 defaults,$options |" /etc/fstab
+            sudo sed -i "s|\($mount_point [^ ]* [^ ]* \)\(.*\)|\1\2,$options|" /etc/fstab
+
+            # Return true to indicate that a change was made.
+            echo "true"
+        else
+            log_info "Creating $mount_point mount point with options $options..."
+            echo "UUID=$uuid  $mount_point  $fs_type  $options  0 2" | sudo tee -a /etc/fstab
 
             # Return true to indicate that a change was made.
             echo "true"
