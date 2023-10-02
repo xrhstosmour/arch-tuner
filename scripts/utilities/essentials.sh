@@ -19,7 +19,7 @@ source "$ESSENTIALS_SCRIPT_DIRECTORY/../helpers/functions/packages.sh"
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
 
 # Essential packages.
-ESSENTIAL_PACKAGES="base-devel git networkmanager neovim btop"
+ESSENTIAL_PACKAGES="base-devel git"
 
 # Install essential packages.
 are_essential_packages_installed=$(are_packages_installed "$ESSENTIAL_PACKAGES" "$ARCH_PACKAGE_MANAGER")
