@@ -1,3 +1,5 @@
+helix
+bottom
 bat
 exa
 rm-improved

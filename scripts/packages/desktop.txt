@@ -16,3 +16,4 @@ session-desktop-bin
 flameshot
 libreoffice-fresh
 pamac
+mission-center
