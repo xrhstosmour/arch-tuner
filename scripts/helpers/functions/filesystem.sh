@@ -40,11 +40,11 @@ update_mount_options() {
     local options="$2"
 
     # Check if the mount point exists in /etc/fstab.
-    if awk '$2 == "'"$mount_point"'" && $1 !~ /^#/' /etc/fstab | grep -q .; then
+    if sudo awk '$2 == "'"$mount_point"'" && $1 !~ /^#/' /etc/fstab | grep -q .; then
 
         # Get current options for the mount point.
         local current_options
-        current_options=$(awk -v mp="$mount_point" '$2 == mp && $1 !~ /^#/{print $4}' /etc/fstab)
+        current_options=$(sudo awk -v mp="$mount_point" '$2 == mp && $1 !~ /^#/{print $4}' /etc/fstab)
 
         # Combine current options and new options into a unique list.
         IFS=',' read -ra all_options <<<"$current_options,$options"
