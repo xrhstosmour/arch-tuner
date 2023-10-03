@@ -15,7 +15,7 @@ source "$IDS_SCRIPT_DIRECTORY/../functions/logs.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
-# SUID constant configuration variables.
+# UID constant configuration variables.
 SBIN_DIRECTORY="/sbin"
 USR_DIRECTORY="/usr"
 BIN_DIRECTORY="/bin"
@@ -25,11 +25,14 @@ BOOT_DIRECTORY="/boot"
 SUID_PERMISSION="4000"
 SGID_PERMISSION="2000"
 
-# Find command to locate all files with SUID and SGID enabled outside the specified directories.
-FIND_SUID_AND_SGID_COMMAND="sudo find / -path /proc -prune -o -path /sys -prune -o \( -path \"$SBIN_DIRECTORY\" -o -path \"$USR_DIRECTORY\" -o -path \"$BIN_DIRECTORY\" -o -path \"$OPT_DIRECTORY\" -o -path \"$ROOT_DIRECTORY\" -o -path \"$BOOT_DIRECTORY\" \) -prune -o \( -perm /$SUID_PERMISSION -o -perm /$SGID_PERMISSION \) -type f -print"
+# Construct the exclusion pattern using the directories.
+EXCLUDE_DIRS="($SBIN_DIRECTORY|$USR_DIRECTORY|$BIN_DIRECTORY|$OPT_DIRECTORY|$ROOT_DIRECTORY|$BOOT_DIRECTORY)"
 
-# Check if any file has SUID enabled outside the specified directories.
-if eval "$FIND_SUID_AND_SGID_COMMAND" | grep -q .; then
-    log_info "Disabling Set owner User ID (SUID) and Set Group ID (SGID)..."
-    eval "$FIND_SUID_AND_SGID_COMMAND -exec chmod u-s,g-s {} \;"
+# Find all binaries with setuid or setgid bits set, excluding the directories listed above.
+SUID_SGID_FILES=$(sudo find / -type f \( -perm -$SUID_PERMISSION -o -perm -$SGID_PERMISSION \) ! -regex "$EXCLUDE_DIRS.*" 2>/dev/null)
+
+# If any such files are found, disable their setuid and setgid bits.
+if [[ ! -z "$SUID_SGID_FILES" ]]; then
+    log_info "Disabling Set owner User ID (SUID) and Set Group ID (SGID) on these files..."
+    sudo chmod u-s,g-s $SUID_SGID_FILES
 fi
