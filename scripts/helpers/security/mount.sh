@@ -16,55 +16,48 @@ source "$MOUNT_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Initialize a flag indicating if a mount options change has been made.
-mount_changes_made=1
+mount_options_changes_made=1
 
-# Mount constant configuration variables.
+# Declare constant variables for mounting options.
+MOUNT_DEFAULTS_OPTION="defaults"
 MOUNT_NO_DEV_OPTION="nodev"
 MOUNT_NO_SUID_OPTION="nosuid"
 MOUNT_NO_EXEC_OPTION="noexec"
-BOOT_DIRECTORY="/boot"
-BOOT_EFI_DIRECTORY="/boot/efi"
-HOME_DIRECTORY="/home"
-ROOT_DIRECTORY="/root"
+
+# Define mount points and their associated options
+declare -A mount_options
+mount_options=(
+    ["/"]="$MOUNT_DEFAULTS_OPTION"
+    ["/home"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION,$MOUNT_NO_DEV_OPTION"
+    ["/tmp"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION,$MOUNT_NO_DEV_OPTION"
+    ["/boot"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION,$MOUNT_NO_DEV_OPTION"
+)
+
+# Seperate /var subfolders and /var/tmp constant variables.
 VAR_SUBFOLDERS_DIRECTORY="/var/*"
 VAR_TMP_DIRECTORY="/var/tmp"
 
-# TODO: Check if this is working or not.
-# To each function execution proceed to change the && mount_changes_made flag to 0 (true), only if the mount point option changed (function returned 0 (true)).
-# Add nodev, noexec, and nosuid options to /boot and /boot/efi.
-added_mount_options_to_boot=$(add_mount_options "$BOOT_DIRECTORY" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION")
-if [ "$added_mount_options_to_boot" = "true" ]; then
-    mount_changes_made=0
-fi
+# Iterate through each mount point and apply the associated options accordingly.
+for mount_point in "${!mount_options[@]}"; do
+    mount_options_changed=$(update_mount_options "$mount_point" "${mount_options[$mount_point]}")
+    if [ "$mount_options_changed" = "true" ]; then
+        mount_options_changes_made=0
+    fi
+done
 
-added_mount_options_to_boot_efi=$(add_mount_options "$BOOT_EFI_DIRECTORY" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION")
-if [ "$added_mount_options_to_boot_efi" = "true" ]; then
-    mount_changes_made=0
-fi
-
-# Add nodev and nosuid options to /home and /root.
-added_mount_options_to_home=$(add_mount_options "$HOME_DIRECTORY" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION")
-if [ "$added_mount_options_to_home" = "true" ]; then
-    mount_changes_made=0
-fi
-
-added_mount_options_to_root=$(add_mount_options "$ROOT_DIRECTORY" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION")
-if [ "$added_mount_options_to_root" = "true" ]; then
-    mount_changes_made=0
-fi
-
-# Add nodev, noexec, and nosuid options to directories under /var excluding /var/tmp.
-for dir in "$VAR_SUBFOLDERS_DIRECTORY"; do
+# Handle the /var subfolders separately due to the exclusion of /var/tmp.
+# Add defaults and nosuid options to directories under /var excluding /var/tmp.
+for dir in $VAR_SUBFOLDERS_DIRECTORY; do
     if [[ $dir != "$VAR_TMP_DIRECTORY" ]]; then
-        added_mount_options_to_var_subfolders=$(add_mount_options "$dir" "$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION")
-        if [ "$added_mount_options_to_var_subfolders" = "true" ]; then
-            mount_changes_made=0
+        mount_options_changed=$(update_mount_options "$dir" "$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION")
+        if [ "$mount_options_changed" = "true" ]; then
+            mount_options_changed=0
         fi
     fi
 done
 
 # Remount all filesystems with new options if any change is made.
-if [ $mount_changes_made -eq 0 ]; then
+if [ $mount_options_changes_made -eq 0 ]; then
     log_info "Enabling mount point hardening..."
     sudo mount -a
 fi
