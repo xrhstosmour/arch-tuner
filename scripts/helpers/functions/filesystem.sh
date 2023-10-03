@@ -44,7 +44,7 @@ update_mount_options() {
 
         # Mount point found in fstab, update its options.
         log_info "Adding options $options to mount point $mount_point..."
-        sudo sed -i "/^[^#].*\<$mount_point\>/ s@\(.*\)\( defaults[^\ ]*\)@\1\2,$options@" /etc/fstab
+        sudo sed -i "/^[^#].*\<$mount_point\>/ s@\([ \t]\)\([^ \t]*\)@\1\2,$options@" /etc/fstab
 
         # Return true to indicate that a change was made.
         echo "true"
