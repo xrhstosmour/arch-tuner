@@ -40,45 +40,27 @@ update_mount_options() {
     local options="$2"
 
     # Check if the mount point exists in /etc/fstab.
-    if sudo awk '$2 == "'"$mount_point"'" && $1 !~ /^#/' /etc/fstab | grep -q .; then
+    if awk '$2 == "'"$mount_point"'" && $1 !~ /^#/' /etc/fstab | grep -q .; then
 
-        # Get current options for the mount point.
-        local current_options
-        current_options=$(sudo awk -v mp="$mount_point" '$2 == mp && $1 !~ /^#/{print $4}' /etc/fstab)
-
-        # Combine current options and new options into a unique list.
-        IFS=',' read -ra all_options <<<"$current_options,$options"
-        local combined_options=($(printf "%s\n" "${all_options[@]}" | sort -u))
-
-        # Convert the array back to a comma separated string.
-        local modified_options
-        IFS=',' eval 'modified_options="${combined_options[*]}"'
-
-        # If options changed, update the fstab entry.
-        if [[ "$modified_options" != "$current_options" ]]; then
-            log_info "Adding options $options to mount point $mount_point..."
-            sudo awk -v mount="$mount_point" -v opts="$modified_options" '
-            {
-                # If the line contains the target mount point and is not commented
-                if ($0 ~ mount && $1 !~ /^#/) {
-                    # Set the options
-                    $4 = opts
-                }
-                # Print each line (modified or not)
-                print
+        # Mount point found in fstab, append new options at the end of the line, before the last 2 digits and excluding possible comments.
+        log_info "Adding options $options to mount point $mount_point..."
+        sudo awk -v mount="$mount_point" -v opts="$options" '
+        {
+            # If the line contains the target mount point and is not commented
+            if ($0 ~ mount && $1 !~ /^#/) {
+                # Add new options
+                $4 = $4 "," opts
             }
-            ' /etc/fstab >/tmp/fstab.tmp && sudo mv /tmp/fstab.tmp /etc/fstab
+            # Print each line (modified or not)
+            print
+        }
+        ' /etc/fstab >/tmp/fstab.tmp && sudo mv /tmp/fstab.tmp /etc/fstab
 
-            # Return true to indicate that a change was made.
-            echo "true"
-        else
-
-            # Return false to indicate that no change was made.
-            echo "false"
-        fi
+        # Return true to indicate that a change was made.
+        echo "true"
     else
 
-        # Return false to indicate that no change was made.
+        # Mount point not found in fstab, return false to indicate that no change was made.
         echo "false"
     fi
 }
