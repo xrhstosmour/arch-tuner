@@ -40,39 +40,55 @@ update_mount_options() {
     local options="$2"
 
     # Check if the mount point exists in /etc/fstab.
-    if ! awk -v mp="$mount_point" '$2 == mp && $1 !~ /^#/' /etc/fstab | grep -q .; then
-        log_warning "Mount point $mount_point not found in /etc/fstab!"
-        echo "false"
-        return
-    fi
+    if awk '$2 == "'"$mount_point"'" && $1 !~ /^#/' /etc/fstab | grep -q .; then
 
-    # Get the current options for the mount point.
-    local current_options
-    current_options=$(awk -v mp="$mount_point" '$2 == mp && $1 !~ /^#/{print $4}' /etc/fstab)
+        # Mount point found in fstab. Get current options.
+        local current_options
+        current_options=$(awk -v mp="$mount_point" '$2 == mp && $1 !~ /^#/{print $4}' /etc/fstab)
 
-    # Combine current options and new options, sort them and remove duplicates
-    local all_options=($current_options $options)
-    IFS=',' read -ra sorted_unique_options <<<"$(echo "${all_options[@]}" | tr ',' '\n' | sort | uniq | tr '\n' ',')"
+        # Split the options string into an array for individual checking.
+        IFS=',' read -ra individual_options <<<"$options"
 
-    # Formulate the final options string.
-    local final_options="${sorted_unique_options%,}"
+        # Loop through each individual option, adding it if not present.
+        local modified_options="$current_options"
+        for opt in "${individual_options[@]}"; do
 
-    # Check if the final options are different from the current options.
-    if [ "$final_options" != "$current_options" ]; then
+            # Check if the option is already in the current options.
+            if [[ ! ",$current_options," =~ ",$opt," ]]; then
+            
+                # Append the option.
+                modified_options="$modified_options,$opt"
+            fi
+        done
 
-        # Update the fstab entry.
-        log_info "Updating options for mount point $mount_point ..."
-        sudo awk -v mp="$mount_point" -v new_opts="$final_options" -i inplace '$2 == mp && $1 !~ /^#/ {$4 = new_opts} 1' /etc/fstab
+        # If options changed, update the fstab entry.
+        if [[ "$modified_options" != "$current_options" ]]; then
+            log_info "Adding options $modified_options to mount point $mount_point..."
+            sudo awk -v mount="$mount_point" -v opts="$modified_options" '
+            {
+                # If the line contains the target mount point and is not commented
+                if ($0 ~ mount && $1 !~ /^#/) {
+                    # Set the options
+                    $4 = opts
+                }
+                # Print each line (modified or not)
+                print
+            }
+            ' /etc/fstab >/tmp/fstab.tmp && sudo mv /tmp/fstab.tmp /etc/fstab
 
-        # Return true to indicate that a change was made.
-        echo "true"
+            # Return true to indicate that a change was made.
+            echo "true"
+        else
+
+            # Return false to indicate that no change was made.
+            echo "false"
+        fi
     else
 
         # Return false to indicate that no change was made.
         echo "false"
     fi
 }
-
 
 # Function to compare two files.
 # compare_files "target_file" "source_file"
