@@ -40,11 +40,11 @@ update_mount_options() {
     local options="$2"
 
     # Check if the mount point exists in /etc/fstab.
-    if grep -q "^[^#].*\<$mount_point\>" /etc/fstab; then
+    if awk '$2 == "'"$mount_point"'" && $1 !~ /^#/' /etc/fstab | grep -q .; then
 
         # Mount point found in fstab, update its options.
         log_info "Adding options $options to mount point $mount_point..."
-        sudo sed -i "s@^\([^#].*\<$mount_point\>\).*@\1 $options 1 2@" /etc/fstab
+        sudo sed -i "s@^\([^#].*\<$mount_point\>.*\)@\1,$options@" /etc/fstab
 
         # Return true to indicate that a change was made.
         echo "true"
