@@ -42,28 +42,21 @@ update_mount_options() {
     # Check if the mount point exists in /etc/fstab.
     if awk '$2 == "'"$mount_point"'" && $1 !~ /^#/' /etc/fstab | grep -q .; then
 
-        # Mount point found in fstab. Get current options.
+        # Get current options for the mount point.
         local current_options
         current_options=$(awk -v mp="$mount_point" '$2 == mp && $1 !~ /^#/{print $4}' /etc/fstab)
 
-        # Split the options string into an array for individual checking.
-        IFS=',' read -ra individual_options <<<"$options"
+        # Combine current options and new options into a unique list.
+        IFS=',' read -ra all_options <<<"$current_options,$options"
+        local combined_options=($(printf "%s\n" "${all_options[@]}" | sort -u))
 
-        # Loop through each individual option, adding it if not present.
-        local modified_options="$current_options"
-        for new_options in "${individual_options[@]}"; do
-
-            # Check if the option is already in the current options.
-            if [[ ! ",$current_options," =~ ",$new_options," ]]; then
-
-                # Append the option.
-                modified_options="$modified_options,$new_options"
-            fi
-        done
+        # Convert the array back to a comma separated string.
+        local modified_options
+        IFS=',' eval 'modified_options="${combined_options[*]}"'
 
         # If options changed, update the fstab entry.
         if [[ "$modified_options" != "$current_options" ]]; then
-            log_info "Adding options $modified_options to mount point $mount_point..."
+            log_info "Adding options $options to mount point $mount_point..."
             sudo awk -v mount="$mount_point" -v opts="$modified_options" '
             {
                 # If the line contains the target mount point and is not commented
