@@ -50,17 +50,18 @@ update_mount_options() {
     local current_options
     current_options=$(awk -v mp="$mount_point" '$2 == mp && $1 !~ /^#/{print $4}' /etc/fstab)
 
-    # Combine current options and new options into a sorted unique list, excluding 'defaults'
+    # Combine current options and new options, sort them and remove duplicates
     local all_options=($current_options $options)
-    IFS=',' read -ra sorted_unique_options <<<"$(echo "${all_options[@]}" | tr ' ' '\n' | sort -u | grep -v 'defaults' | tr '\n' ',')"
+    IFS=',' read -ra sorted_unique_options <<<"$(echo "${all_options[@]}" | tr ',' '\n' | sort | uniq | tr '\n' ',')"
 
     # Formulate the final options string.
-    local final_options="defaults,${sorted_unique_options%,}"
+    local final_options="${sorted_unique_options%,}"
 
+    # Check if the final options are different from the current options.
     if [ "$final_options" != "$current_options" ]; then
 
         # Update the fstab entry.
-        log_info "Updating options for $mount_point to $final_options..."
+        log_info "Updating options for mount point $mount_point ..."
         sudo awk -v mp="$mount_point" -v new_opts="$final_options" -i inplace '$2 == mp && $1 !~ /^#/ {$4 = new_opts} 1' /etc/fstab
 
         # Return true to indicate that a change was made.
@@ -71,6 +72,7 @@ update_mount_options() {
         echo "false"
     fi
 }
+
 
 # Function to compare two files.
 # compare_files "target_file" "source_file"
