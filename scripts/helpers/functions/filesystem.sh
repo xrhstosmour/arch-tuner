@@ -39,31 +39,36 @@ update_mount_options() {
     local mount_point="$1"
     local options="$2"
 
-    # Split the options string into an array for individual checking.
-    IFS=',' read -ra individual_options <<<"$options"
-
     # Check if the mount point exists in /etc/fstab.
-    if awk '$2 == "'"$mount_point"'" && $1 !~ /^#/' /etc/fstab | grep -q .; then
-        local current_options
-        current_options=$(awk -v mp="$mount_point" '$2 == mp && $1 !~ /^#/{print $4}' /etc/fstab)
+    if ! awk -v mp="$mount_point" '$2 == mp && $1 !~ /^#/' /etc/fstab | grep -q .; then
+        log_warning "Mount point $mount_point not found in /etc/fstab!"
+        echo "false"
+        return
+    fi
 
-        # Loop through each individual option, adding it if not present.
-        local modified_options="$current_options"
-        for opt in "${individual_options[@]}"; do
+    # Get the current options for the mount point.
+    local current_options
+    current_options=$(awk -v mp="$mount_point" '$2 == mp && $1 !~ /^#/{print $4}' /etc/fstab)
 
-            # Check if the option is already in the current options.
-            if [[ ! ",$current_options," =~ ",$opt," ]]; then
+    # Combine current options and new options into a sorted unique list, excluding 'defaults'
+    local all_options=($current_options $options)
+    IFS=',' read -ra sorted_unique_options <<<"$(echo "${all_options[@]}" | tr ' ' '\n' | sort -u | grep -v 'defaults' | tr '\n' ',')"
 
-                # Append the option.
-                modified_options="$modified_options,$opt"
-            fi
-        done
+    # Formulate the final options string.
+    local final_options="defaults,${sorted_unique_options%,}"
+
+    if [ "$final_options" != "$current_options" ]; then
 
         # Update the fstab entry.
-        sudo awk -v mp="$mount_point" -v new_opts="$modified_options" -i inplace '$2 == mp && $1 !~ /^#/ {$4 = new_opts} 1' /etc/fstab
+        log_info "Updating options for $mount_point to $final_options..."
+        sudo awk -v mp="$mount_point" -v new_opts="$final_options" -i inplace '$2 == mp && $1 !~ /^#/ {$4 = new_opts} 1' /etc/fstab
 
         # Return true to indicate that a change was made.
         echo "true"
+    else
+
+        # Return false to indicate that no change was made.
+        echo "false"
     fi
 }
 
