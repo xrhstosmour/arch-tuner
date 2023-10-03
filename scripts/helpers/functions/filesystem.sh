@@ -41,33 +41,34 @@ update_mount_options() {
 
     # Check if the mount point exists in /etc/fstab.
     if sudo awk '$2 == "'"$mount_point"'" && $1 !~ /^#/' /etc/fstab | grep -q .; then
-
         # Mount point found in fstab. Get current options.
         local current_options
         current_options=$(sudo awk -v mp="$mount_point" '$2 == mp && $1 !~ /^#/{print $4}' /etc/fstab)
 
-        # Split the options string into an array for individual checking.
-        IFS=',' read -ra individual_options <<<"$options"
+        # Convert the current and new options into arrays for easier processing.
+        IFS=',' read -ra current_options_array <<<"$current_options"
+        IFS=',' read -ra new_options_array <<<"$options"
 
-        # Loop through each individual option, adding it if not present.
-        local modified_options="$current_options"
-        for new_option in "${individual_options[@]}"; do
-
-            # Check if the option is already in the current options.
-            if [[ ! ",$current_options," =~ ",$new_option," ]]; then
-
-                # Append the option.
-                modified_options="$modified_options,$new_option"
-            fi
+        # Create an associative array to hold unique options.
+        declare -A unique_options
+        for current_option in "${current_options_array[@]}"; do
+            unique_options["$current_option"]=1
+        done
+        for new_option in "${new_options_array[@]}"; do
+            unique_options["$new_option"]=1
         done
 
-        # If options changed, update the fstab entry.
+        # Create the modified options string from the unique options.
+        local modified_options
+        modified_options=$(echo "${!unique_options[@]}" | tr ' ' ',')
+
+        # Update the fstab entry if necessary.
         if [[ "$modified_options" != "$current_options" ]]; then
             log_info "Appending options $options to mount point $mount_point..."
             sudo awk -v mount="$mount_point" -v opts="$modified_options" '
             {
                 # If the line contains the target mount point and is not commented
-                if ($0 ~ mount && $1 !~ /^#/) {
+                if ($2 == mount && $1 !~ /^#/) {
                     # Set the options
                     $4 = opts
                 }
@@ -79,13 +80,11 @@ update_mount_options() {
             # Return true to indicate that a change was made.
             echo "true"
         else
-
-            # Return false to indicate that no change was made.
+            # No change needed.
             echo "false"
         fi
     else
-
-        # Mount point not found in fstab, return false to indicate that no change was made.
+        # Mount point not found in fstab.
         echo "false"
     fi
 }
