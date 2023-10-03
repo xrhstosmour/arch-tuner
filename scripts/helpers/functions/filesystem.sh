@@ -44,7 +44,17 @@ update_mount_options() {
 
         # Mount point found in fstab, append new options at the end of the line, before the last 2 digits and excluding possible comments.
         log_info "Adding options $options to mount point $mount_point..."
-        sudo sed -i "/^[^#].*\<$mount_point\>[ \t].*[ \t][0-9][ \t][0-9]$/ {s|\(.*\)[ \t]\([0-9]\)[ \t]\([0-9]\)$|\1,$options \2 \3|;}" /etc/fstab
+        sudo awk -v mount="$mount_point" -v opts="$options" '
+        {
+            # If the line contains the target mount point and is not commented
+            if ($0 ~ mount && $1 !~ /^#/) {
+                # Add new options
+                $4 = $4 "," opts
+            }
+            # Print each line (modified or not)
+            print
+        }
+        ' /etc/fstab > /tmp/fstab.tmp && sudo mv /tmp/fstab.tmp /etc/fstab
 
         # Return true to indicate that a change was made.
         echo "true"
