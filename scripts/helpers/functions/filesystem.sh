@@ -42,9 +42,9 @@ update_mount_options() {
     # Check if the mount point exists in /etc/fstab.
     if awk '$2 == "'"$mount_point"'" && $1 !~ /^#/' /etc/fstab | grep -q .; then
 
-        # Mount point found in fstab, update its options.
+        # Mount point found in fstab, append new options at the end of the line.
         log_info "Adding options $options to mount point $mount_point..."
-        sudo sed -i "/^[^#].*\<$mount_point\>/ s@\([ \t]\)\([^ \t]*\)@\1\2,$options@" /etc/fstab
+        sudo sed -i "/^[^#].*\<$mount_point\>/ s@$@,$options@" /etc/fstab
 
         # Return true to indicate that a change was made.
         echo "true"
