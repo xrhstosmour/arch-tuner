@@ -51,13 +51,13 @@ update_mount_options() {
 
         # Loop through each individual option, adding it if not present.
         local modified_options="$current_options"
-        for opt in "${individual_options[@]}"; do
+        for new_options in "${individual_options[@]}"; do
 
             # Check if the option is already in the current options.
-            if [[ ! ",$current_options," =~ ",$opt," ]]; then
-            
+            if [[ ! ",$current_options," =~ ",$new_options," ]]; then
+
                 # Append the option.
-                modified_options="$modified_options,$opt"
+                modified_options="$modified_options,$new_options"
             fi
         done
 
