@@ -26,26 +26,17 @@ declare -A mount_options
 mount_options=(
     ["/"]="$MOUNT_DEFAULTS_OPTION"
     ["/home"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION,$MOUNT_NO_DEV_OPTION"
-    ["/home/*"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION,$MOUNT_NO_DEV_OPTION"
     ["/boot"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION,$MOUNT_NO_DEV_OPTION"
     ["/var"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION"
-    ["/var/*"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION"
+    ["/home/.cargo"]="$MOUNT_DEFAULTS_OPTION"
+    ["/var/tmp"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION"
 )
-
-# Define directories to exclude from adding mounting options.
-excluded_directories=("/home/.cargo" "/var/tmp")
 
 # Initialize a flag indicating if a mount options change has been made.
 mount_options_changes_made=1
 
 # Iterate through each mount point and apply the associated options accordingly.
 for mount_point in "${!mount_options[@]}"; do
-
-    # Skip excluded directories.
-    should_exclude_direcotry=$(directory_exists_in_list "$mount_point" excluded_directories)
-    if [ "$should_exclude_direcotry" = "true" ]; then
-        continue
-    fi
 
     # Proceed with changing the mounting points.
     mount_options_changed=$(update_mount_options "$mount_point" "${mount_options[$mount_point]}")

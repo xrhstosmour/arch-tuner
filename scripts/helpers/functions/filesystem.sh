@@ -39,6 +39,10 @@ update_mount_options() {
     local mount_point="$1"
     local options="$2"
 
+    # Find the device and filesystem type for possible new mount points.
+    local device=$(findmnt -nr -o SOURCE --target "$mount_point")
+    local filesystem=$(findmnt -nr -o FSTYPE --target "$mount_point")
+
     # Check if the mount point exists in /etc/fstab.
     if sudo awk '$2 == "'"$mount_point"'" && $1 !~ /^#/' /etc/fstab | grep -q .; then
         # Mount point found in fstab. Get current options.
@@ -84,8 +88,20 @@ update_mount_options() {
             echo "false"
         fi
     else
-        # Mount point not found in fstab.
-        echo "false"
+
+        # Check if both device and filesystem are valid.
+        if [[ -n "$device" && -n "$filesystem" ]]; then
+            log_info "Adding new mount point $mount_point with options $options..."
+            echo "$device $mount_point $filesystem $options 0 2" | sudo tee -a /etc/fstab
+
+            # Return true to indicate that a change was made.
+            echo "true"
+        else
+            log_error "Failed to retrieve device or filesystem type for mount point $mount_point!"
+
+            # Return false to indicate that no change was made.
+            echo "false"
+        fi
     fi
 }
 
@@ -103,7 +119,6 @@ compare_files() {
         echo "true"
     fi
 }
-
 
 # Check if a directory is in the excluded list
 # directory_exists_in_list "directory" "directory_list"
