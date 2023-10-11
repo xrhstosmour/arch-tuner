@@ -17,3 +17,4 @@ flameshot
 libreoffice-fresh
 pamac
 mission-center
+spacedrive-bin
