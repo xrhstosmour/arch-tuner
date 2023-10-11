@@ -44,6 +44,9 @@ update_mount_options() {
     local filesystem=$(findmnt -nr -o FSTYPE --target "$mount_point")
     local uuid=$(sudo blkid -s UUID -o value "$device")
 
+    # Remove any subvolume part if exists.
+    device=${device%[\/*]}
+
     # Check if the mount point exists in /etc/fstab.
     if sudo awk '$2 == "'"$mount_point"'" && $1 !~ /^#/' /etc/fstab | grep -q .; then
         # Mount point found in fstab. Get current options.
