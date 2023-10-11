@@ -39,13 +39,15 @@ update_mount_options() {
     local mount_point="$1"
     local options="$2"
 
-    # Find the uuid and filesystem type for possible new mount points.
+    # TODO: device, filesystem and uuid seems empty on execution although manually responds.
+    # Find the device the filesystem and the uuid for possible new mount points.
     local device=$(findmnt -nr -o SOURCE --target "$mount_point")
-    local filesystem=$(findmnt -nr -o FSTYPE --target "$mount_point")
-    local uuid=$(sudo blkid -s UUID -o value "$device")
 
     # Remove any subvolume part if exists.
     device=${device%[\/*]}
+
+    local filesystem=$(findmnt -nr -o FSTYPE --target "$mount_point")
+    local uuid=$(sudo blkid -s UUID -o value "$device")
 
     # Check if the mount point exists in /etc/fstab.
     if sudo awk '$2 == "'"$mount_point"'" && $1 !~ /^#/' /etc/fstab | grep -q .; then
