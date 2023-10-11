@@ -40,8 +40,9 @@ update_mount_options() {
     local options="$2"
 
     # Find the uuid and filesystem type for possible new mount points.
-    local uuid=$(sudo blkid -s UUID -o value "$device")
+    local device=$(findmnt -nr -o SOURCE --target "$mount_point")
     local filesystem=$(findmnt -nr -o FSTYPE --target "$mount_point")
+    local uuid=$(sudo blkid -s UUID -o value "$device")
 
     # Check if the mount point exists in /etc/fstab.
     if sudo awk '$2 == "'"$mount_point"'" && $1 !~ /^#/' /etc/fstab | grep -q .; then
