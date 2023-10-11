@@ -39,8 +39,8 @@ update_mount_options() {
     local mount_point="$1"
     local options="$2"
 
-    # Find the device and filesystem type for possible new mount points.
-    local device=$(findmnt -nr -o SOURCE --target "$mount_point")
+    # Find the uuid and filesystem type for possible new mount points.
+    local uuid=$(sudo blkid -s UUID -o value "$device")
     local filesystem=$(findmnt -nr -o FSTYPE --target "$mount_point")
 
     # Check if the mount point exists in /etc/fstab.
@@ -90,9 +90,9 @@ update_mount_options() {
     else
 
         # Check if both device and filesystem are valid.
-        if [[ -n "$device" && -n "$filesystem" ]]; then
+        if [[ -n "$uuid" && -n "$filesystem" ]]; then
             log_info "Adding new mount point $mount_point with options $options..."
-            echo "$device $mount_point $filesystem $options 0 2" | sudo tee -a /etc/fstab
+            echo "UUID=$uuid $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
 
             # Return true to indicate that a change was made.
             echo "true"
