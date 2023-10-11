@@ -103,3 +103,20 @@ compare_files() {
         echo "true"
     fi
 }
+
+
+# Check if a directory is in the excluded list
+# directory_exists_in_list "directory" "directory_list"
+directory_exists_in_list() {
+    local directory="$1"
+    local directory_list="$2"
+
+    # Iterate and check if the directory exists in the list.
+    for excluded_dir in "${directory_list[@]}"; do
+        if [[ "$directory" == "$excluded_dir" ]]; then
+            echo "true"
+            return
+        fi
+    done
+    echo "false"
+}

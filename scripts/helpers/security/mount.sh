@@ -15,9 +15,6 @@ source "$MOUNT_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
-# Initialize a flag indicating if a mount options change has been made.
-mount_options_changes_made=1
-
 # Declare constant variables for mounting options.
 MOUNT_DEFAULTS_OPTION="defaults"
 MOUNT_NO_DEV_OPTION="nodev"
@@ -28,30 +25,31 @@ MOUNT_NO_EXEC_OPTION="noexec"
 declare -A mount_options
 mount_options=(
     ["/"]="$MOUNT_DEFAULTS_OPTION"
-    ["/home"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION,$MOUNT_NO_DEV_OPTION"
+    ["/home/*"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION,$MOUNT_NO_DEV_OPTION"
     ["/boot"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION,$MOUNT_NO_DEV_OPTION"
+    ["/var/*"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION"
 )
 
-# Seperate /var subfolders and /var/tmp constant variables.
-VAR_SUBFOLDERS_DIRECTORY="/var/*"
-VAR_TMP_DIRECTORY="/var/tmp"
+# Define directories to exclude from adding mounting options.
+declare -A excluded_directories
+excluded_directories=("/home/.cargo" "/var/tmp")
+
+# Initialize a flag indicating if a mount options change has been made.
+mount_options_changes_made=1
 
 # Iterate through each mount point and apply the associated options accordingly.
 for mount_point in "${!mount_options[@]}"; do
+
+    # Skip excluded directories.
+    should_exclude_direcotry=$(directory_exists_in_list "$mount_point" "$excluded_directories")
+    if [ "$should_exclude_direcotry" = "true" ]; then
+        continue
+    fi
+
+    # Proceed with changing the mounting points.
     mount_options_changed=$(update_mount_options "$mount_point" "${mount_options[$mount_point]}")
     if [ "$mount_options_changed" = "true" ]; then
         mount_options_changes_made=0
-    fi
-done
-
-# Handle the /var subfolders separately due to the exclusion of /var/tmp.
-# Add defaults and nosuid options to directories under /var excluding /var/tmp.
-for dir in $VAR_SUBFOLDERS_DIRECTORY; do
-    if [[ $dir != "$VAR_TMP_DIRECTORY" ]]; then
-        mount_options_changed=$(update_mount_options "$dir" "$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION")
-        if [ "$mount_options_changed" = "true" ]; then
-            mount_options_changed=0
-        fi
     fi
 done
 
