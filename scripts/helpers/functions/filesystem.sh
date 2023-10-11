@@ -109,7 +109,9 @@ compare_files() {
 # directory_exists_in_list "directory" "directory_list"
 directory_exists_in_list() {
     local directory="$1"
-    local directory_list="$2"
+
+    # Declare a local array by dereferencing the passed array name.
+    local -n directory_list="$2"
 
     # Iterate and check if the directory exists in the list.
     for excluded_dir in "${directory_list[@]}"; do
