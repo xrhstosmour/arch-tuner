@@ -26,7 +26,6 @@ install_packages "hardened_malloc" "$AUR_PACKAGE_MANAGER" "Installing hardened m
 if ! grep -q "^$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION" "$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION_DIRECTORY"; then
     log_info "Enabling hardened memory allocator..."
 
-    # TODO: Check if this creates any issues with running applications.
     # Add 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' to the end of the file.
     echo "$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION" | sudo tee -a "$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION_DIRECTORY" >/dev/null
 fi

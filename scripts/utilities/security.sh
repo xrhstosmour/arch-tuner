@@ -22,16 +22,20 @@ source "$SECURITY_SCRIPT_DIRECTORY/../core/flags.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
-# Constant variable for the file path containing the security applications to install.
-SECURITY_PACKAGES="$SECURITY_SCRIPT_DIRECTORY/../packages/security.txt"
+# Install only if the user chooses to install an interface.
+if [ $INTERFACE_COMPLETED -eq 0 ]; then
 
-# Check if at least one security package is not installed.
-are_security_packages_installed=$(are_packages_installed "$SECURITY_PACKAGES" "$AUR_PACKAGE_MANAGER")
-if [ "$are_security_packages_installed" = "false" ]; then
-    log_info "Installing security applications..."
+    # Constant variable for the file path containing the security applications to install.
+    SECURITY_PACKAGES="$SECURITY_SCRIPT_DIRECTORY/../packages/security.txt"
 
-    # Install security packages.
-    install_packages "$SECURITY_PACKAGES" "$AUR_PACKAGE_MANAGER"
+    # Check if at least one security package is not installed.
+    are_security_packages_installed=$(are_packages_installed "$SECURITY_PACKAGES" "$AUR_PACKAGE_MANAGER")
+    if [ "$are_security_packages_installed" = "false" ]; then
+        log_info "Installing security applications..."
+
+        # Install security packages.
+        install_packages "$SECURITY_PACKAGES" "$AUR_PACKAGE_MANAGER"
+    fi
 fi
 
 # Check if script has not already been completed.
