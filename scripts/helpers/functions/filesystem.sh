@@ -87,7 +87,7 @@ update_mount_options() {
 
         # Find the device the filesystem and the uuid for possible new mount points.
         local device=$(findmnt -nr -o SOURCE --target "$mount_point")
-        device=${device%[\/*]}
+        device="${device%%[[]*}"
         local filesystem=$(findmnt -nr -o FSTYPE --target "$mount_point")
         local uuid=$(sudo blkid -s UUID -o value "$device")
 
