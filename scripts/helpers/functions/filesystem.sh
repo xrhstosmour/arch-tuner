@@ -89,17 +89,42 @@ update_mount_options() {
         local device=$(findmnt -nr -o SOURCE --target "$mount_point")
         device="${device%%[[]*}"
         local filesystem=$(findmnt -nr -o FSTYPE --target "$mount_point")
-        local uuid=$(sudo blkid -s UUID -o value "$device")
+        local uuid=""
+
+        # Handle tmpfs mounts.
+        if [[ "$filesystem" == "tmpfs" ]]; then
+            uuid=""
+        else
+            uuid=$(sudo blkid -s UUID -o value "$device")
+        fi
 
         # Check if both device and filesystem are valid.
-        if [[ -n "$uuid" && -n "$filesystem" ]]; then
-            log_info "Adding new mount point $mount_point with options $options..."
-            echo "UUID=$uuid $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
+        if [[ -n "$filesystem" ]]; then
 
-            # Return true to indicate that a change was made.
-            echo "true"
+            # If it's a tmpfs, use this format.
+            if [[ "$filesystem" == "tmpfs" ]]; then
+                log_info "Adding new tmpfs mount point $mount_point with options $options..."
+                echo "$device $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
+
+                # Return true to indicate that a change was made.
+                echo "true"
+            else
+                # For other filesystems, use the UUID format.
+                if [[ -n "$uuid" ]]; then
+                    log_info "Adding new mount point $mount_point with options $options..."
+                    echo "UUID=$uuid $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
+
+                    # Return true to indicate that a change was made.
+                    echo "true"
+                else
+                    log_error "Failed to retrieve UUID for mount point $mount_point and device $device!"
+
+                    # Return false to indicate that no change was made.
+                    echo "false"
+                fi
+            fi
         else
-            log_error "Failed to retrieve device or filesystem type for mount point $mount_point!"
+            log_error "Failed to retrieve filesystem type for mount point $mount_point!"
 
             # Return false to indicate that no change was made.
             echo "false"
