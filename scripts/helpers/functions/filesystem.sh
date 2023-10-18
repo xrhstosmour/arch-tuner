@@ -39,7 +39,7 @@ move_files_to_temporary_mount() {
     local mount_point="$1"
 
     # Before adding a new mount point, check if the directory contains any files.
-    if [[ $(find "$mount_point" -mindepth 1 | wc -l) -gt 0 ]]; then
+    if [[ $(sudo find "$mount_point" -mindepth 1 | wc -l) -gt 0 ]]; then
         log_info "Moving $mount_point's files to a temporaty mount..."
 
         # Mount the new device to a temporary location to transfer the files.
@@ -48,7 +48,10 @@ move_files_to_temporary_mount() {
         sudo mount "$device" "$temporary_directory"
 
         # Copy files from the old mount point to the new mount point.
-        sudo rsync -avh --remove-source-files "$mount_point/" "$temporary_directory/"
+        sudo cp -a "$mount_point/"* "$temporary_directory/"
+
+        # # After verifying that the files have been copied successfully, you can remove the source files.
+        # sudo rm -r "$mount_point/"*
 
         # Unmount the temporary mount point.
         sudo umount "$temporary_directory"
