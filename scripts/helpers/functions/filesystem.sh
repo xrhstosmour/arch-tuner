@@ -57,12 +57,26 @@ move_files_to_temporary_mount() {
         # Copy files from the old mount point to the new mount point.
         sudo cp -a "$mount_point/"* "$temporary_directory/"
 
-        # After verifying that the files have been copied successfully, you can remove the source files.
-        sudo rm -r "$mount_point/"*
+        # Sleep for 10 seconds before deleting the mount point.
+        sleep 10
+
+        # If even with sleep the rm command fails, terminate the processes using the mount point.
+        # sudo lsof +D "$mount_point" | awk 'NR>1 {print $2}' | uniq | xargs -r sudo kill -9
+
+        # Remove the source files.
+        sudo rm -rf "$mount_point/"*
 
         # Unmount the temporary mount point.
         sudo umount "$temporary_directory"
-        sudo rmdir "$temporary_directory"
+
+        # Sleep for 10 seconds before deleting the temporaty directory.
+        sleep 10
+
+        # If even with sleep the rm command fails, terminate the processes using the temporaty directory.
+        # sudo lsof +D "$temporary_directory" | awk 'NR>1 {print $2}' | uniq | xargs -r sudo kill -9
+
+        # Remove the temporaty directory.
+        sudo rmdir --ignore-fail-on-non-empty "$temporary_directory"
     fi
 }
 
