@@ -43,7 +43,7 @@ move_files_to_temporary_mount() {
         log_info "Moving $mount_point's files to a temporaty mount..."
 
         # Mount the new device to a temporary location to transfer the files.
-        local temporary_directory="/mnt/tmp_$mount_point"
+        local temporary_directory="/mnt/tmp_${mount_point#/}"
         sudo mkdir -p "$temporary_directory"
         sudo mount "$device" "$temporary_directory"
 
