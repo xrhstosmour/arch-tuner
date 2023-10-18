@@ -55,7 +55,7 @@ move_files_to_temporary_mount() {
 
         # Unmount the temporary mount point.
         sudo umount "$temporary_directory"
-        rmdir "$temporary_directory"
+        sudo rmdir "$temporary_directory"
     fi
 }
 
