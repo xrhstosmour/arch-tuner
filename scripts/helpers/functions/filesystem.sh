@@ -34,9 +34,10 @@ append_line_to_file() {
 }
 
 # Function to move existing files to a new mount before changing fstab.
-# move_files_to_temporary_mount "/mount/point"
+# move_files_to_temporary_mount "/mount/point" "device"
 move_files_to_temporary_mount() {
     local mount_point="$1"
+    local device="$2"
 
     # Before adding a new mount point, check if the directory contains any files.
     if [[ $(sudo find "$mount_point" -mindepth 1 | wc -l) -gt 0 ]]; then
@@ -126,7 +127,7 @@ update_mount_options() {
 
                 # Proceed with adding the new mount point.
                 if [[ -n "$uuid" ]]; then
-                    move_files_to_temporary_mount "$mount_point"
+                    move_files_to_temporary_mount "$mount_point" "$device"
                     log_info "Adding new mount point $mount_point with options $options..."
                     echo "UUID=$uuid $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
 
@@ -139,7 +140,7 @@ update_mount_options() {
                     echo "false"
                 fi
             else
-                move_files_to_temporary_mount "$mount_point"
+                move_files_to_temporary_mount "$mount_point" "$device"
                 log_info "Adding new tmpfs mount point $mount_point with options $options..."
                 echo "$device $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
 
