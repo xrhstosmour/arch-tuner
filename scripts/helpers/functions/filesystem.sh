@@ -33,6 +33,29 @@ append_line_to_file() {
     echo "false"
 }
 
+# Function to move existing files to a new mount before changing fstab.
+# move_files_to_temporary_mount "/mount/point"
+move_files_to_temporary_mount() {
+    local mount_point="$1"
+
+    # Before adding a new mount point, check if the directory contains any files.
+    if [[ $(find "$mount_point" -mindepth 1 | wc -l) -gt 0 ]]; then
+        log_info "Moving $mount_point's files to a temporaty mount..."
+
+        # Mount the new device to a temporary location to transfer the files.
+        local temporary_directory="/mnt/tmp_$mount_point"
+        sudo mkdir -p "$temporary_directory"
+        sudo mount "$device" "$temporary_directory"
+
+        # Copy files from the old mount point to the new mount point.
+        sudo rsync -avh --remove-source-files "$mount_point/" "$temporary_directory/"
+
+        # Unmount the temporary mount point.
+        sudo umount "$temporary_directory"
+        rmdir "$temporary_directory"
+    fi
+}
+
 # Function to apply mount hardening options to a mount point in /etc/fstab.
 # update_mount_options "/mount/point" "option1,option2,option3"
 update_mount_options() {
@@ -91,26 +114,16 @@ update_mount_options() {
         local filesystem=$(findmnt -nr -o FSTYPE --target "$mount_point")
         local uuid=""
 
-        # Handle tmpfs mounts.
-        if [[ "$filesystem" == "tmpfs" ]]; then
-            uuid=""
-        else
-            uuid=$(sudo blkid -s UUID -o value "$device")
-        fi
-
-        # Check if both device and filesystem are valid.
+        # Check if filesystem is valid.
         if [[ -n "$filesystem" ]]; then
 
-            # If it's a tmpfs, use this format.
-            if [[ "$filesystem" == "tmpfs" ]]; then
-                log_info "Adding new tmpfs mount point $mount_point with options $options..."
-                echo "$device $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
+            # Get UUID when filesystem is not tmpfs.
+            if [[ "$filesystem" != "tmpfs" ]]; then
+                uuid=$(sudo blkid -s UUID -o value "$device")
 
-                # Return true to indicate that a change was made.
-                echo "true"
-            else
-                # For other filesystems, use the UUID format.
+                # Proceed with adding the new mount point.
                 if [[ -n "$uuid" ]]; then
+                    move_files_to_temporary_mount "$mount_point"
                     log_info "Adding new mount point $mount_point with options $options..."
                     echo "UUID=$uuid $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
 
@@ -122,6 +135,13 @@ update_mount_options() {
                     # Return false to indicate that no change was made.
                     echo "false"
                 fi
+            else
+                move_files_to_temporary_mount "$mount_point"
+                log_info "Adding new tmpfs mount point $mount_point with options $options..."
+                echo "$device $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
+
+                # Return true to indicate that a change was made.
+                echo "true"
             fi
         else
             log_error "Failed to retrieve filesystem type for mount point $mount_point!"
