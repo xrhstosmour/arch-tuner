@@ -61,7 +61,7 @@ move_files_to_temporary_mount() {
         sleep 10
 
         # Terminate the processes using the mount point.
-        sudo lsof +D "$mount_point" | awk 'NR>1 {print $2}' | uniq | xargs -r sudo kill -9
+        sudo fuser -m "$mount_point" 2>/dev/null | xargs -r sudo kill -9
 
         # Remove the source files.
         sudo rm -rf "$mount_point/"*
@@ -73,7 +73,7 @@ move_files_to_temporary_mount() {
         sleep 10
 
         # Terminate the processes using the temporaty directory.
-        sudo lsof +D "$temporary_directory" | awk 'NR>1 {print $2}' | uniq | xargs -r sudo kill -9
+        sudo fuser -m "$temporary_directory" 2>/dev/null | xargs -r sudo kill -9
 
         # Remove the temporaty directory.
         sudo rmdir --ignore-fail-on-non-empty "$temporary_directory"
