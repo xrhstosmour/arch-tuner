@@ -43,16 +43,16 @@ move_files_to_temporary_mount() {
     if [[ $(sudo find "$mount_point" -mindepth 1 | wc -l) -gt 0 ]]; then
         log_info "Moving $mount_point's files to a temporaty mount..."
 
-        # Mount the new device to a temporary location to transfer the files.
-        local temporary_directory="/mnt/tmp_${mount_point#/}"
+        # Mount the new device to a temporary migration location to transfer the files.
+        local temporary_directory="/mnt/mgr_${mount_point#/}"
         sudo mkdir -p "$temporary_directory"
         sudo mount "$device" "$temporary_directory"
 
         # Copy files from the old mount point to the new mount point.
         sudo cp -a "$mount_point/"* "$temporary_directory/"
 
-        # # After verifying that the files have been copied successfully, you can remove the source files.
-        # sudo rm -r "$mount_point/"*
+        # After verifying that the files have been copied successfully, you can remove the source files.
+        sudo rm -r "$mount_point/"*
 
         # Unmount the temporary mount point.
         sudo umount "$temporary_directory"
