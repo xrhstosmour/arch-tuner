@@ -24,11 +24,26 @@ BIN_DIRECTORY="/bin"
 OPT_DIRECTORY="/opt"
 ROOT_DIRECTORY="/root"
 BOOT_DIRECTORY="/boot"
+SUDO_DIRECTORY="/usr/bin/sudo"
+SU_DIRECTORY="/usr/bin/su"
+PASSWD_DIRECTORY="/usr/bin/passwd"
+GPASSWD_DIRECTORY="/usr/bin/gpasswd"
+NEWGRP_DIRECTORY="/usr/bin/newgrp"
+CHSH_DIRECTORY="/usr/bin/chsh"
+CHFN_DIRECTORY="/usr/bin/chfn"
+SSH_KEYSIGN_DIRECTORY="/usr/libexec/openssh/ssh-keysign"
+CRONTAB_DIRECTORY="/usr/bin/crontab"
+AT_DIRECTORY="/usr/bin/at"
+SCREEN_DIRECTORY="/usr/bin/screen"
+UNIX_CHKPWD_DIRECTORY="/usr/sbin/unix_chkpwd"
+PKEXEC_DIRECTORY="/usr/bin/pkexec"
+MTR_DIRECTORY="/usr/bin/mtr"
+KSU_DIRECTORY="/usr/bin/ksu"
 SUID_PERMISSION="4000"
 SGID_PERMISSION="2000"
 
-# Construct the exclusion pattern using the directories.
-EXCLUDE_DIRS="^$SBIN_DIRECTORY/.*|^$USR_DIRECTORY/.*|^$BIN_DIRECTORY/.*|^$OPT_DIRECTORY/.*|^$ROOT_DIRECTORY/.*|^$BOOT_DIRECTORY/.*"
+# Construct the exclusion pattern using the directories and binaries.
+EXCLUDE_DIRS="^$SBIN_DIRECTORY/.*|^$USR_DIRECTORY/.*|^$BIN_DIRECTORY/.*|^$OPT_DIRECTORY/.*|^$ROOT_DIRECTORY/.*|^$BOOT_DIRECTORY/.*|^$SYS_DIRECTORY/.*|^$PROC_DIRECTORY/.*|^$SUDO_DIRECTORY|^$SU_DIRECTORY|^$PASSWD_DIRECTORY|^$GPASSWD_DIRECTORY|^$NEWGRP_DIRECTORY|^$CHSH_DIRECTORY|^$CHFN_DIRECTORY|^$SSH_KEYSIGN_DIRECTORY|^$CRONTAB_DIRECTORY|^$AT_DIRECTORY|^$SCREEN_DIRECTORY|^$UNIX_CHKPWD_DIRECTORY|^$PKEXEC_DIRECTORY|^$MTR_DIRECTORY|^$KSU_DIRECTORY"
 
 # Find all binaries with setuid or setgid bits set, excluding the directories listed above.
 suid_sgid_files=$(sudo find / -xdev -type f \( -perm /$SUID_PERMISSION -o -perm /$SGID_PERMISSION \) ! -regex "$EXCLUDE_DIRS" 2>/dev/null)
