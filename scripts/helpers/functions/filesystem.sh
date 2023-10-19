@@ -60,14 +60,8 @@ move_files_to_temporary_mount() {
         # Sleep for 10 seconds after copying files.
         sleep 10
 
-        # Unmount the temporary mount point.
-        sudo umount "$mount_point"
-
-        # Sleep for 10 seconds after unmounting mount point.
-        sleep 10
-
-        # Remove the mount point files.
-        sudo rm -rf "$mount_point/"*
+        # Remove the mount point.
+        sudo rmdir --ignore-fail-on-non-empty "$mount_point"
 
         # Sleep for 10 seconds after deleting mount point files.
         sleep 10
