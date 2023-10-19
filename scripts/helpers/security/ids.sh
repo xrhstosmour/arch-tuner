@@ -16,6 +16,8 @@ source "$IDS_SCRIPT_DIRECTORY/../functions/logs.sh"
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # UID constant configuration variables.
+SYS_DIRECTORY="/sys"
+PROC_DIRECTORY="/proc"
 SBIN_DIRECTORY="/sbin"
 USR_DIRECTORY="/usr"
 BIN_DIRECTORY="/bin"
@@ -29,7 +31,7 @@ SGID_PERMISSION="2000"
 EXCLUDE_DIRS="^$SBIN_DIRECTORY/.*|^$USR_DIRECTORY/.*|^$BIN_DIRECTORY/.*|^$OPT_DIRECTORY/.*|^$ROOT_DIRECTORY/.*|^$BOOT_DIRECTORY/.*"
 
 # Find all binaries with setuid or setgid bits set, excluding the directories listed above.
-suid_sgid_files=$(sudo find / -type f \( \( -perm -$SUID_PERMISSION -o -perm -$SGID_PERMISSION \) ! -regex "$EXCLUDE_DIRS" \) 2>/dev/null)
+suid_sgid_files=$(sudo find / -xdev -type f \( -perm /$SUID_PERMISSION -o -perm /$SGID_PERMISSION \) ! -regex "$EXCLUDE_DIRS" 2>/dev/null)
 
 # If any such files are found, disable their setuid and setgid bits.
 if [[ ! -z "$suid_sgid_files" ]]; then
