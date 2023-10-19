@@ -26,13 +26,13 @@ SUID_PERMISSION="4000"
 SGID_PERMISSION="2000"
 
 # Construct the exclusion pattern using the directories.
-EXCLUDE_DIRS="($SBIN_DIRECTORY|$USR_DIRECTORY|$BIN_DIRECTORY|$OPT_DIRECTORY|$ROOT_DIRECTORY|$BOOT_DIRECTORY)"
+EXCLUDE_DIRS="^$SBIN_DIRECTORY/.*|^$USR_DIRECTORY/.*|^$BIN_DIRECTORY/.*|^$OPT_DIRECTORY/.*|^$ROOT_DIRECTORY/.*|^$BOOT_DIRECTORY/.*"
 
 # Find all binaries with setuid or setgid bits set, excluding the directories listed above.
-SUID_SGID_FILES=$(sudo find / -type f \( -perm -$SUID_PERMISSION -o -perm -$SGID_PERMISSION \) ! -regex "$EXCLUDE_DIRS.*" 2>/dev/null)
+suid_sgid_files=$(sudo find / -type f \( \( -perm -$SUID_PERMISSION -o -perm -$SGID_PERMISSION \) ! -regex "$EXCLUDE_DIRS" \) 2>/dev/null)
 
 # If any such files are found, disable their setuid and setgid bits.
-if [[ ! -z "$SUID_SGID_FILES" ]]; then
+if [[ ! -z "$suid_sgid_files" ]]; then
     log_info "Disabling Set owner User ID (SUID) and Set Group ID (SGID) on these files..."
-    sudo chmod u-s,g-s $SUID_SGID_FILES
+    sudo chmod u-s,g-s $suid_sgid_files
 fi
