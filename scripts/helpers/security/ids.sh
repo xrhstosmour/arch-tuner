@@ -41,28 +41,32 @@ declare -a EXCLUDE_DIRS=(
     "/usr/bin/mtr"
     "/usr/bin/ksu"
 )
-SUID_PERMISSION="4000"
-SGID_PERMISSION="2000"
 
-directories_to_process=("/")
-while ((${#directories_to_process[@]})); do
-    current_directory="${directories_to_process[0]}"
-    directories_to_process=("${directories_to_process[@]:1}")
+# Construct the exclude arguments for the find command.
+EXCLUDE_ARGUMENTS=""
+for path in "${EXCLUDE_PATHS[@]}"; do
+    EXCLUDE_ARGUMENTS="$EXCLUDE_ARGUMENTS ! -path $path"
+done
 
-    # If the directory is not in the directories to exclude.
-    if [[ ! " ${EXCLUDE_DIRS[@]} " =~ " ${current_directory} " ]]; then
-        for entry in "$current_directory"/*; do
-            if [[ -d "$entry" && ! -L "$entry" ]]; then
-                directories_to_process+=("$entry")
-            elif [[ -f "$entry" ]]; then
+# Find all binaries with setuid or setgid bit set, excluding specified paths.
+suid_sgid_binary_files=$(find / -type f \( -perm -4000 -o -perm -2000 \) $EXCLUDE_ARGUMENTS 2>/dev/null)
+if [[ -z "$suid_sgid_binary_files" ]]; then
+    log_info "No SUID/SGID binaries found!"
+    exit 0
+fi
 
-                # Get the permissions
-                permissions=$(stat -c %a "$entry")
-                if (((permissions & SUID_PERMISSION) == SUID_PERMISSION || (permissions & SGID_PERMISSION) == SGID_PERMISSION)); then
-                    log_info "Disabling Set owner User ID (SUID) and Set Group ID (SGID) on $entry..."
-                    sudo chmod u-s,g-s "$entry"
-                fi
-            fi
-        done
+# Iterate to remove the setuid and setgid bits from the files which were found.
+for binary_file in $suid_sgid_binary_files; do
+
+    # Check if the binary file has setuid bit set.
+    if [[ $(stat -c "%a" "$binary_file") == *4* ]]; then
+        log_info "Disabling Set Owner User ID (SUID) from $binary_file..."
+        sudo chmod u-s "$binary_file"
+    fi
+
+    # Check if the binary file has setgid bit set.
+    if [[ $(stat -c "%a" "$binary_file") == *2* ]]; then
+        log_info "Disabling Set Group ID (SGID) from $binary_file..."
+        sudo chmod g-s "$binary_file"
     fi
 done
