@@ -16,7 +16,7 @@ source "$IDS_SCRIPT_DIRECTORY/../functions/logs.sh"
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # UID constant configuration variables.
-declare -a EXCLUDE_DIRS=(
+declare -a EXCLUDE_PATHS=(
     "/sys"
     "/proc"
     "/sbin"
