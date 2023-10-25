@@ -44,15 +44,14 @@ declare -a EXCLUDE_PATHS=(
 # Construct the exclude arguments for the find command.
 EXCLUDE_ARGUMENTS=""
 for path in "${EXCLUDE_PATHS[@]}"; do
-    EXCLUDE_ARGUMENTS="${EXCLUDE_ARGUMENTS} -path $path -prune -o"
+    EXCLUDE_ARGUMENTS="${EXCLUDE_ARGUMENTS}-path $path -prune -o "
 done
 
-# Remove the trailing '-o ' from EXCLUDE_ARGUMENTS.
-EXCLUDE_ARGUMENTS=${EXCLUDE_ARGUMENTS% -o }
+# Remove the trailing '-o '
+EXCLUDE_ARGUMENTS=${EXCLUDE_ARGUMENTS%-o }
 
 # Find all binaries with setuid or setgid bit set, excluding specified paths.
-suid_sgid_binary_files=$(sudo find / \( $EXCLUDE_ARGUMENTS \) -type f \( -perm -4000 -o -perm -2000 \) -print 2>/dev/null)
-
+suid_sgid_binary_files=$(sudo find / $EXCLUDE_ARGUMENTS -type f \( -perm -4000 -o -perm -2000 \) -print 2>/dev/null)
 if [[ -z "$suid_sgid_binary_files" ]]; then
     log_info "No SUID/SGID binaries found!"
     exit 0
