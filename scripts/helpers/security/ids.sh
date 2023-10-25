@@ -59,13 +59,13 @@ fi
 for binary_file in $suid_sgid_binary_files; do
 
     # Check if the binary file has setuid bit set.
-    if [[ $(stat -c "%a" "$binary_file") == *4* ]]; then
+    if [[ $(stat -c "%a" "$binary_file") == 4* ]]; then
         log_info "Disabling Set Owner User ID (SUID) from $binary_file..."
         sudo chmod u-s "$binary_file"
     fi
 
     # Check if the binary file has setgid bit set.
-    if [[ $(stat -c "%a" "$binary_file") == *2* ]]; then
+    if [[ $(stat -c "%a" "$binary_file") == 2* ]]; then
         log_info "Disabling Set Group ID (SGID) from $binary_file..."
         sudo chmod g-s "$binary_file"
     fi
