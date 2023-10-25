@@ -17,6 +17,12 @@ update_system() {
     # Constant variable for the world wide mirror.
     local WORLDWIDE_MIRROR='https://geo.mirror.pkgbuild.com/$repo/os/$arch'
 
+    # Check if AUR package manager is installed or not.
+    local use_aur_manager=1
+    if command -v "$AUR_PACKAGE_MANAGER" >/dev/null; then
+        use_aur_manager=0
+    fi
+
     # Reset mirrors to the worldwide one before updating/upgrading.
     if [[ "$INITIAL_SETUP" -eq 0 ]]; then
         log_info "Resetting mirrors to the worldwide one before updating/upgrading..."
@@ -27,24 +33,39 @@ update_system() {
     sudo pacman-db-upgrade
 
     # Update package databases.
-    sudo pacman -Sy
+    if [[ "$use_aur_manager" -eq 0 ]]; then
+        $AUR_PACKAGE_MANAGER -Sy
+    else
+        sudo $ARCH_PACKAGE_MANAGER -Sy
+    fi
 
     # Check if any package is upgradable.
-    upgradable=$(pacman -Qu) || true
+    upgradable_packages=""
+    if [[ "$use_aur_manager" -eq 0 ]]; then
+        upgradable_packages=$($AUR_PACKAGE_MANAGER -Qu) || true
+    else
+        upgradable_packages=$(sudo $ARCH_PACKAGE_MANAGER -Qu) || true
+    fi
 
     # Check if 'archlinux-keyring' package is upgradable.
-    upgradable_keyring=$(echo "$upgradable" | grep archlinux-keyring) || true
+    upgradable_keyring=$(echo "$upgradable_packages" | grep archlinux-keyring) || true
 
     # Update 'archlinux-keyring' package if it needs an update.
     if [[ -n "$upgradable_keyring" ]]; then
         log_info "Updating archlinux-keyring..."
-        sudo pacman -S --noconfirm --needed archlinux-keyring
+        sudo $ARCH_PACKAGE_MANAGER -S --noconfirm --needed archlinux-keyring
     fi
 
     # Update system if any package is upgradable.
-    if [[ -n "$upgradable" ]]; then
+    if [[ -n "$upgradable_packages" ]]; then
         log_info "Updating system..."
-        sudo pacman -Su --noconfirm --needed
+
+        # Update using the corresponding package manager.
+        if [[ "$use_aur_manager" -eq 0 ]]; then
+            $AUR_PACKAGE_MANAGER -Su --noconfirm
+        else
+            sudo $ARCH_PACKAGE_MANAGER -Su --noconfirm --needed
+        fi
     fi
 }
 
