@@ -48,6 +48,9 @@ for path in "${EXCLUDE_PATHS[@]}"; do
     EXCLUDE_ARGUMENTS="${EXCLUDE_ARGUMENTS}-path $path -prune -o "
 done
 
+# Remove the trailing '-o ' from EXCLUDE_ARGUMENTS.
+EXCLUDE_ARGUMENTS=${EXCLUDE_ARGUMENTS% -o }
+
 # Find all binaries with setuid or setgid bit set, excluding specified paths.
 suid_sgid_binary_files=$(sudo find / \( \( $EXCLUDE_ARGUMENTS \) -false -o -type f \( -perm -4000 -o -perm -2000 \) \) -print 2>/dev/null)
 if [[ -z "$suid_sgid_binary_files" ]]; then
