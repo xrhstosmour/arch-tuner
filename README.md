@@ -10,7 +10,7 @@ A comprehensive suite of bash scripts designed to fine-tune and optimize your se
 - ⚙️ **Interface**: Streamline the installation of GPU drivers and display managers for an optimized visual experience.
 - 🖥 **Desktop**: Set up your desktop with essential applications.
 - 💻 **Development**: Elevate your coding environment with tools and programming languages.
-- 🕶 **Privacy**: Apply key adjustments for a more private browsing experience.
+- 🕶 **Privacy**: Apply key adjustments for a more private experience.
 - 🛡 **Security**: Strengthen your Arch installation with best security measures.
 
 ## Usage
