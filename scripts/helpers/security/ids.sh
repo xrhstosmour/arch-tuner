@@ -41,17 +41,25 @@ declare -a EXCLUDE_PATHS=(
     "/usr/bin/ksu"
 )
 
-# Construct the exclude arguments for the find command.
-EXCLUDE_ARGUMENTS=""
+# Start with the basic command.
+FIND_COMMAND="sudo find /"
+
+# Then we add each excluded path.
 for path in "${EXCLUDE_PATHS[@]}"; do
-    EXCLUDE_ARGUMENTS="${EXCLUDE_ARGUMENTS}-path $path -prune -o "
+
+    # If this is not the last path in EXCLUDE_PATHS add the '-o' otherwise omit it.
+    if [[ "$path" != "${EXCLUDE_PATHS[-1]}" ]]; then
+        FIND_COMMAND="${FIND_COMMAND} -path $path -prune -o"
+    else
+        FIND_COMMAND="${FIND_COMMAND} -path $path -prune"
+    fi
 done
 
-# Remove the trailing '-o '
-EXCLUDE_ARGUMENTS=${EXCLUDE_ARGUMENTS%-o }
+# Finally, we add the part that selects the files of interest.
+FIND_COMMAND="${FIND_COMMAND} -o -type f \( -perm -4000 -o -perm -2000 \) -print"
 
-# Find all binaries with setuid or setgid bit set, excluding specified paths.
-suid_sgid_binary_files=$(sudo find / $EXCLUDE_ARGUMENTS -type f \( -perm -4000 -o -perm -2000 \) -print 2>/dev/null)
+# Execute the final command.
+suid_sgid_binary_files=$(eval $FIND_COMMAND 2>/dev/null)
 if [[ -z "$suid_sgid_binary_files" ]]; then
     log_info "No SUID/SGID binaries found!"
     exit 0
