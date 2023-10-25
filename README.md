@@ -67,6 +67,14 @@ A massive thank you to the broader open-source community. This toolkit was inspi
 
 🚧 **Note**: This project is a work in progress. Your contributions, suggestions, and feedback are always welcome!
 
+### Getting Started
+
+1. **Open Issues**: Check out the open issues to see where you can help out. These are a good place to start, especially if you're new to the project.
+
+2. **TODOs Inside the Code**: While browsing the codebase, you might come across `TODO` comments. These represent areas of the code that need attention or improvement. Feel free to tackle any of these!
+
+Remember, every contribution, no matter how small, is valuable. If you have questions or need guidance, don't hesitate to ask. Together, we can make this project better for everyone!
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE.md file for details.
