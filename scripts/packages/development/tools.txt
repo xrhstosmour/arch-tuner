@@ -1,5 +1,5 @@
 vscodium-bin
-remmina-git
+remmina
 remmina-plugin-teamviewer
 remmina-plugin-anydesk-git
 remmina-plugin-rdesktop
