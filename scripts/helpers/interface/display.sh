@@ -23,7 +23,7 @@ DISPLAY_MANAGER_BLANK_PASSWORD="blank_password"
 DISPLAY_MANAGER_BLANK_PASSWORD_TRUE="blank_password = true"
 
 # Install display manager.
-install_packages "$DISPLAY_MANAGER_PACKAGE-git" "$AUR_PACKAGE_MANAGER" "Installing display manager..."
+install_packages "$DISPLAY_MANAGER_PACKAGE" "$AUR_PACKAGE_MANAGER" "Installing display manager..."
 
 # Enable display manager.
 enable_service "$DISPLAY_MANAGER_PACKAGE" "Enabling display manager..."
