@@ -4,7 +4,7 @@ remmina-plugin-teamviewer
 remmina-plugin-anydesk-git
 remmina-plugin-rdesktop
 remmina-plugin-rustdesk
-gitkraken
+github-desktop-bin
 obsidian-bin
 postman-bin
 etcher-bin
