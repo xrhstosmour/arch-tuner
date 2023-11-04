@@ -17,7 +17,7 @@ source "$PRIVACY_SCRIPT_DIRECTORY/../helpers/functions/packages.sh"
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Install only if the user chooses to install an interface.
-if [ $INTERFACE_COMPLETED -eq 0 ]; then
+if [ "$INTERFACE_COMPLETED" -eq 0 ]; then
 
     # Constant variable for the file path containing the privacy applications to install.
     PRIVACY_PACKAGES="$PRIVACY_SCRIPT_DIRECTORY/../packages/privacy.txt"
