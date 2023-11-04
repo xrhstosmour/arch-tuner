@@ -18,25 +18,34 @@ source "$ANTIVIRUS_SCRIPT_DIRECTORY/../functions/system.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
+# Constant variable containing the ClamAV database directory.
+CLAMAV_DATABASE_DIRECTORY="/var/lib/clamav"
+
 # Install antivirus.
 install_packages "clamav" "$AUR_PACKAGE_MANAGER" "Installing antivirus..."
 
-# Get the date from freshclam --version output.
-database_date=$(sudo freshclam --version | awk -F'/' '{print $3}' | cut -d ' ' -f1-4)
-
-# Convert to a simple YYYYMMDD date string.
-database_date_simple=$(date --date="$database_date" +%Y%m%d)
-
-# Get "yesterday's" date in simple YYYYMMDD format.
-current_date_simple=$(date --date="yesterday" +%Y%m%d)
-
-# Check if the database date is earlier than "yesterday"
-if [ "$database_date_simple" -lt "$current_date_simple" ]; then
-
-    # Updating virus database.
-    stop_service "clamav-freshclam" "Stopping antivirus update manager..."
-    log_info "Updating virus database..."
+# Check if the database directory is populated with cvd files
+if [ -z "$(ls -A ${CLAMAV_DATABASE_DIRECTORY}/*.cvd 2>/dev/null)" ]; then
+    log_info "Downloading virus database..."
     sudo freshclam
+else
+    # Get the date from freshclam --version output.
+    database_date=$(sudo freshclam --version | awk -F'/' '{print $3}' | cut -d ' ' -f1-4)
+
+    # Convert to a simple YYYYMMDD date string.
+    database_date_simple=$(date --date="$database_date" +%Y%m%d)
+
+    # Get "yesterday's" date in simple YYYYMMDD format.
+    current_date_simple=$(date --date="yesterday" +%Y%m%d)
+
+    # Check if the database date is earlier than "yesterday"
+    if [ "$database_date_simple" -lt "$current_date_simple" ]; then
+
+        # Updating virus database.
+        stop_service "clamav-freshclam" "Stopping antivirus update manager..."
+        log_info "Updating virus database..."
+        sudo freshclam
+    fi
 fi
 
 # Enable antivirus services.
