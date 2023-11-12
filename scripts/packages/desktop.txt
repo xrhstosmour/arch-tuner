@@ -19,3 +19,4 @@ pamac
 mission-center
 spacedrive-bin
 localsend-bin
+notepadqq-git
