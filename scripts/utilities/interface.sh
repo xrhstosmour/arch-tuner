@@ -15,8 +15,8 @@ source "$INTERFACE_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
-# Install and configure display manager.
-sh $INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/display.sh
+# Install and configure greeter.
+sh $INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/greeter.sh
 
 # Install and configure GPU drivers.
 sh $INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/gpu.sh
