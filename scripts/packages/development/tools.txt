@@ -10,3 +10,5 @@ postman-bin
 etcher-bin
 docker
 docker-compose
+quickemu
+quickgui-bin
