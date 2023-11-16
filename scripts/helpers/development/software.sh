@@ -16,6 +16,22 @@ source "$SOFTWARE_SCRIPT_DIRECTORY/../functions/services.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
+# Install only if the user chooses to install an interface.
+if [ $INTERFACE_COMPLETED -eq 0 ]; then
+
+    # Constant variable for the file path containing the development applications to install.
+    DEVELOPMENT_APPLICATIONS="$SOFTWARE_SCRIPT_DIRECTORY/../../packages/development/applications.txt"
+
+    # Check if at least one development application package is not installed.
+    are_development_application_packages_installed=$(are_packages_installed "$DEVELOPMENT_APPLICATIONS" "$AUR_PACKAGE_MANAGER")
+    if [ "$are_development_application_packages_installed" = "false" ]; then
+        log_info "Installing development applications..."
+
+        # Install development application packages.
+        install_packages "$DEVELOPMENT_APPLICATIONS" "$AUR_PACKAGE_MANAGER"
+    fi
+fi
+
 # Constant variable for the file path containing the software tools to install.
 SOFTWARE_TOOLS="$SOFTWARE_SCRIPT_DIRECTORY/../../packages/development/tools.txt"
 
