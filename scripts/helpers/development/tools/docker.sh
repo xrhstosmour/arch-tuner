@@ -11,6 +11,7 @@ DOCKER_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
 source "$DOCKER_SCRIPT_DIRECTORY/../../functions/services.sh"
+source "$DOCKER_SCRIPT_DIRECTORY/../../functions/filesystem.sh"
 
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
