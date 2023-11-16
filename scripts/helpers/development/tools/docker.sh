@@ -24,8 +24,12 @@ DOCKER_DAEMON_CONFIGURATION_TO_PASS="$DOCKER_SCRIPT_DIRECTORY/../../../configura
 # Stop Docker service.
 stop_service "docker"
 
-# Truncate possible existing Docker logs.
-sudo sh -c "truncate -s 0 "$DOCKER_LOGS""
+# Truncate existing Docker logs if they exist.
+for log_file in $DOCKER_LOGS; do
+    if [ -f "$log_file" ]; then
+        sudo truncate -s 0 "$log_file"
+    fi
+done
 
 # Update the Docker daemon configuration.
 # ? Use the JSON file log driver for Docker and update the log options.
