@@ -16,13 +16,16 @@ source "$DESKTOP_SCRIPT_DIRECTORY/../helpers/functions/packages.sh"
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Constant variable for the file path containing the desktop applications to install.
-DESKTOP_PACKAGES="$DESKTOP_SCRIPT_DIRECTORY/../packages/desktop.txt"
+DESKTOP_APPLICATION_PACKAGES="$DESKTOP_SCRIPT_DIRECTORY/../packages/desktop/applications.txt"
 
 # Check if at least one desktop package is not installed.
-are_desktop_packages_installed=$(are_packages_installed "$DESKTOP_PACKAGES" "$AUR_PACKAGE_MANAGER")
+are_desktop_packages_installed=$(are_packages_installed "$DESKTOP_APPLICATION_PACKAGES" "$AUR_PACKAGE_MANAGER")
 if [ "$are_desktop_packages_installed" = "false" ]; then
     log_info "Installing desktop applications..."
 
     # Install desktop packages.
-    install_packages "$DESKTOP_PACKAGES" "$AUR_PACKAGE_MANAGER"
+    install_packages "$DESKTOP_APPLICATION_PACKAGES" "$AUR_PACKAGE_MANAGER"
 fi
+
+# Install themes, icons, fonts, cursors.
+sh $DESKTOP_SCRIPT_DIRECTORY/../helpers/desktop/theming.sh

@@ -16,9 +16,9 @@ source "$THEMING_SCRIPT_DIRECTORY/../functions/packages.sh"
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Constant variables for the file paths containing the themes, icons, and cursors to install.
-THEMES="$THEMING_SCRIPT_DIRECTORY/../../packages/essentials/themes.txt"
-ICONS="$THEMING_SCRIPT_DIRECTORY/../../packages/essentials/icons.txt"
-CURSORS="$THEMING_SCRIPT_DIRECTORY/../../packages/essentials/cursors.txt"
+THEMES="$THEMING_SCRIPT_DIRECTORY/../../packages/dektop/themes.txt"
+ICONS="$THEMING_SCRIPT_DIRECTORY/../../packages/dektop/icons.txt"
+CURSORS="$THEMING_SCRIPT_DIRECTORY/../../packages/dektop/cursors.txt"
 
 # Check if at least one theme is not installed.
 are_theme_packages_installed=$(are_packages_installed "$THEMES" "$AUR_PACKAGE_MANAGER")
