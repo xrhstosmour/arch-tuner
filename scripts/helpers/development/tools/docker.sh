@@ -10,7 +10,7 @@ set -e
 DOCKER_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$DOCKER_SCRIPT_DIRECTORY/../functions/services.sh"
+source "$DOCKER_SCRIPT_DIRECTORY/../../functions/services.sh"
 
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
@@ -19,7 +19,7 @@ source "$DOCKER_SCRIPT_DIRECTORY/../functions/services.sh"
 DOCKER_DIRECTORY="/etc/docker"
 DOCKER_LOGS="/var/lib/docker/containers/*/*-json.log"
 DOCKER_DAEMON_CONFIGURATION="/etc/docker/daemon.json"
-DOCKER_DAEMON_CONFIGURATION_TO_PASS="$DOCKER_SCRIPT_DIRECTORY/../../configurations/information/neofetch.conf"
+DOCKER_DAEMON_CONFIGURATION_TO_PASS="$DOCKER_SCRIPT_DIRECTORY/../../../configurations/information/neofetch.conf"
 
 # Stop Docker service.
 stop_service "docker"
