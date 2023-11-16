@@ -40,8 +40,8 @@ sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/terminal.sh
 # Install and configure prompt.
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/prompt.sh
 
-# Install themes, icons, fonts, cursors.
-sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/theming.sh
+# Install fonts.
+sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/fonts.sh
 
 # Install and configure shell.
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/shell.sh
