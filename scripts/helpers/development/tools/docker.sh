@@ -39,7 +39,7 @@ done
 are_docker_daemon_files_the_same=$(compare_files "$DOCKER_DAEMON_CONFIGURATION" "$DOCKER_DAEMON_CONFIGURATION_TO_PASS")
 if [ "$are_docker_daemon_files_the_same" = "false" ]; then
     log_info "Configuring Docker..."
-    mkdir -p "$DOCKER_DIRECTORY"
+    sudo mkdir -p "$DOCKER_DIRECTORY"
     cp -f "$DOCKER_DAEMON_CONFIGURATION_TO_PASS" "$DOCKER_DAEMON_CONFIGURATION"
 fi
 
