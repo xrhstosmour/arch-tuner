@@ -1,0 +1,12 @@
+hyprland
+eww-wayland
+gtk3
+gtk4
+swww
+waypaper
+rofi-wayland
+dunst
+hyprshot
+upower
+cliphist
+playerctl
