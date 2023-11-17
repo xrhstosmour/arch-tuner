@@ -53,3 +53,24 @@ ask_for_user_approval_before_executing_script() {
     # return the answer.
     echo "$answer"
 }
+
+# Function to ask user to choose a display manager.
+# choose_display_manager
+choose_display_manager() {
+
+    local choice=""
+    while [[ "$choice" != "1" && "$choice" != "2" ]]; do
+        log_info "Choose a display manager:"
+        log_info -n "1. ly"
+        log_info -n "2. sddm"
+        read -r choice
+
+        if [ "$choice" = "1" ]; then
+            echo "ly"
+        elif [ "$choice" = "2" ]; then
+            echo "sddm"
+        else
+            echo "Invalid choice!"
+        fi
+    done
+}
