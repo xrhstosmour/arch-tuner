@@ -28,6 +28,9 @@ if [ "$are_essential_packages_installed" = "false" ]; then
     install_packages "$ESSENTIAL_PACKAGES" "$ARCH_PACKAGE_MANAGER"
 fi
 
+# Configure Arch package manager.
+sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/pacman.sh
+
 # Install and configure AUR helper.
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/aur.sh
 
