@@ -24,7 +24,7 @@ nts_changes_made=1
 NTS_CONFIGURATION_DIRECTORY="/etc/chrony/"
 NTS_SYSTEM_CONFIGURATION_DIRECTORY="/etc/sysconfig"
 NTS_CONFIGURATION="/etc/chrony/chrony.conf"
-NTS_CONFIGURATION_TO_PASS="$NTS_SCRIPT_DIRECTORY/../../configurations/network/time.conf"
+NTS_CONFIGURATION_TO_PASS="$NTS_SCRIPT_DIRECTORY/../../configurations/security/network/time.conf"
 NTS_SYSTEM_CONFIGURATION="/etc/sysconfig/chronyd"
 
 # Install encrypted network time security.

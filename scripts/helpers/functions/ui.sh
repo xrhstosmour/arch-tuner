@@ -28,6 +28,8 @@ ask_for_user_approval_before_executing_script() {
     local script_path="$2"
     local script_name=$(basename "$script_path" .sh)
 
+    # TODO: Ask for desktop only if interface is completed.
+
     # Capitalize the first letter.
     local capitalized_script_name="${script_name^}"
 

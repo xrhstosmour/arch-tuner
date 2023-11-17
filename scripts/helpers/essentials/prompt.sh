@@ -19,7 +19,7 @@ source "$PROMPT_SCRIPT_DIRECTORY/../functions/packages.sh"
 # Constant variables for changing and configuring shell.
 STARSHIP_DIRECTORY="$HOME/.config"
 STARSHIP_CONFIGURATION="$HOME/.config/starship.toml"
-STARSHIP_CONFIGURATION_TO_PASS="$PROMPT_SCRIPT_DIRECTORY/../../configurations/prompt/configuration.toml"
+STARSHIP_CONFIGURATION_TO_PASS="$PROMPT_SCRIPT_DIRECTORY/../../configurations/essentials/prompt/configuration.toml"
 
 # Install prompt.
 install_packages "starship" "$AUR_PACKAGE_MANAGER" "Installing prompt..."

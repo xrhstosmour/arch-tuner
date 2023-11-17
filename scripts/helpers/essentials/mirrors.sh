@@ -21,8 +21,9 @@ source "$MIRRORS_SCRIPT_DIRECTORY/../../core/flags.sh"
 # Constant variables for changing and configuring shell.
 REFLECTOR_DIRECTORY="/etc/xdg/reflector/"
 REFLECTOR_CONFIGURATION="/etc/xdg/reflector/reflector.conf"
-REFLECTOR_CONFIGURATION_TO_PASS="$MIRRORS_SCRIPT_DIRECTORY/../../configurations/mirrors/reflector.conf"
+REFLECTOR_CONFIGURATION_TO_PASS="$MIRRORS_SCRIPT_DIRECTORY/../../configurations/essentials/mirrors/reflector.conf"
 
+# TODO: use rate-mirrors package instead.
 # Install mirror list manager.
 install_packages "reflector" "$ARCH_PACKAGE_MANAGER" "Installing mirror list manager..."
 

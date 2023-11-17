@@ -19,7 +19,7 @@ source "$INFROMATION_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 # Constant variables for installing and configuring system information tool.
 NEOFETCH_DIRECTORY="$HOME/.config/neofetch"
 NEOFETCH_CONFIGURATION="$HOME/.config/neofetch/config.conf"
-NEOFETCH_CONFIGURATION_TO_PASS="$INFROMATION_SCRIPT_DIRECTORY/../../configurations/information/neofetch.conf"
+NEOFETCH_CONFIGURATION_TO_PASS="$INFROMATION_SCRIPT_DIRECTORY/../../configurations/essentials/information/neofetch.conf"
 
 # Install system information tool package.
 install_packages "neofetch" "$AUR_PACKAGE_MANAGER" "Installing system information tool..."
