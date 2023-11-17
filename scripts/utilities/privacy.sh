@@ -21,7 +21,7 @@ source "$PRIVACY_SCRIPT_DIRECTORY/../core/flags.sh"
 if [ $INTERFACE_COMPLETED -eq 0 ]; then
 
     # Constant variable for the file path containing the privacy applications to install.
-    PRIVACY_PACKAGES="$PRIVACY_SCRIPT_DIRECTORY/../packages/privacy.txt"
+    PRIVACY_PACKAGES="$PRIVACY_SCRIPT_DIRECTORY/../packages/privacy/applications.txt"
 
     # Check if at least one privacy package is not installed.
     are_privacy_packages_installed=$(are_packages_installed "$PRIVACY_PACKAGES" "$AUR_PACKAGE_MANAGER")
