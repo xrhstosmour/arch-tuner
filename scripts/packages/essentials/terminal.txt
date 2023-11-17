@@ -1,4 +1,5 @@
 helix
+nano
 bottom
 bat
 exa
