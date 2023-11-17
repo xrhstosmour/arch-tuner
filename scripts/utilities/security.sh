@@ -38,7 +38,7 @@ if [ $INTERFACE_COMPLETED -eq 0 ]; then
     fi
 fi
 
-# Check if script has not already been completed.
+# Check if the firewall script has not already been completed.
 if [ $COMPLETED_UP_TO_FIREWALL -eq 1 ]; then
 
     # Install and configure firewall.
@@ -71,8 +71,15 @@ sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/nts.sh
 # TODO: Implement Pluggable Authentication Modules (PAM) and U2F/FIDO2 authenticator choice.
 # TODO: Implement Mandatory Access Control via AppArmor and its policies/profiles.
 
-# Configure mount options.
-sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/mount.sh
+# Check if the mount script has not already been completed.
+if [ $COMPLETED_UP_TO_MOUNT -eq 1 ]; then
+
+    # Configure mount options.
+    sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/mount.sh
+
+    # Reboot system if needed.
+    reboot_system $COMPLETED_UP_TO_MOUNT "COMPLETED_UP_TO_MOUNT"
+fi
 
 # Configure owner user IDs.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/ids.sh
