@@ -20,7 +20,7 @@ source "$AUR_SCRIPT_DIRECTORY/../functions/ui.sh"
 aur_helper=$(choose_aur_helper)
 
 # Change the 'constant' value to the one user choosed.
-change_flag_value "AUR_PACKAGE_MANAGER" "$aur_helper" "$AUR_SCRIPT_DIRECTORY/../../core/constans.sh"
+change_flag_value "AUR_PACKAGE_MANAGER" "$aur_helper" "$AUR_SCRIPT_DIRECTORY/../../core/constants.sh"
 
 # Constant variables for installing and configuring the AUR helper.
 AUR_DIRECTORY="$aur_helper"
