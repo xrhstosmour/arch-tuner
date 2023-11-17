@@ -72,7 +72,7 @@ choose_display_manager() {
     local choice=""
     while :; do
         log_info "Choose a display manager [1]/2:"
-        log_info -n "1. LY"
+        log_info -n "1. ly"
         log_info -n "2. sddm"
         read -r choice
 
@@ -104,7 +104,7 @@ choose_aur_helper() {
     local choice=""
     while :; do
         log_info "Choose an AUR helper [1]/2:"
-        log_info -n "1. PARU"
+        log_info -n "1. paru"
         log_info -n "2. yay"
         read -r choice
 
