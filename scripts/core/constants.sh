@@ -9,4 +9,4 @@ BOLD_RED='\e[1;31m'
 
 # Package managers to use.
 ARCH_PACKAGE_MANAGER="pacman"
-AUR_PACKAGE_MANAGER="paru"
+AUR_PACKAGE_MANAGER=""

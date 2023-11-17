@@ -19,7 +19,7 @@ update_system() {
 
     # Check if AUR package manager is installed or not.
     local use_aur_manager=1
-    if command -v "$AUR_PACKAGE_MANAGER" >/dev/null; then
+    if [[ -n "${AUR_PACKAGE_MANAGER// /}" ]] && command -v "$AUR_PACKAGE_MANAGER" >/dev/null; then
         use_aur_manager=0
     fi
 
