@@ -67,6 +67,7 @@ ask_for_user_approval_before_executing_script() {
 }
 
 # Function to ask user to choose a display manager with default option.
+# choose_display_manager
 choose_display_manager() {
     local choice=""
     while :; do
@@ -98,6 +99,7 @@ choose_display_manager() {
 }
 
 # Function to ask user to choose an AUR helper with default option.
+# choose_aur_helper
 choose_aur_helper() {
     local choice=""
     while :; do
