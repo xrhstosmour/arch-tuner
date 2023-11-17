@@ -60,8 +60,7 @@ if ! command -v "$AUR_PACKAGE_MANAGER" &>/dev/null; then
         fi
         ;;
     yay)
-        # TODO: Implement yay pre installation configuration.
-        log_warning "Pre installation configuration for yay AUR helper is not implemented yet!"
+        :
         ;;
     esac
 
@@ -90,7 +89,6 @@ paru)
     fi
     ;;
 yay)
-    # TODO: Implement yay configuration.
-    log_warning "Configuration for yay AUR helper is not implemented yet!"
+    :
     ;;
 esac
