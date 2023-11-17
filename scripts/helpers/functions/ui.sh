@@ -33,44 +33,97 @@ ask_for_user_approval_before_executing_script() {
     # Capitalize the first letter.
     local capitalized_script_name="${script_name^}"
 
-    local answer=""
-    while [[ "$answer" != "y" && "$answer" != "n" ]]; do
-        log_info "$prompt Y/N: "
-        read -r answer
+    # Proceed with the user choice.
+    local choice=""
+    while :; do
+        log_info "$prompt [Y]/N: "
+        read -r choice
+
+        # Set default value if no input.
+        if [ -z "$choice" ]; then
+            choice="Y"
+        fi
 
         # Convert to lowercase.
-        answer=${answer,,}
+        choice=${choice,,}
 
-        if [[ "$answer" == "y" ]]; then
+        case "$choice" in
+        y)
             log_info "Executing $script_name script..."
             sh "$script_path"
             log_info "$capitalized_script_name script execution finished!"
-        elif [[ "$answer" != "n" ]]; then
-            log_error "Invalid input!"
-        fi
+            echo "$choice"
+            break
+            ;;
+        n)
+            echo "$choice"
+            break
+            ;;
+        *)
+            log_error "Invalid choice!"
+            ;;
+        esac
     done
-
-    # return the answer.
-    echo "$answer"
 }
 
-# Function to ask user to choose a display manager.
-# choose_display_manager
+# Function to ask user to choose a display manager with default option.
 choose_display_manager() {
-
     local choice=""
-    while [[ "$choice" != "1" && "$choice" != "2" ]]; do
-        log_info "Choose a display manager:"
-        log_info -n "1. ly"
+    while :; do
+        log_info "Choose a display manager [1]/2:"
+        log_info -n "1. LY"
         log_info -n "2. sddm"
         read -r choice
 
-        if [ "$choice" = "1" ]; then
-            echo "ly"
-        elif [ "$choice" = "2" ]; then
-            echo "sddm"
-        else
-            echo "Invalid choice!"
+        # Set default value if no input.
+        if [ -z "$choice" ]; then
+            choice="1"
         fi
+
+        # Return the user choice.
+        case "$choice" in
+        1)
+            echo "ly"
+            break
+            ;;
+        2)
+            echo "sddm"
+            break
+            ;;
+        *)
+            echo "Invalid choice!"
+            ;;
+        esac
+    done
+}
+
+# Function to ask user to choose an AUR helper with default option.
+choose_aur_helper() {
+    local choice=""
+    while :; do
+        log_info "Choose an AUR helper [1]/2:"
+        log_info -n "1. PARU"
+        log_info -n "2. yay"
+        read -r choice
+
+        # Set default value if no input.
+        if [ -z "$choice" ]; then
+            choice="1"
+        fi
+
+        # Return the user choice.
+        case "$choice" in
+        1)
+            echo "paru"
+            break
+            ;;
+        2)
+            echo "yay"
+            break
+            ;;
+        *)
+            echo "Invalid choice!"
+            ;;
+        esac
     done
 }
