@@ -59,7 +59,7 @@ done
 FIND_COMMAND="${FIND_COMMAND} -o -type f \( -perm -4000 -o -perm -2000 \) -print"
 
 # Execute the final command.
-suid_sgid_binary_files=$(eval $FIND_COMMAND 2>/dev/null)
+suid_sgid_binary_files=$(eval $FIND_COMMAND 2>&1 | grep -v "File system loop detected" || true)
 if [[ -z "$suid_sgid_binary_files" ]]; then
     log_info "No SUID/SGID binaries found!"
     exit 0
