@@ -1,6 +1,5 @@
 wezterm
 dolphin
-thorium-bin
 gimp
 spotify
 thunderbird
