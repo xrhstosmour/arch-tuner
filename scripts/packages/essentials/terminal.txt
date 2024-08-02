@@ -3,7 +3,7 @@ nano
 bottom
 bat
 exa
-rm-improved
+trashy
 xcp
 eva
 zoxide
