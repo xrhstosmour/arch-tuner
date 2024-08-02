@@ -1,3 +1,4 @@
+fzf
 helix
 nano
 bottom
