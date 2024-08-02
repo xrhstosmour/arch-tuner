@@ -82,6 +82,12 @@ process_package() {
     # Skip if it's a comment or empty.
     [[ "$package" == \#* ]] || [[ -z "$package" ]] && return
 
+    # If the package starts with '!', add flags to skip test checks.
+    if [[ "$package" == !* ]]; then
+        package="${package:1}"
+        install_command="$install_command --mflags --nocheck"
+    fi
+
     # Install package if it is not already installed.
     is_package_installed=$(are_packages_installed "$package" "$manager")
     if [ "$is_package_installed" = "false" ]; then
