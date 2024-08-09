@@ -29,10 +29,14 @@ install_packages "rate-mirrors-bin" "$AUR_PACKAGE_MANAGER" "Installing mirror li
 
 # If the rate-mirrors service file does not exist, create it.
 if [ ! -f "$RATE_MIRRORS_SERVICE_FILE" ]; then
-    log_info "Adding mirror list auto refresh command to the root user's crontab..."
     start_service "cronie" "Starting crontab service..."
     enable_service "cronie" "Enabling crontab service..."
-    (crontab -l 2>/dev/null; echo "@reboot $RATE_MIRRORS_COMMAND") | sudo crontab -
+
+    # If the rate-mirrors command is not in the root user's crontab, add it.
+    if ! sudo crontab -l | grep -q "@reboot $RATE_MIRRORS_COMMAND"; then
+        log_info "Adding mirror list auto refresh command to the root user's crontab..."
+        (crontab -l 2>/dev/null; echo "@reboot $RATE_MIRRORS_COMMAND") | sudo crontab -
+    fi
 
     log_info "Creating mirror list auto refresh service..."
     echo "[Unit]
@@ -47,7 +51,7 @@ if [ ! -f "$RATE_MIRRORS_SERVICE_FILE" ]; then
     WantedBy=multi-user.target" | sudo tee "$RATE_MIRRORS_SERVICE_FILE" >/dev/null
 
     log_info "Configuring mirror list..."
-    sudo /bin/bash -c "$RATE_MIRRORS_COMMAND"
+    $RATE_MIRRORS_COMMAND
 fi
 
 # Start and enable mirror list auto update service if it is not already active/enabled.
