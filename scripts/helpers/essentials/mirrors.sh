@@ -51,7 +51,7 @@ if [ ! -f "$RATE_MIRRORS_SERVICE_FILE" ]; then
     WantedBy=multi-user.target" | sudo tee "$RATE_MIRRORS_SERVICE_FILE" >/dev/null
 
     log_info "Configuring mirror list..."
-    $RATE_MIRRORS_COMMAND
+    /bin/bash -c '$RATE_MIRRORS_COMMAND'
 fi
 
 # Start and enable mirror list auto update service if it is not already active/enabled.
