@@ -15,9 +15,6 @@ source "$ESSENTIALS_SCRIPT_DIRECTORY/../helpers/functions/packages.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
-# Install and configure mirror list manager.
-sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
-
 # Essential packages.
 ESSENTIAL_PACKAGES="base-devel git networkmanager"
 
@@ -33,6 +30,9 @@ sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/pacman.sh
 
 # Install and configure AUR helper.
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/aur.sh
+
+# Install and configure mirror list manager.
+sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
 
 # Install and configure system information tool.
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/information.sh
