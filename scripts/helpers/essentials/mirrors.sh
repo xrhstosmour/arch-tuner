@@ -25,7 +25,7 @@ RATE_MIRRORS_SERVICE="refresh-mirrors-list.service"
 RATE_MIRRORS_SERVICE_FILE="/etc/systemd/system/$RATE_MIRRORS_SERVICE"
 
 # Install mirror list manager.
-install_packages "rate-mirrors-bin" "$ARCH_PACKAGE_MANAGER" "Installing mirror list manager..."
+install_packages "rate-mirrors-bin" "$AUR_PACKAGE_MANAGER" "Installing mirror list manager..."
 
 # If the rate-mirrors service file does not exist, create it.
 if [ ! -f "$RATE_MIRRORS_SERVICE_FILE" ]; then
