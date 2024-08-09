@@ -18,41 +18,34 @@ source "$MIRRORS_SCRIPT_DIRECTORY/../../core/flags.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
-# Constant variables for changing and configuring shell.
-REFLECTOR_DIRECTORY="/etc/xdg/reflector/"
-REFLECTOR_CONFIGURATION="/etc/xdg/reflector/reflector.conf"
-REFLECTOR_CONFIGURATION_TO_PASS="$MIRRORS_SCRIPT_DIRECTORY/../../configurations/essentials/mirrors/reflector.conf"
+# Define the rate-mirrors configuration file, command, service name and file.
+RATE_MIRRORS_CONFIGURATION="$MIRRORS_SCRIPT_DIRECTORY/../../configurations/essentials/mirrors/rate-mirrors.conf"
+RATE_MIRRORS_COMMAND=$(cat "$RATE_MIRRORS_CONFIGURATION")
+RATE_MIRRORS_SERVICE="refresh-mirrors-list.service"
+RATE_MIRRORS_SERVICE_FILE="$HOME/.config/systemd/user/$RATE_MIRRORS_SERVICE"
 
-# TODO: use rate-mirrors package instead.
 # Install mirror list manager.
-install_packages "reflector" "$ARCH_PACKAGE_MANAGER" "Installing mirror list manager..."
+install_packages "rate-mirrors-bin" "$AUR_PACKAGE_MANAGER" "Installing mirror list manager..."
 
-# Copy the configuration file only if it is not the same as the current one.
-are_reflector_files_the_same=$(compare_files "$REFLECTOR_CONFIGURATION" "$REFLECTOR_CONFIGURATION_TO_PASS")
-if [ "$are_reflector_files_the_same" = "false" ]; then
+# If the rate-mirrors service file does not exist, create it.
+if [ ! -f "$RATE_MIRRORS_SERVICE_FILE" ]; then
+    log_info "Creating mirror list auto refresh service..."
+
+    mkdir -p "$(dirname "$RATE_MIRRORS_SERVICE_FILE")"
+
+    echo "[Unit]
+Description=Mirror list auto refresh service on startup
+
+[Service]
+ExecStart=/bin/bash -c \"$RATE_MIRRORS_COMMAND\"
+
+[Install]
+WantedBy=default.target" | sudo tee "$RATE_MIRRORS_SERVICE_FILE" >/dev/null
+
     log_info "Configuring mirror list..."
-    sudo mkdir -p "$REFLECTOR_DIRECTORY"
-    sudo cp -f "$REFLECTOR_CONFIGURATION_TO_PASS" "$REFLECTOR_CONFIGURATION"
-
-    # Read the configuration file into a string, excluding comment lines.
-    args=$(grep -v '^#' "$REFLECTOR_CONFIGURATION")
-
-    # Run reflector with the arguments.
-    sudo reflector ${args} >/dev/null
+    /bin/bash -c "$RATE_MIRRORS_COMMAND"
 fi
 
-# Before enabling the service, check if it is already enabled and keep it for later use.
-is_reflector_already_enabled=$(is_service_enabled "reflector")
-
-# Enable and start mirror list service if they are not already active.
-enable_service "reflector" "Enabling mirror list auto refresh service..."
-
-# Run reflector once to populate the mirror list.
-# The reflector service will show as inactive and run periodically, with the help of the reflector timer.
-if [[ "$is_reflector_already_enabled" = "false" ]] || [[ "$INITIAL_SETUP" -eq 0 ]]; then
-    start_service "reflector" "Running mirror list auto refresh service..."
-fi
-
-# Start and enable mirror list timer if they are not already active.
-start_service "reflector.timer" "Starting mirror list auto refresh timer service..."
-enable_service "reflector.timer" "Enabling mirror list auto refresh timer service..."
+# Start and enable mirror list auto update service if it is not already active/enabled.
+start_service "$RATE_MIRRORS_SERVICE" "Starting mirror list auto refresh service..." "user"
+enable_service "$RATE_MIRRORS_SERVICE" "Enabling mirror list auto refresh service..." "user"
