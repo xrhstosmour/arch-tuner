@@ -17,17 +17,17 @@ source "$INFROMATION_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Constant variables for installing and configuring system information tool.
-NEOFETCH_DIRECTORY="$HOME/.config/neofetch"
-NEOFETCH_CONFIGURATION="$HOME/.config/neofetch/config.conf"
-NEOFETCH_CONFIGURATION_TO_PASS="$INFROMATION_SCRIPT_DIRECTORY/../../configurations/essentials/information/neofetch.conf"
+FASTFETCH_DIRECTORY="$HOME/.config/fastfetch"
+FASTFETCH_CONFIGURATION="$FASTFETCH_DIRECTORY/config.jsonc"
+FASTFETCH_CONFIGURATION_TO_PASS="$INFROMATION_SCRIPT_DIRECTORY/../../configurations/essentials/information/fastfetch.jsonc"
 
 # Install system information tool package.
-install_packages "neofetch" "$AUR_PACKAGE_MANAGER" "Installing system information tool..."
+install_packages "fastfetch" "$AUR_PACKAGE_MANAGER" "Installing system information tool..."
 
 # Configure system information tool.
-are_neofetch_files_the_same=$(compare_files "$NEOFETCH_CONFIGURATION" "$NEOFETCH_CONFIGURATION_TO_PASS")
-if [ "$are_neofetch_files_the_same" = "false" ]; then
+are_fastfetch_files_the_same=$(compare_files "$FASTFETCH_CONFIGURATION" "$FASTFETCH_CONFIGURATION_TO_PASS")
+if [ "$are_fastfetch_files_the_same" = "false" ]; then
     log_info "Configuring system information tool..."
-    mkdir -p "$NEOFETCH_DIRECTORY"
-    cp -f "$NEOFETCH_CONFIGURATION_TO_PASS" "$NEOFETCH_CONFIGURATION"
+    mkdir -p "$FASTFETCH_DIRECTORY"
+    cp -f "$FASTFETCH_CONFIGURATION_TO_PASS" "$FASTFETCH_CONFIGURATION"
 fi
