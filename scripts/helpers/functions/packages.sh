@@ -77,7 +77,7 @@ are_packages_installed() {
 process_package() {
     local package="$(trim_string "$1")"
     local install_command="$2"
-    local message="${4:-"Installing '$package' package..."}"
+    local message="${3:-"Installing '$package' package..."}"
 
     # Skip if it's a comment or empty.
     [[ "$package" == \#* ]] || [[ -z "$package" ]] && return
