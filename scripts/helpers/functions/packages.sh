@@ -77,7 +77,7 @@ are_packages_installed() {
 process_package() {
     local package="$(trim_string "$1")"
     local install_command="$2"
-    local message="${4:-"Installing '$package' package..."}"
+    local message="${3:-"Installing '$package' package..."}"
 
     # Skip if it's a comment or empty.
     [[ "$package" == \#* ]] || [[ -z "$package" ]] && return
@@ -86,6 +86,11 @@ process_package() {
     if [[ "$package" == !* ]]; then
         package="${package:1}"
         install_command="$install_command --mflags --nocheck"
+
+        # Change the message if no other message was provided.
+        if [ -z "$3" ]; then
+            message="Installing '$package' package without tests..."
+        fi
     fi
 
     # Install package if it is not already installed.

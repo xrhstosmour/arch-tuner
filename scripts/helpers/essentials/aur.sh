@@ -16,19 +16,29 @@ source "$AUR_SCRIPT_DIRECTORY/../functions/ui.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
-# Get the user's choice about AUR helper.
-aur_helper=$(choose_aur_helper)
+# Check if an AUR helper is already installed.
+aur_helper=""
+if command -v paru &>/dev/null; then
 
-# Change the 'constant' value to the one user choosed.
-change_flag_value "AUR_PACKAGE_MANAGER" "$aur_helper" "$AUR_SCRIPT_DIRECTORY/../../core/constants.sh"
+    # Change the 'constant' value to "paru".
+    aur_helper="paru"
+    change_flag_value "AUR_PACKAGE_MANAGER" "paru" "$AUR_SCRIPT_DIRECTORY/../../core/constants.sh"
+elif command -v yay &>/dev/null; then
 
-# Constant variables for installing and configuring the AUR helper.
-AUR_DIRECTORY="$aur_helper"
-AUR_GIT_URL="https://aur.archlinux.org/$aur_helper.git"
-PARU_CONFIGURATION="/etc/paru.conf"
+    # Change the 'constant' value to "paru".
+    aur_helper="yay"
+    change_flag_value "AUR_PACKAGE_MANAGER" "yay" "$AUR_SCRIPT_DIRECTORY/../../core/constants.sh"
+else
 
-# Install AUR helper.
-if ! command -v "$AUR_PACKAGE_MANAGER" &>/dev/null; then
+    # Get the user's choice about AUR helper.
+    aur_helper=$(choose_aur_helper)
+
+    # Change the 'constant' value to the one user choosed.
+    change_flag_value "AUR_PACKAGE_MANAGER" "$aur_helper" "$AUR_SCRIPT_DIRECTORY/../../core/constants.sh"
+
+    # Constant variables for installing and configuring the AUR helper.
+    AUR_DIRECTORY="$aur_helper"
+    AUR_GIT_URL="https://aur.archlinux.org/$aur_helper.git"
 
     # Delete old AUR directory, if it exists.
     if [ -d "$AUR_DIRECTORY" ]; then
@@ -65,7 +75,7 @@ if ! command -v "$AUR_PACKAGE_MANAGER" &>/dev/null; then
     esac
 
     # Proceed with installation.
-    log_info "Installing $AUR_PACKAGE_MANAGER AUR helper..."
+    log_info "Installing $aur_helper AUR helper..."
     git clone $AUR_GIT_URL
     cd $AUR_DIRECTORY
     makepkg -si --noconfirm
@@ -77,15 +87,32 @@ fi
 case $aur_helper in
 paru)
 
-    # Configure AUR helper.
-    if ! grep -qxF 'SkipReview' "$PARU_CONFIGURATION"; then
-        log_info "Configuring $AUR_PACKAGE_MANAGER package manager..."
-    fi
+    # Declare the configuration options of the AUR helper we want to set.
+    declare -a CONFIGURATION_OPTIONS=("BottomUp" "Devel" "Provides" "PgpFetch" "CombinedUpgrade" "FailFast" "SudoLoop" "SkipReview")
 
-    # Skip review messages.
-    if ! grep -qxF 'SkipReview' $PARU_CONFIGURATION; then
-        log_info "Skipping review messages..."
-        echo 'SkipReview' | sudo tee -a $PARU_CONFIGURATION >/dev/null
+    # Constant variable for the paru AUR helper configuration file.
+    PARU_CONFIGURATION="/etc/paru.conf"
+
+    # Check if at least one configuration option does not exist or is commented out.
+    configuration_option_missing=false
+    for configuration_option in "${CONFIGURATION_OPTIONS[@]}"; do
+        if ! grep -qxF "$configuration_option" "$PARU_CONFIGURATION"; then
+            configuration_option_missing=true
+            break
+        fi
+    done
+
+    # Configure AUR helper if any configuration option is missing.
+    if [ "$configuration_option_missing" = true ]; then
+        log_info "Configuring $aur_helper package manager..."
+
+        # Add each configuration option if not already present.
+        for configuration_option in "${CONFIGURATION_OPTIONS[@]}"; do
+            if ! grep -qxF "$configuration_option" "$PARU_CONFIGURATION"; then
+                log_info "Adding '$configuration_option' to $AUR_PACKAGE_MANAGER configuration..."
+                echo "$configuration_option" | sudo tee -a "$PARU_CONFIGURATION" >/dev/null
+            fi
+        done
     fi
     ;;
 yay)

@@ -44,7 +44,7 @@ A massive thank you to the broader open-source community. This toolkit was inspi
 - [Configuring Starship Prompt](https://starship.rs/config/#prompt)
 - [Dive into Starship](https://mvolkmann.github.io/blog/starship/)
 - [Enhanced Terminal Aesthetics with Starship & Exa](https://fadeevab.com/my-configs-for-fancy-looking-terminal-starship-exa/)
-- [Neofetch Theme Showcase](https://github.com/chick2d/neofetch-themes/blob/main/normal/acenoster.conf)
+- [Fastfetch Theme Showcase](https://github.com/LierB/fastfetch)
 
 ### Linux System Protection
 
