@@ -42,8 +42,11 @@ ExecStart=/bin/bash -c \"$RATE_MIRRORS_COMMAND\"
 [Install]
 WantedBy=default.target" | sudo tee "$RATE_MIRRORS_SERVICE_FILE" >/dev/null
 
+    # Configure mirror list and wait for the process to finish.
     log_info "Configuring mirror list..."
-    /bin/bash -c "$RATE_MIRRORS_COMMAND"
+    /bin/bash -c "$RATE_MIRRORS_COMMAND" &
+    PID=$!
+    wait $PID
 fi
 
 # Start and enable mirror list auto update service if it is not already active/enabled.
