@@ -39,7 +39,6 @@ else
     # Constant variables for installing and configuring the AUR helper.
     AUR_DIRECTORY="$aur_helper"
     AUR_GIT_URL="https://aur.archlinux.org/$aur_helper.git"
-    PARU_CONFIGURATION="/etc/paru.conf"
 
     # Delete old AUR directory, if it exists.
     if [ -d "$AUR_DIRECTORY" ]; then
@@ -88,15 +87,32 @@ fi
 case $aur_helper in
 paru)
 
-    # Configure AUR helper.
-    if ! grep -qxF 'SkipReview' "$PARU_CONFIGURATION"; then
-        log_info "Configuring $aur_helper package manager..."
-    fi
+    # Declare the configuration options of the AUR helper we want to set.
+    declare -a CONFIGURATION_OPTIONS=("BottomUp" "Devel" "Provides" "PgpFetch" "CombinedUpgrade" "FailFast" "SudoLoop" "SkipReview")
 
-    # Skip review messages.
-    if ! grep -qxF 'SkipReview' $PARU_CONFIGURATION; then
-        log_info "Skipping review messages..."
-        echo 'SkipReview' | sudo tee -a $PARU_CONFIGURATION >/dev/null
+    # Constant variable for the paru AUR helper configuration file.
+    PARU_CONFIGURATION="/etc/paru.conf"
+
+    # Check if at least one configuration option does not exist or is commented out.
+    configuration_option_missing=false
+    for configuration_option in "${CONFIGURATION_OPTIONS[@]}"; do
+        if ! grep -qxF "$configuration_option" "$PARU_CONFIGURATION"; then
+            configuration_option_missing=true
+            break
+        fi
+    done
+
+    # Configure AUR helper if any configuration option is missing.
+    if [ "$configuration_option_missing" = true ]; then
+        log_info "Configuring $aur_helper package manager..."
+
+        # Add each configuration option if not already present.
+        for configuration_option in "${CONFIGURATION_OPTIONS[@]}"; do
+            if ! grep -qxF "$configuration_option" "$PARU_CONFIGURATION"; then
+                log_info "Adding '$configuration_option' to $AUR_PACKAGE_MANAGER configuration..."
+                echo "$configuration_option" | sudo tee -a "$PARU_CONFIGURATION" >/dev/null
+            fi
+        done
     fi
     ;;
 yay)
