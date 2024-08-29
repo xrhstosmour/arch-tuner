@@ -1,4 +1,5 @@
 # Custom abbreviations for terminal tools.
+abbr um "rate-mirrors --disable-comments-in-file --save mirrors.txt arch && cat mirrors.txt | head -n 5 | sudo tee /etc/pacman.d/mirrorlist && sudo rm mirrors.txt"
 abbr us "sudo pacman-db-upgrade && sudo pacman -Sy && sudo pacman -S --noconfirm --needed archlinux-keyring && paru -Su --noconfirm"
 abbr pi "paru -S --noconfirm"
 abbr pr "paru -Rns --noconfirm"
