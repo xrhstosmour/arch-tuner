@@ -1,4 +1,5 @@
 # Custom abbreviations for terminal tools.
+abbr ff "fastfetch"
 abbr cat "bat"
 abbr ls "exa --long --all --icons --color=always --group-directories-first --git"
 abbr cp "xcp"
