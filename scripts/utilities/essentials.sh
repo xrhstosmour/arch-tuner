@@ -16,7 +16,7 @@ source "$ESSENTIALS_SCRIPT_DIRECTORY/../helpers/functions/packages.sh"
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Essential packages.
-ESSENTIAL_PACKAGES="base-devel git networkmanager"
+ESSENTIAL_PACKAGES="base-devel git"
 
 # Install essential packages.
 are_essential_packages_installed=$(are_packages_installed "$ESSENTIAL_PACKAGES" "$ARCH_PACKAGE_MANAGER")
