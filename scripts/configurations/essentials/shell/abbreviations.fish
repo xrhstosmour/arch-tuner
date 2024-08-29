@@ -1,4 +1,7 @@
 # Custom abbreviations for terminal tools.
+abbr us "sudo pacman-db-upgrade && sudo pacman -Sy && sudo pacman -S --noconfirm --needed archlinux-keyring && paru -Su --noconfirm"
+abbr pi "paru -S --noconfirm"
+abbr pr "paru -Rns --noconfirm"
 abbr ff "fastfetch"
 abbr cat "bat"
 abbr ls "exa --long --all --icons --color=always --group-directories-first --git"
