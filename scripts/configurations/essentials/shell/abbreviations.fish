@@ -1,9 +1,20 @@
-# Custom abbreviations for terminal tools.
+# Shell configuration abbreviations.
+abbr efa "code ~/.config/fish/conf.d/abbr.fish"
+abbr efc "code ~/.config/fish/config.fish"
+abbr eff "code ~/.config/fish/functions"
+
+# System abbreviations.
 abbr um "rate-mirrors --disable-comments-in-file --save mirrors.txt arch && cat mirrors.txt | head -n 5 | sudo tee /etc/pacman.d/mirrorlist && sudo rm mirrors.txt"
 abbr us "sudo pacman-db-upgrade && sudo pacman -Sy && sudo pacman -S --noconfirm --needed archlinux-keyring && paru -Su --noconfirm"
 abbr pi "paru -S --noconfirm"
 abbr pr "paru -Rns --noconfirm"
 abbr ff "fastfetch"
+abbr btm "bottom"
+abbr ip "ip -br a | grep UP | awk '{print \"Interface: \" \$1 \"\nIPv4: \" \$3}'"
+abbr po "sudo systemctl poweroff"
+abbr zzz "sudo systemctl suspend"
+
+# Terminal tools abbreviations.
 abbr cat "bat"
 abbr ls "exa --long --all --icons --color=always --group-directories-first --git"
 abbr cp "xcp"
@@ -20,4 +31,14 @@ abbr mkdir "mkdir -p"
 abbr jsn "jless"
 abbr hlx "helix"
 abbr h "history"
-abbr ip "ip -br a | grep UP | awk '{print \"Interface: \" \$1 \"\nIPv4: \" \$3}'"
+abbr cl "clear"
+
+# Services abbreviations.
+abbr sc "sudo systemctl"
+abbr scsts "sudo systemctl status"
+abbr sci "sudo systemctl info"
+abbr scstr "sudo systemctl start"
+abbr sce "sudo systemctl enable"
+abbr scstp "sudo systemctl stop"
+abbr scd "sudo systemctl disable"
+abbr scrr "sudo systemctl reload-or-restart"
