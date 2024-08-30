@@ -20,6 +20,8 @@ abbr ls "exa --long --all --icons --color=always --group-directories-first --git
 abbr cp "xcp"
 abbr t "trash"
 abbr tl "trash list"
+abbr te "trash_empty"
+abbr tr "trash_restore"
 abbr tea "trash empty --all"
 abbr eva "calc"
 abbr cd "z"

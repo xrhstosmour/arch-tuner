@@ -9,3 +9,4 @@ set -U fish_greeting
 
 # Load custom functions.
 source ~/.config/fish/functions/trashy.fish
+source ~/.config/fish/functions/logs.fish
