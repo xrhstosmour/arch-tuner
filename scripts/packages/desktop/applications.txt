@@ -5,13 +5,11 @@ spotify
 thunderbird
 vlc
 davinci-resolve
-ferdium-bin
 filen-desktop-appimage
+syncthing-bin
 viber
 discord
-telegram-desktop
 signal-desktop
-session-desktop-bin
 flameshot
 libreoffice-fresh
 pamac
@@ -19,3 +17,8 @@ mission-center
 spacedrive-bin
 localsend-bin
 notepadqq-git
+logseq-desktop
+appflowy-bin
+google-chrome
+brave-bin
+cromite-bin
