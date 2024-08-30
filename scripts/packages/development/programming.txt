@@ -1,4 +1,3 @@
-python
-python-pip
-python-poetry
-python-poetry-plugin-up
+dotnet-sdk
+dotnet-runtime
+aspnet-runtime
