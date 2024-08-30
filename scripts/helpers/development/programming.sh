@@ -26,10 +26,3 @@ if [ "$are_programming_packages_installed" = "false" ]; then
     # Install programming languages packages.
     install_packages "$PROGRAMMING_LANGUAGES" "$AUR_PACKAGE_MANAGER"
 fi
-
-# ! PYTHON SECTION.
-if grep -q "^python-poetry$" "$PROGRAMMING_LANGUAGES"; then
-
-    # Install and configure Python.
-    sh $PROGRAMMING_SCRIPT_DIRECTORY/languages/python.sh
-fi
