@@ -67,6 +67,18 @@ update_system() {
             sudo $ARCH_PACKAGE_MANAGER -Su --noconfirm --needed
         fi
     fi
+
+    # Check if any orphaned packages are available to remove.
+    orphan_packages=$(sudo $ARCH_PACKAGE_MANAGER -Qtdq) || true
+    if [[ -n "$orphan_packages" ]]; then
+        log_info "Removing orphaned packages..."
+        sudo $ARCH_PACKAGE_MANAGER -Rns $orphan_packages --noconfirm
+    fi
+
+    # Clean up the package and directory cache.
+    log_info "Cleaning up package and directory cache..."
+    sudo $ARCH_PACKAGE_MANAGER -Scc --noconfirm
+    sudo rm -rf ~/.cache/*
 }
 
 # Function to stop a process.
