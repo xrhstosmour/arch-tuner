@@ -73,16 +73,6 @@
       "keyColor": "green"
     },
     {
-      "type": "terminaltheme",
-      "key": " ├󰉼",
-      "keyColor": "green"
-    },
-    {
-      "type": "terminalfont",
-      "key": " ├󰉼",
-      "keyColor": "green"
-    },
-    {
       "type": "theme",
       "key": " ├󰉼",
       "keyColor": "green"
