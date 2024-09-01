@@ -1,6 +1,5 @@
 vscodium-bin
 zed
-neovim
 remmina
 remmina-plugin-teamviewer
 remmina-plugin-anydesk-git
