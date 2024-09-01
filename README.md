@@ -26,6 +26,7 @@ A massive thank you to the broader open-source community. This toolkit was inspi
 ### Arch Linux Optimization
 
 - [Optimizing Mirror List with `rate-mirrors`](https://github.com/westandskif/rate-mirrors)
+- [Clean Arch Linux](https://averagelinuxuser.com/clean-arch-linux/)
 - [Create `systemd` service as a non `root` user](https://sekor.eu.org/techlog/systemd-without-root-instances/)
 - [Implementing ZRAM-Swap](https://www.dwarmstrong.org/zram-swap/)
 - [Arch Linux Official Documentation](https://wiki.archlinux.org/)
