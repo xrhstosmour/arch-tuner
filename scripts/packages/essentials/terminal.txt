@@ -1,6 +1,5 @@
 fzf
 helix
-nano
 bottom
 bat
 exa
