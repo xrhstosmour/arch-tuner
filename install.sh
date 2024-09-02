@@ -67,7 +67,7 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
         else
             log_info "Executing $script script..."
             sh "$INSTALL_SCRIPT_DIRECTORY/scripts/utilities/$script.sh"
-            log_info "${script^} script execution finished!"
+            log_success "${script^} script execution finished!"
             user_choice=0
         fi
 
@@ -86,8 +86,8 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
                 # Proceed with rebooting the system.
                 reboot_system "${!completion_flag}" "$completion_flag"
             elif [ "$script" == "security" ]; then
-                log_info "Installation procedure finished!"
-                log_info "Your system is ready to use!"
+                log_success "Installation procedure finished!"
+                log_success "Your system is ready to use!"
 
                 # Do not log the rerun warning.
                 reboot_system "${!completion_flag}" "$completion_flag" 1

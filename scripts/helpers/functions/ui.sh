@@ -51,7 +51,7 @@ ask_for_user_approval_before_executing_script() {
         y)
             log_info "Executing $script_name script..."
             sh "$script_path"
-            log_info "$capitalized_script_name script execution finished!"
+            log_success "$capitalized_script_name script execution finished!"
             echo "$choice"
             break
             ;;
