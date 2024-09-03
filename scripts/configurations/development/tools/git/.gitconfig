@@ -1,0 +1,11 @@
+[user]
+	name = Christos Mourtogiannis
+	email = c.mourtogiannis@gmail.com
+[pull]
+	rebase = true
+[merge]
+	conflictstyle = diff3
+[push]
+	default = current
+[core]
+	editor = code --wait

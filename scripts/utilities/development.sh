@@ -18,6 +18,9 @@ source "$DEVELOPMENT_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 # Configure shell for development purposes.
 sh $DEVELOPMENT_SCRIPT_DIRECTORY/../helpers/development/shell.sh
 
+# Configure Git.
+sh $DEVELOPMENT_SCRIPT_DIRECTORY/../helpers/development/git.sh
+
 # Install and configure software.
 sh $DEVELOPMENT_SCRIPT_DIRECTORY/../helpers/development/software.sh
 
