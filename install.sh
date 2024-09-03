@@ -17,14 +17,12 @@ declare -a ORDERED_SCRIPTS=("essentials" "interface" "desktop" "development" "pr
 # Scripts to run containing their completion flag, initial setup value and optional message, splitted by "|".
 declare -A SCRIPTS=(
     ["essentials"]="ESSENTIALS_COMPLETED|1"
-    ["interface"]="INTERFACE_COMPLETED|1|Do you want to install display manager and GPU drivers?"
-    ["desktop"]="DESKTOP_COMPLETED|1|Do you want to install desktop applications?"
-    ["development"]="DEVELOPMENT_COMPLETED|1|Do you want to install development tools and programming languages?"
-    ["privacy"]="PRIVACY_COMPLETED|1"
+    ["interface"]="INTERFACE_COMPLETED|1|Would you like to set up the graphical interface?"
+    ["desktop"]="DESKTOP_COMPLETED|1|Would you like to install desktop applications?"
+    ["development"]="DEVELOPMENT_COMPLETED|1|Would you like to set up development applications and configurations?"
+    ["privacy"]="PRIVACY_COMPLETED|1|Would you like to set up privacy applications and configurations?"
     ["security"]="SECURITY_COMPLETED|1"
 )
-
-# TODO: Give execution permission to all the needed scripts.
 
 # Import functions and flags.
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/ui.sh"
