@@ -31,7 +31,8 @@ elif command -v yay &>/dev/null; then
 else
 
     # Get the user's choice about AUR helper.
-    aur_helper=$(choose_aur_helper)
+    declare -a AUR_OPTIONS=("paru" "yay")
+    aur_helper=$(choose_option "Choose an AUR helper" "${AUR_OPTIONS[@]}")
 
     # Change the 'constant' value to the one user choosed.
     change_flag_value "AUR_PACKAGE_MANAGER" "$aur_helper" "$AUR_SCRIPT_DIRECTORY/../../core/constants.sh"

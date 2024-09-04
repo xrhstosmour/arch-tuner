@@ -19,7 +19,7 @@ ask_for_user_backup_before_proceeding() {
         log_info "Terminating script..."
         exit 1
     fi
-    log_info "Starting tuning procedure..."
+    log_info -n "Starting tuning procedure..."
 }
 
 # Function to ask for user approval and proceed with script or fucntion execution if provided.
@@ -125,46 +125,29 @@ ask_user_before_execution() {
     done
 }
 
-# Function to ask user to choose a display manager with default option.
-# choose_display_manager
-choose_display_manager() {
+# Function to ask user to choose an option with the fist one as default.
+# Usage:
+#   choose_option "prompt_message" "options_array"
+choose_option() {
+    local prompt="$1"
+    shift
+    local options=("$@")
+    local default_option="${options[0]}"
     local choice=""
-    while :; do
-        log_info "Choose a display manager [1]/2:"
-        log_info -n "1. ly"
-        log_info -n "2. sddm"
-        read -r choice
 
-        # Set default value if no input.
-        if [ -z "$choice" ]; then
-            choice="1"
-        fi
-
-        # Return the user choice.
-        case "$choice" in
-        1)
-            echo "ly"
-            break
-            ;;
-        2)
-            echo "sddm"
-            break
-            ;;
-        *)
-            echo "Invalid choice!"
-            ;;
-        esac
+    # Construct the options prompt string.
+    local options_prompt="[1]"
+    for i in $(seq 2 ${#options[@]}); do
+        options_prompt+="/$i"
     done
-}
+    options_prompt+=":"
 
-# Function to ask user to choose an AUR helper with default option.
-# choose_aur_helper
-choose_aur_helper() {
-    local choice=""
+    # Iterate until a valid choice is made.
     while :; do
-        log_info "Choose an AUR helper [1]/2:"
-        log_info -n "1. paru"
-        log_info -n "2. yay"
+        log_info "$prompt $options_prompt"
+        for i in "${!options[@]}"; do
+            log_info -n "$((i + 1)). ${options[i]}"
+        done
         read -r choice
 
         # Set default value if no input.
@@ -172,19 +155,12 @@ choose_aur_helper() {
             choice="1"
         fi
 
-        # Return the user choice.
-        case "$choice" in
-        1)
-            echo "paru"
+        # Validate and return the user choice.
+        if [[ "$choice" =~ ^[1-9][0-9]*$ ]] && [ "$choice" -le "${#options[@]}" ]; then
+            echo "${options[$((choice - 1))]}"
             break
-            ;;
-        2)
-            echo "yay"
-            break
-            ;;
-        *)
-            echo "Invalid choice!"
-            ;;
-        esac
+        else
+            log_error "Invalid choice!"
+        fi
     done
 }
