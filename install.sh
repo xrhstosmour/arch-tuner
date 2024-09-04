@@ -35,6 +35,11 @@ if [[ "$INITIAL_SETUP" -eq 0 ]]; then
     ask_for_user_backup_before_proceeding
 fi
 
+# Ask user for system reset if not already completed, before proceeding.
+if [[ "$SYSTEM_RESET" -eq 1 ]]; then
+    should_reset_system=$(ask_user_before_execution "Would you like to reset your system to a 'clean' state?" "true" "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh#reset_system_to_clean_state")
+fi
+
 # Update system.
 update_system
 
@@ -56,7 +61,7 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
         if [[ "$message" ]]; then
 
             # Ask user for approval before executing script and change the flag value accordingly.
-            user_answer=$(ask_for_user_approval_before_executing_script "$message" "$INSTALL_SCRIPT_DIRECTORY/scripts/utilities/$script.sh")
+            user_answer=$(ask_user_before_execution "$message" "false" "$INSTALL_SCRIPT_DIRECTORY/scripts/utilities/$script.sh")
             if [[ "$user_answer" == "y" ]]; then
                 user_choice=0
             elif [[ "$user_answer" == "n" ]]; then
