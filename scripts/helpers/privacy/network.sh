@@ -27,6 +27,8 @@ NETWORK_MANAGER_ETHERNET_CLONED_MAC_ADDRESS="ethernet.cloned-mac-address=random"
 # Check if NetworkManager is installed and active.
 is_network_manager_installed=$(are_packages_installed "$NETWORK_MANAGER_PACKAGE")
 is_network_manager_already_active=$(is_service_active "$NETWORK_MANAGER_PACKAGE")
+
+# TODO: Proceed only if the machine has not a static IP address or a hostname set.
 if [ "$is_network_manager_installed" = "true" ] && [ "$is_network_manager_already_active" = "true" ]; then
 
     # Create network manager directory if it does not exist.

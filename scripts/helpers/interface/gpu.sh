@@ -60,7 +60,6 @@ case "$VIRTUAL_MACHINE" in
     ;;
 
 *)
-    # TODO: Possibly handle other virtual machines here.
     log_warning "No valid $VIRTUAL_MACHINE drivers found!"
     ;;
 esac

@@ -36,7 +36,7 @@ fi
 # Configure network.
 sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/network.sh
 
-# TODO: Keystroke anonymization is disabled for now, because it is not working properly.
+# TODO: There are open issues with the kloak package, so this script is not working properly, and it is not recommended to use for now.
 # Install and configure keystroke anonymization.
 # sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/keyboard.sh
 

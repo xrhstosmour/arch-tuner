@@ -119,3 +119,5 @@ yay)
     :
     ;;
 esac
+
+# TODO: Clean AUR cache configuration using paccache.

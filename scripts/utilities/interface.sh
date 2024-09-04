@@ -34,5 +34,4 @@ esac
 # Install and configure GPU drivers.
 sh $INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/gpu.sh
 
-# TODO: Install environment packages.
 # TODO: Install dotfiles from existing repository.

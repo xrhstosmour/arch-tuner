@@ -182,6 +182,8 @@ reset_system_to_clean_state() {
     # Extract package names from the list.
     FRESH_INSTALLTION_PACKAGES=$(awk '{print $1}' $TEMPORARY_PACKAGE_LIST)
 
+    # TODO: Remove packages used in pacman hooks.
+
     # Remove all AUR packages.
     log_info "Removing all AUR packages..."
     AUR_PACKAGES=$(sudo $ARCH_PACKAGE_MANAGER -Qqm) || true
