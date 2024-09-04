@@ -11,7 +11,8 @@ source "$SYSTEM_SCRIPT_DIRECTORY/../../core/flags.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 
 # Function to update system.
-# update_system
+# Usage:
+#   update_system
 update_system() {
 
     # Constant variable for the world wide mirror.
@@ -82,7 +83,8 @@ update_system() {
 }
 
 # Function to stop a process.
-# stop_process "process_name" "message"
+# Usage:
+#   stop_process "process_name" "message"
 stop_process() {
     local process_name="$1"
     local message="${2:-"Stopping $process_name process..."}"
@@ -111,7 +113,8 @@ stop_process() {
 }
 
 # Function to check if a process is running by its name.
-# is_process_running "process_name"
+# Usage:
+#   is_process_running "process_name"
 is_process_running() {
     local process_name="$1"
 
@@ -127,7 +130,8 @@ is_process_running() {
 }
 
 # Function to reboot system if needed.
-# reboot_system "flag" "flag_name" "0_or_1_to_log_warning"
+# Usage:
+#   reboot_system "flag" "flag_name" "0_or_1_to_log_warning"
 reboot_system() {
     local flag="$1"
     local flag_name="$2"
@@ -153,4 +157,116 @@ reboot_system() {
         # Reboot the system immediately.
         exec sudo reboot
     fi
+}
+
+# Function to remove all installed packages, returning the system to a clean Arch Linux installation state.
+# Usage:
+#   reset_system_to_clean_state
+reset_system_to_clean_state() {
+
+    # Constant variable for the flags script path.
+    local flags_path="$SYSTEM_SCRIPT_DIRECTORY/../../core/flags.sh"
+
+    # URL of a fresh Arch Linux installation package list.
+    PACKAGE_LIST_URL="https://geo.mirror.pkgbuild.com/iso/latest/arch/pkglist.x86_64.txt"
+
+    # Create a temporary file to store the package list.
+    TEMPORARY_PACKAGE_LIST=$(mktemp)
+
+    # Download the package list.
+    if ! curl -s $PACKAGE_LIST_URL -o $TEMPORARY_PACKAGE_LIST; then
+        log_error "Failed to download the fresh Arch Linux installation package list!"
+        return 1
+    fi
+
+    # Extract package names from the list.
+    FRESH_INSTALLTION_PACKAGES=$(awk '{print $1}' $TEMPORARY_PACKAGE_LIST)
+
+    # Remove all AUR packages.
+    log_info "Removing all AUR packages..."
+    AUR_PACKAGES=$(sudo $ARCH_PACKAGE_MANAGER -Qqm) || true
+    if [ -n "$AUR_PACKAGES" ]; then
+        echo "$AUR_PACKAGES" | xargs sudo $ARCH_PACKAGE_MANAGER -Rdd --noconfirm --
+    fi
+
+    # Mark all installed packages as dependencies.
+    log_info "Marking all installed packages as dependencies..."
+    sudo $ARCH_PACKAGE_MANAGER -D --asdeps $($ARCH_PACKAGE_MANAGER -Qqe)
+
+    # Define essential packages.
+    declare -a ESSENTIAL_PACKAGES=(
+        base
+        linux
+        linux-firmware
+        grub
+        efibootmgr
+        os-prober
+        microcode
+        db
+        amd-ucode
+        intel-ucode
+        e2fsprogs
+        xfsprogs
+        btrfs-progs
+        lvm2
+        mdadm
+        sof-firmware
+        linux-firmware-marvell
+        broadcom-wl
+        networkmanager
+        dhclient
+        wpa_supplicant
+        modemmanager
+        man-db
+        man-pages
+        dosfstools
+        udftools
+        reiserfsprogs
+        ntfs-3g
+        nilfs-utils
+        jfsutils
+        hfsprogs
+        f2fs-tools
+        exfatprogs
+        zfs-utils
+        dhcpcd
+        connman
+        netctl
+        systemd
+        iwd
+    )
+
+    # Mark essential packages as explicitly installed.
+    log_info "Excluding essential packages from removal..."
+    for package in "${ESSENTIAL_PACKAGES[@]}"; do
+        if pacman -Q $package &> /dev/null; then
+            sudo $ARCH_PACKAGE_MANAGER -D --asexplicit $package
+        fi
+    done
+
+    log_info "Excluding fresh installation packages from removal..."
+    for package in $FRESH_INSTALLTION_PACKAGES; do
+        if pacman -Q $package &> /dev/null; then
+            sudo $ARCH_PACKAGE_MANAGER -D --asexplicit $package
+        fi
+    done
+
+    # Remove all unused/orphan packages.
+    log_info "Removing all unnecessary packages..."
+    UNNECESSARY_PACKAGES=$(sudo $ARCH_PACKAGE_MANAGER -Qdtq) || true
+    if [ -n "$UNNECESSARY_PACKAGES" ]; then
+        echo "$UNNECESSARY_PACKAGES" | xargs sudo $ARCH_PACKAGE_MANAGER -Rns --noconfirm -- 2>/dev/null
+    fi
+
+    # Delete the temporary package list file.
+    rm $TEMPORARY_PACKAGE_LIST
+
+    # Change the default shell to Bash.
+    log_info "Changing the default shell to Bash..."
+    sudo chsh -s /bin/bash $USER
+
+    log_info "System reset to a clean Arch Linux installation state!"
+
+    # Change the value of the flag to 0 (true) after resetting the system and reboot.
+    reboot_system $SYSTEM_RESET "SYSTEM_RESET"
 }
