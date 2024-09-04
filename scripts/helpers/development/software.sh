@@ -51,3 +51,10 @@ if grep -q "^docker$" "$SOFTWARE_TOOLS"; then
     # Install and configure Docker.
     sh $SOFTWARE_SCRIPT_DIRECTORY/tools/docker.sh
 fi
+
+# ! MISE SECTION.
+if grep -q "^mise-bin$" "$SOFTWARE_TOOLS"; then
+
+    # Install and configure mise.
+    sh $SOFTWARE_SCRIPT_DIRECTORY/tools/mise.sh
+fi
