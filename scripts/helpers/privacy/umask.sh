@@ -17,7 +17,7 @@ source "$UMASK_SCRIPT_DIRECTORY/../functions/logs.sh"
 # Constant variables for umask configuration.
 UMASK_VALUE="077"
 LOGIN_FILE="/etc/login.defs"
-UMASK_FILES=("/etc/profile" "/etc/bash.bashrc" "$LOGIN_FILE")
+declare -a UMASK_FILES=("/etc/profile" "/etc/bash.bashrc" "$LOGIN_FILE")
 
 # Iterate over the files.
 for file in ${UMASK_FILES[@]}; do
