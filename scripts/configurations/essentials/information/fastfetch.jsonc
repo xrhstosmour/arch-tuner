@@ -1,126 +1,205 @@
-// TODO: Update to this new format: https://github.com/jan-rex/my-fastfetch-config/blob/main/fastfetch/boxes_logo.jsonc
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
   "logo": {
-    "source": "arch",
     "type": "auto",
-    "height": 20,
     "padding": {
       "top": 1
+    },
+    "color": {
+      "1": "blue",
+      "2": "blue",
+      "3": "blue",
+      "4": "blue",
+      "5": "blue",
+      "6": "blue",
+      "7": "blue",
+      "8": "blue",
+      "9": "blue"
     }
   },
+  "general": {},
   "display": {
-    "separator": " ➜ ",
+    "disableLinewrap": false,
+    "separator": "",
     "temp": {
       "unit": "CELSIUS"
     },
     "size": {
-      "maxPrefix": "GB"
-    }
+      "binaryPrefix": "jedec"
+    },
+    "key": {
+      "width": 16
+    },
+    "constants": [
+      // Background key color.
+      "\u001b[48;2;43;43;69m",
+      // Background output color.
+      "\u001b[48;2;56;59;78m",
+      // Vertical bar at the start of the line and 75th character.
+      "\u001b[90m│                                                            │\u001b[60D\u001b[39m"
+    ]
   },
   "modules": [
-    "break",
-    "break",
-    "break",
+    {
+      "type": "custom",
+      "key": "{#90}╭─────────────╮",
+      "format": "{#90}╭────────────────────────────────────────────────────────────╮"
+    },
+    {
+      "type": "title",
+      "key": "{#90}│ {#93}Host        {#90}│",
+      "format": "{$3}{host-name}"
+    },
+    {
+      "type": "host",
+      "key": "{#90}│ {#93}Machine     {#90}│",
+      "format": "{$3}{name}  {#2}{version}"
+    },
     {
       "type": "os",
-      "key": " OS",
-      "keyColor": "black"
+      "key": "{#90}│ {#93}OS          {#90}│",
+      "format": "{$3}{pretty-name}"
     },
     {
       "type": "kernel",
-      "key": " ├",
-      "keyColor": "black"
+      "key": "{#90}│ {#93}Kernel      {#90}│",
+      "format": "{$3}{sysname}  {#2}{release}"
     },
     {
       "type": "bios",
-      "key": " ├󰀻",
-      "keyColor": "black"
+      "key": "{#90}│ {#93}BIOS        {#90}│",
+      "format": "{$3}{version}  {#2}{release}"
     },
     {
       "type": "packages",
-      "key": " ├󰏖",
-      "keyColor": "black"
-    },
-    {
-      "type": "terminal",
-      "key": " ├󰀻",
-      "keyColor": "black"
-    },
-    {
-      "type": "shell",
-      "key": " ├󰀻",
-      "keyColor": "black"
+      "key": "{#90}│ {#93}Packages    {#90}│",
+      "format": "{$3}{2} (pacman){?3}{3}{?}"
     },
     {
       "type": "uptime",
-      "key": " └󰍹",
-      "keyColor": "black"
-    },
-    "break",
-    {
-      "type": "de",
-      "key": " DE",
-      "keyColor": "green"
-    },
-    {
-      "type": "wm",
-      "key": " ├",
-      "keyColor": "green"
-    },
-    {
-      "type": "wmtheme",
-      "key": " ├󰉼",
-      "keyColor": "green"
-    },
-    {
-      "type": "theme",
-      "key": " ├󰉼",
-      "keyColor": "green"
-    },
-    {
-      "type": "font",
-      "key": " ├󰉼",
-      "keyColor": "green"
-    },
-    {
-      "type": "icons",
-      "key": " └󰍹",
-      "keyColor": "green"
-    },
-    "break",
-    {
-      "type": "host",
-      "key": " PC",
-      "keyColor": "blue"
+      "key": "{#90}│ {#93}Uptime      {#90}│",
+      "format": "{$3}{days} Days {hours} Hours {minutes} Mins {seconds} Secs"
     },
     {
       "type": "cpu",
-      "key": " ├",
-      "keyColor": "blue"
+      "key": "{#90}│ {#91}CPU         {#90}│",
+      "showPeCoreCount": true,
+      "temp": true,
+      "format": "{$3}{}"
     },
+    // TODO: Check if the GPU format is fine.
     {
       "type": "gpu",
-      "key": " ├󰍛",
-      "keyColor": "blue"
-    },
-    {
-      "type": "disk",
-      "key": " ├",
-      "keyColor": "blue"
+      "key": "{#90}│ {#91}GPU         {#90}│",
+      "detectionMethod": "auto",
+      "hideType": "none",
+      "temp": true,
+      "format": "{$3}{vendor} {name}  {#2}{frequency}  {#2}{temperature}"
     },
     {
       "type": "memory",
-      "key": " ├󰑭",
-      "keyColor": "blue"
+      "key": "{#90}│ {#91}Memory      {#90}│",
+      "format": "{$3}{used} / {total} ({percentage})"
     },
     {
       "type": "swap",
-      "key": " └󰍹",
-      "keyColor": "blue"
+      "key": "{#90}│ {#91}Swap        {#90}│",
+      "format": "{$3}{used} / {total} ({percentage})"
     },
-    "break",
-    "break",
-    "break"
+    {
+      "type": "disk",
+      "key": "{#90}│ {#91}Disk        {#90}│",
+      "format": "{$3}{size-used} / {size-total} ({size-percentage})  {#2}{filesystem}"
+    },
+    // TODO: Check if the Battery format is fine.
+    {
+      "type": "battery",
+      "key": "{#90}│ {#91}Battery     {#90}│",
+      "temp": true,
+      "format": "{$3}{status}  ({capacity})  {#2}{temperature}  {#2}{cycle-count}"
+    },
+    {
+      "type": "terminal",
+      "key": "{#90}│ {#95}Terminal    {#90}│",
+      "format": "{$3}{pretty-name}  {#2}{version}"
+    },
+    // TODO: Check if the Terminal Font format is fine.
+    {
+      "type": "terminalfont",
+      "key": "{#90}│ {#95}Terminal Font{#90}│",
+      "format": "{$3}{name}  {#2}{size}  {#2}{style}"
+    },
+    {
+      "type": "shell",
+      "key": "{#90}│ {#95}Shell       {#90}│",
+      "format": "{$3}{pretty-name}  {#2}{version}"
+    },
+    // TODO: Check if the DE format is fine.
+    {
+      "type": "de",
+      "key": "{#90}│ {#92}DE          {#90}│",
+      "format": "{$3}{pretty-name}  {#2}{version}"
+    },
+    // TODO: Check if the WM format is fine.
+    {
+      "type": "wm",
+      "key": "{#90}│ {#92}WM          {#90}│",
+      "format": "{$3}{pretty-name}  {#2}{protocol-name}  {#2}{plugin-name}"
+    },
+    // TODO: Check if the Theme format is fine.
+    {
+      "type": "theme",
+      "key": "{#90}│ {#92}Theme       {#90}│",
+      "format": "{$3}{theme1}"
+    },
+    // TODO: Check if the Font format is fine.
+    {
+      "type": "font",
+      "key": "{#90}│ {#92}Font        {#90}│",
+      "format": "{$3}{combined}"
+    },
+    // TODO: Check if the Icons format is fine.
+    {
+      "type": "icons",
+      "key": "{#90}│ {#92}Icons       {#90}│",
+      "format": "{$3}{icons1}  {#2}{icons2}"
+    },
+    {
+      "type": "users",
+      "key": "{#90}│ {#94}Login IP    {#90}│",
+      "myselfOnly": true,
+      "format": "{$3}{client-ip}  {#2}{login-time}"
+    },
+    {
+      "type": "localip",
+      "key": "{#90}│ {#94}Local IPv4  {#90}│",
+      "showPrefixLen": true,
+      "showIpv4": true,
+      "showIpv6": false,
+      "format": "{$3}{ipv4}  {#2}{ifname}  {#2}{mtu}"
+    },
+    {
+      "type": "localip",
+      "key": "{#90}│ {#94}Local IPv6  {#90}│",
+      "showPrefixLen": true,
+      "showIpv4": false,
+      "showIpv6": true,
+      "format": "{$3}{ipv6}  {#2}{ifname}  {#2}{mtu}"
+    },
+    {
+      "type": "publicip",
+      "key": "{#90}│ {#94}Public IPv4 {#90}│",
+      "format": "{$3}{ip}  {#2}{location}"
+    },
+    {
+      "type": "dns",
+      "key": "{#90}│ {#94}DNS         {#90}│",
+      "format": "{$3}{result}"
+    },
+    {
+      "type": "custom",
+      "key": "{#90}╰─────────────╯",
+      "format": "{#90}╰────────────────────────────────────────────────────────────╯"
+    }
   ]
 }
