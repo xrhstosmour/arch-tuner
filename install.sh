@@ -17,14 +17,12 @@ declare -a ORDERED_SCRIPTS=("essentials" "interface" "desktop" "development" "pr
 # Scripts to run containing their completion flag, initial setup value and optional message, splitted by "|".
 declare -A SCRIPTS=(
     ["essentials"]="ESSENTIALS_COMPLETED|1"
-    ["interface"]="INTERFACE_COMPLETED|1|Do you want to install display manager and GPU drivers?"
-    ["desktop"]="DESKTOP_COMPLETED|1|Do you want to install desktop applications?"
-    ["development"]="DEVELOPMENT_COMPLETED|1|Do you want to install development tools and programming languages?"
-    ["privacy"]="PRIVACY_COMPLETED|1"
+    ["interface"]="INTERFACE_COMPLETED|1|Would you like to set up the graphical interface?"
+    ["desktop"]="DESKTOP_COMPLETED|1|Would you like to install desktop applications?"
+    ["development"]="DEVELOPMENT_COMPLETED|1|Would you like to set up development applications and configurations?"
+    ["privacy"]="PRIVACY_COMPLETED|1|Would you like to set up privacy applications and configurations?"
     ["security"]="SECURITY_COMPLETED|1"
 )
-
-# TODO: Give execution permission to all the needed scripts.
 
 # Import functions and flags.
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/ui.sh"
@@ -35,6 +33,11 @@ source "$FLAGS_SCRIPT_PATH"
 # Ask user for backup confirmation before proceeding.
 if [[ "$INITIAL_SETUP" -eq 0 ]]; then
     ask_for_user_backup_before_proceeding
+fi
+
+# Ask user for system reset if not already completed, before proceeding.
+if [[ "$SYSTEM_RESET" -eq 1 ]]; then
+    should_reset_system=$(ask_user_before_execution "Would you like to reset your system to a 'clean' state?" "true" "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh#reset_system_to_clean_state")
 fi
 
 # Update system.
@@ -58,7 +61,7 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
         if [[ "$message" ]]; then
 
             # Ask user for approval before executing script and change the flag value accordingly.
-            user_answer=$(ask_for_user_approval_before_executing_script "$message" "$INSTALL_SCRIPT_DIRECTORY/scripts/utilities/$script.sh")
+            user_answer=$(ask_user_before_execution "$message" "false" "$INSTALL_SCRIPT_DIRECTORY/scripts/utilities/$script.sh")
             if [[ "$user_answer" == "y" ]]; then
                 user_choice=0
             elif [[ "$user_answer" == "n" ]]; then
@@ -67,7 +70,7 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
         else
             log_info "Executing $script script..."
             sh "$INSTALL_SCRIPT_DIRECTORY/scripts/utilities/$script.sh"
-            log_info "${script^} script execution finished!"
+            log_success "${script^} script execution finished!"
             user_choice=0
         fi
 
@@ -86,8 +89,8 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
                 # Proceed with rebooting the system.
                 reboot_system "${!completion_flag}" "$completion_flag"
             elif [ "$script" == "security" ]; then
-                log_info "Installation procedure finished!"
-                log_info "Your system is ready to use!"
+                log_success "Installation procedure finished!"
+                log_success "Your system is ready to use!"
 
                 # Do not log the rerun warning.
                 reboot_system "${!completion_flag}" "$completion_flag" 1

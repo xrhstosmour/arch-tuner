@@ -29,3 +29,6 @@ fi
 
 # Install themes, icons, fonts, cursors.
 sh $DESKTOP_SCRIPT_DIRECTORY/../helpers/desktop/theming.sh
+
+# TODO: Create a function to configure system like the following:
+# TODO:     - Suspend when lid is closed: https://www.reddit.com/r/archlinux/comments/2d2btn/configuring_suspend_when_lid_closes/

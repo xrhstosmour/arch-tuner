@@ -1,11 +1,10 @@
 fzf
 helix
-nano
 bottom
 bat
 exa
 trashy
-!xcp
+xcp
 eva
 zoxide
 fd

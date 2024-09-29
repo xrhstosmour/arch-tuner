@@ -1,12 +1,10 @@
 vscodium-bin
+zed
 remmina
 remmina-plugin-teamviewer
 remmina-plugin-anydesk-git
 remmina-plugin-rdesktop
 remmina-plugin-rustdesk
-github-desktop-bin
-obsidian-bin
-postman-bin
+bruno-bin
 etcher-bin
-quickemu
 quickgui-bin

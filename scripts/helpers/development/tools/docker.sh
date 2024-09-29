@@ -20,7 +20,7 @@ source "$DOCKER_SCRIPT_DIRECTORY/../../functions/filesystem.sh"
 DOCKER_DIRECTORY="/etc/docker"
 DOCKER_LOGS="/var/lib/docker/containers/*/*-json.log"
 DOCKER_DAEMON_CONFIGURATION="/etc/docker/daemon.json"
-DOCKER_DAEMON_CONFIGURATION_TO_PASS="$DOCKER_SCRIPT_DIRECTORY/../../../configurations/development/tools/docker.json"
+DOCKER_DAEMON_CONFIGURATION_TO_PASS="$DOCKER_SCRIPT_DIRECTORY/../../../configurations/development/tools/docker/docker.json"
 
 # Stop Docker service.
 stop_service "docker"

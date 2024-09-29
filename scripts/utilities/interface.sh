@@ -17,7 +17,8 @@ source "$INTERFACE_SCRIPT_DIRECTORY/../helpers/functions/ui.sh"
 # ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
 
 # Get the user's choice about display manager.
-display_manager=$(choose_display_manager)
+declare -a DISPLAY_OPTIONS=("ly" "sddm")
+display_manager=$(choose_option "Choose a display manager" "${DISPLAY_OPTIONS[@]}")
 
 # Execute the corresponding script
 case $display_manager in
@@ -34,5 +35,4 @@ esac
 # Install and configure GPU drivers.
 sh $INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/gpu.sh
 
-# TODO: Install environment packages.
 # TODO: Install dotfiles from existing repository.

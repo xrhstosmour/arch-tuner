@@ -26,6 +26,7 @@ A massive thank you to the broader open-source community. This toolkit was inspi
 ### Arch Linux Optimization
 
 - [Optimizing Mirror List with `rate-mirrors`](https://github.com/westandskif/rate-mirrors)
+- [Clean Arch Linux](https://averagelinuxuser.com/clean-arch-linux/)
 - [Create `systemd` service as a non `root` user](https://sekor.eu.org/techlog/systemd-without-root-instances/)
 - [Implementing ZRAM-Swap](https://www.dwarmstrong.org/zram-swap/)
 - [Arch Linux Official Documentation](https://wiki.archlinux.org/)
@@ -44,7 +45,7 @@ A massive thank you to the broader open-source community. This toolkit was inspi
 - [Configuring Starship Prompt](https://starship.rs/config/#prompt)
 - [Dive into Starship](https://mvolkmann.github.io/blog/starship/)
 - [Enhanced Terminal Aesthetics with Starship & Exa](https://fadeevab.com/my-configs-for-fancy-looking-terminal-starship-exa/)
-- [Fastfetch Theme Showcase](https://github.com/LierB/fastfetch)
+- [Fastfetch Configuration](https://github.com/jan-rex/my-fastfetch-config/tree/main)
 
 ### Linux System Protection
 

@@ -9,7 +9,8 @@ source "$FILESYSTEM_SCRIPT_DIRECTORY/logs.sh"
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 
 # Function to check if a line exists in a file and add it if it does not.
-# append_line_to_file "/file/path/with.extension" "Line To Append" "Message to print if the line is appended."
+# Usage:
+#   append_line_to_file "/file/path/with.extension" "Line To Append" "Message to print if the line is appended."
 append_line_to_file() {
     local file_path="$1"
     local line_to_append="$2"
@@ -34,7 +35,8 @@ append_line_to_file() {
 }
 
 # Function to move existing files to a new mount before changing fstab.
-# move_files_to_temporary_mount "/mount/point" "device"
+# Usage:
+#   move_files_to_temporary_mount "/mount/point" "device"
 move_files_to_temporary_mount() {
     local mount_point="$1"
     local device="$2"
@@ -81,7 +83,8 @@ move_files_to_temporary_mount() {
 }
 
 # Function to apply mount hardening options to a mount point in /etc/fstab.
-# update_mount_options "/mount/point" "option1,option2,option3"
+# Usage:
+#   update_mount_options "/mount/point" "option1,option2,option3"
 update_mount_options() {
     local mount_point="$1"
     local options="$2"
@@ -177,7 +180,8 @@ update_mount_options() {
 }
 
 # Function to compare two files.
-# compare_files "target_file" "source_file"
+# Usage:
+#   compare_files "target_file" "source_file"
 compare_files() {
     local target_file=$1
     local source_file=$2
@@ -191,8 +195,9 @@ compare_files() {
     fi
 }
 
-# Check if a directory is in the excluded list
-# directory_exists_in_list "directory" "directory_list"
+# Function to check if a directory is in the excluded list
+# Usage:
+#   directory_exists_in_list "directory" "directory_list"
 directory_exists_in_list() {
     local directory="$1"
 
@@ -207,4 +212,61 @@ directory_exists_in_list() {
         fi
     done
     echo "false"
+}
+
+# Function to check if a file contains another file.
+# Usage:
+#   file_contains_file "file_to_check" "file_to_check_if_is_contained"
+is_file_contained_in_another() {
+    local file_to_check="$1"
+    local file_to_check_if_is_contained="$2"
+
+    # Check if both files exist and are not empty.
+    if [ -s "$file_to_check" ] && [ -s "$file_to_check_if_is_contained" ]; then
+
+        # Check if the first file contains the second file.
+        if comm -13 <(sort -u "$file_to_check") <(sort -u "$file_to_check_if_is_contained") | grep -q .; then
+            echo "false"
+        else
+            echo "true"
+        fi
+    else
+        echo "false"
+    fi
+}
+
+# Function to configure shell files (constants or functions).
+# Usage:
+#   configure_fish_shell_files "configuration_file" "source_directory" "target_directory" "file_type"
+configure_fish_shell_files() {
+    local configuration_file=$1
+    local source_directory=$2
+    local target_directory=$3
+    local file_type=$4
+
+    for file in "$source_directory"/*; do
+        # Get the filename.
+        filename=$(basename "$file")
+
+        # Construct the corresponding target file path.
+        target_file="$target_directory/$filename"
+
+        # Compare the files and copy if they are different or not existent.
+        are_files_the_same=$(compare_files "$target_file" "$file")
+        if [ "$are_files_the_same" = "false" ]; then
+            log_info "Configuring $filename shell $file_type..."
+            mkdir -p "$target_directory"
+            cp -f "$file" "$target_file"
+
+            # Add source $target_file to $configuration_file if not already added.
+            source_line="source $target_file"
+            if ! grep -qxF "$source_line" "$configuration_file"; then
+                log_info "Appending $filename $file_type to the shell configuration..."
+
+                echo "" | sudo tee -a "$configuration_file" >/dev/null
+                echo "# Load $filename $file_type" | sudo tee -a "$configuration_file" >/dev/null
+                echo "$source_line" | sudo tee -a "$configuration_file" >/dev/null
+            fi
+        fi
+    done
 }

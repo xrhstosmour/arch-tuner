@@ -1,5 +1,3 @@
-# TODO: Finilize the starship configuration.
-
 # Base configuration.
 command_timeout = 10000
 add_newline = true
@@ -56,7 +54,7 @@ style = "bold blue"
 # Git.
 [git_branch]
 format = "on [$symbol$branch]($style) "
-symbol = "🍣 "
+symbol = " "
 style = "bold yellow"
 
 [git_commit]
@@ -68,15 +66,15 @@ format = '[\($state( $progress_current of $progress_total)\)]($style) '
 
 [git_status]
 conflicted = "⚔️ "
-ahead = "🏎️ 💨 ×${count}"
+ahead = "🏎️ ×${count}"
 behind = "🐢 ×${count}"
-diverged = "🔱 🏎️ 💨 ×${ahead_count} 🐢 ×${behind_count}"
+diverged = "🏎️ ×${ahead_count} 🐢 ×${behind_count}"
 untracked = "🛤️  ×${count}"
 stashed = "📦 "
 modified = "📝 ×${count}"
-staged = "🗃️  ×${count}"
+staged = "🗃️ ×${count}"
 renamed = "📛 ×${count}"
-deleted = "🗑️  ×${count}"
+deleted = "🗑️ ×${count}"
 style = "bright-white"
 format = "$all_status$ahead_behind"
 
@@ -120,3 +118,7 @@ style = "bold blue"
 [dart]
 format = "🎯 $version "
 style = "bold cyan"
+
+[ruby]
+format = "💎 $version "
+style = "bold red"

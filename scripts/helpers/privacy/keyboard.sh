@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# TODO: There are open issues with the kloak package, so this script is not working properly, and it is not recommended to use for now.
 # ! When enabling the service, every password input is wrong: https://github.com/vmonaco/kloak/issues/12.
 # ! I do not know if it is related to the kloak, kloak-git or at adding the user to input group.
 

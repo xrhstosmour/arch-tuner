@@ -1,2 +1,7 @@
 docker
 docker-compose
+mise-bin
+lazygit
+lazydocker-bin
+github-cli
+quickemu

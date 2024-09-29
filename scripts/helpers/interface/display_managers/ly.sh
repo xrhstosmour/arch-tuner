@@ -20,12 +20,7 @@ source "$LY_SCRIPT_DIRECTORY/../../functions/services.sh"
 LY_PACKAGE="ly"
 DISPLAY_MANAGER_SERVICE="/etc/systemd/system/display-manager.service"
 LY_CONFIGURATION_FILE="/etc/ly/config.ini"
-LY_CONFIGURATIONS=(
-    "blank_password = true"
-    "wayland_specifier = true"
-    "load = true"
-    "clock = %c"
-)
+declare -a LY_CONFIGURATIONS=("blank_password = true" "wayland_specifier = true" "load = true" "clock = %c")
 
 # Check if another display manager is already enabled.
 if [ -L "$DISPLAY_MANAGER_SERVICE" ]; then

@@ -27,6 +27,8 @@ FISH_ABBREVIATIONS="$HOME/.config/fish/conf.d/abbr.fish"
 FISH_ABBREVIATIONS_TO_PASS="$SHELL_SCRIPT_DIRECTORY/../../configurations/essentials/shell/abbreviations.fish"
 FISH_FUNCTIONS="$HOME/.config/fish/functions"
 FISH_FUNCTIONS_TO_PASS="$SHELL_SCRIPT_DIRECTORY/../../configurations/essentials/shell/functions"
+FISH_CONSTANTS="$HOME/.config/fish/constants"
+FISH_CONSTANTS_TO_PASS="$SHELL_SCRIPT_DIRECTORY/../../configurations/essentials/shell/constants"
 
 # Install shell package.
 install_packages "$FISH_SHELL" "$AUR_PACKAGE_MANAGER" "Installing shell..."
@@ -47,22 +49,11 @@ if [ "$are_fish_abbreviations_files_the_same" = "false" ]; then
     cp -f "$FISH_ABBREVIATIONS_TO_PASS" "$FISH_ABBREVIATIONS"
 fi
 
+# Configure shell constants.
+configure_fish_shell_files "$FISH_CONFIGURATION" "$FISH_CONSTANTS_TO_PASS" "$FISH_CONSTANTS" "constants"
+
 # Configure shell functions.
-for function_file in "$FISH_FUNCTIONS_TO_PASS"/*; do
-    # Get the filename.
-    filename=$(basename "$function_file")
-
-    # Construct the corresponding target file path.
-    target_file="$FISH_FUNCTIONS/$filename"
-
-    # Compare the files and copy if they are different or not existent.
-    are_the_functions_files_the_same=$(compare_files "$target_file" "$function_file")
-    if [ "$are_the_functions_files_the_same" = "false" ]; then
-        log_info "Configuring $filename shell functions..."
-        mkdir -p "$FISH_FUNCTIONS"
-        cp -f "$function_file" "$target_file"
-    fi
-done
+configure_fish_shell_files "$FISH_CONFIGURATION" "$FISH_FUNCTIONS_TO_PASS" "$FISH_FUNCTIONS" "functions"
 
 # Set default shell.
 current_shell=$(basename "$SHELL")
