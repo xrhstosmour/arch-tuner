@@ -234,3 +234,39 @@ is_file_contained_in_another() {
         echo "false"
     fi
 }
+
+# Function to configure shell files (constants or functions).
+# Usage:
+#   configure_fish_shell_files "configuration_file" "source_directory" "target_directory" "file_type"
+configure_fish_shell_files() {
+    local configuration_file=$1
+    local source_directory=$2
+    local target_directory=$3
+    local file_type=$4
+
+    for file in "$source_directory"/*; do
+        # Get the filename.
+        filename=$(basename "$file")
+
+        # Construct the corresponding target file path.
+        target_file="$target_directory/$filename"
+
+        # Compare the files and copy if they are different or not existent.
+        are_files_the_same=$(compare_files "$target_file" "$file")
+        if [ "$are_files_the_same" = "false" ]; then
+            log_info "Configuring $filename shell $file_type..."
+            mkdir -p "$target_directory"
+            cp -f "$file" "$target_file"
+
+            # Add source $target_file to $configuration_file if not already added.
+            source_line="source $target_file"
+            if ! grep -qxF "$source_line" "$configuration_file"; then
+                log_info "Appending $filename $file_type to the shell configuration..."
+
+                echo "" | sudo tee -a "$configuration_file" >/dev/null
+                echo "# Load $filename $file_type" | sudo tee -a "$configuration_file" >/dev/null
+                echo "$source_line" | sudo tee -a "$configuration_file" >/dev/null
+            fi
+        fi
+    done
+}
