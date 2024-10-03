@@ -4,7 +4,6 @@ gimp
 spotify
 thunderbird
 vlc
-davinci-resolve
 filen-desktop-appimage
 syncthing-bin
 viber

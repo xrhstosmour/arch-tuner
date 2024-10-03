@@ -61,10 +61,6 @@ A massive thank you to the broader open-source community. This toolkit was inspi
 - [Madaidan's Guide to Linux Protection](https://madaidans-insecurities.github.io/guides/linux-hardening.html#choosing-the-right-distro)
 - [Akbu's Linux Security Handbook](https://akbu.medium.com/linux-hardening-guide-9acab386d047)
 
-### GUI Software Installation
-
-- [Setting Up DaVinci Resolve on Linux](https://www.techhut.tv/how-to-install-davinci-resolve-in-linux-ubuntu-arch-and-fedora/)
-
 ## Contributing
 
 🚧 **Note**: This project is a work in progress. Your contributions, suggestions, and feedback are always welcome!
