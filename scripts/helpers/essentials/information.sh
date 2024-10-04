@@ -13,9 +13,6 @@ INFROMATION_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$INFROMATION_SCRIPT_DIRECTORY/../functions/packages.sh"
 source "$INFROMATION_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 
-# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
-# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
-
 # Constant variables for installing and configuring system information tool.
 FASTFETCH_DIRECTORY="$HOME/.config/fastfetch"
 FASTFETCH_CONFIGURATION="$FASTFETCH_DIRECTORY/config.jsonc"

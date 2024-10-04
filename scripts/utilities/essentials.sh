@@ -12,9 +12,6 @@ ESSENTIALS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import functions.
 source "$ESSENTIALS_SCRIPT_DIRECTORY/../helpers/functions/packages.sh"
 
-# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
-# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
-
 # Essential packages.
 ESSENTIAL_PACKAGES="base-devel git"
 

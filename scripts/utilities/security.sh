@@ -19,9 +19,6 @@ source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/system.sh"
 source "$SECURITY_SCRIPT_DIRECTORY/../core/flags.sh"
 
-# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
-# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
-
 # Install only if the user chooses to install an interface.
 if [ $INTERFACE_COMPLETED -eq 0 ]; then
 

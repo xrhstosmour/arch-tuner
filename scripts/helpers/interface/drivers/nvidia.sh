@@ -13,9 +13,6 @@ NVIDIA_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$NVIDIA_SCRIPT_DIRECTORY/../../functions/packages.sh"
 source "$NVIDIA_SCRIPT_DIRECTORY/../../functions/services.sh"
 
-# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
-# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
-
 # TODO: Check if this is working or not.
 # Constant variable containing the NVIDIA 32 bit graphics drivers.
 NVIDIA_32_BIT_DRIVERS="lib32-nvidia-libgl lib32-nvidia-utils"

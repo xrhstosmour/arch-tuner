@@ -12,9 +12,6 @@ DNS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import functions.
 source "$DNS_SCRIPT_DIRECTORY/../functions/services.sh"
 
-# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
-# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
-
 # Initialize a flag to track whether a change was made.
 dns_changes_made=1
 

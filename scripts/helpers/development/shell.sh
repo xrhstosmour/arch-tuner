@@ -13,9 +13,6 @@ SHELL_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$SHELL_SCRIPT_DIRECTORY/../functions/packages.sh"
 source "$SHELL_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 
-# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
-# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
-
 # Constant variables for configuring shell.
 FISH_CONFIGURATION="$HOME/.config/fish/config.fish"
 FISH_ABBREVIATIONS="$HOME/.config/fish/conf.d/abbr.fish"
@@ -27,9 +24,8 @@ FISH_FUNCTIONS_TO_PASS="$SHELL_SCRIPT_DIRECTORY/../../configurations/development
 is_abbreviations_file_contained=$(is_file_contained_in_another "$FISH_ABBREVIATIONS" "$FISH_ABBREVIATIONS_TO_PASS")
 if [ "$is_abbreviations_file_contained" = "false" ]; then
     log_info "Appending development abbreviations to the shell configuration..."
-    cat "$FISH_ABBREVIATIONS_TO_PASS" | sudo tee -a "$FISH_ABBREVIATIONS" > /dev/null
+    cat "$FISH_ABBREVIATIONS_TO_PASS" | sudo tee -a "$FISH_ABBREVIATIONS" >/dev/null
 fi
 
 # Configure shell functions.
 configure_fish_shell_files "$FISH_CONFIGURATION" "$FISH_FUNCTIONS_TO_PASS" "$FISH_FUNCTIONS" "development functions"
-
