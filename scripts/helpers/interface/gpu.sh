@@ -14,7 +14,7 @@ source "$GPU_SCRIPT_DIRECTORY/../functions/packages.sh"
 source "$GPU_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 
 # Get an array of GPU vendors.
-readarray -t VENDORS < <(lspci -v -m | grep -A1 VGA | grep Vendor | awk "{print \$2}" | tr "[:upper:]" "[:lower:]")
+readarray -t VENDORS < <(lspci -v -m | grep -A1 -E '(VGA|3D)' | grep Vendor | awk "{print \$2}" | tr "[:upper:]" "[:lower:]")
 
 # Loop through the array of GPU vendors and handle each one.
 for VENDOR in "${VENDORS[@]}"; do
