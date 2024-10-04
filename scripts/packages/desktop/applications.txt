@@ -16,7 +16,7 @@ mission-center
 spacedrive-bin
 localsend-bin
 notepadqq
-logseq-desktop
+logseq-desktop-bin
 appflowy-bin
 google-chrome
 brave-bin
