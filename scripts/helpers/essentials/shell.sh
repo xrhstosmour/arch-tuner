@@ -13,9 +13,6 @@ SHELL_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$SHELL_SCRIPT_DIRECTORY/../functions/packages.sh"
 source "$SHELL_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 
-# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
-# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
-
 # Constant variables for changing and configuring shell.
 FISH_SHELL="fish"
 FISH_BINARY_DIRECTORY="/usr/bin/fish"

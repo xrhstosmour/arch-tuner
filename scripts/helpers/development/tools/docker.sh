@@ -13,9 +13,6 @@ DOCKER_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$DOCKER_SCRIPT_DIRECTORY/../../functions/services.sh"
 source "$DOCKER_SCRIPT_DIRECTORY/../../functions/filesystem.sh"
 
-# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
-# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
-
 # Constant variables for the paths needed for configuring Docker.
 DOCKER_DIRECTORY="/etc/docker"
 DOCKER_LOGS="/var/lib/docker/containers/*/*-json.log"

@@ -70,12 +70,12 @@ ask_user_before_execution() {
     # Proceed with the user choice.
     local choice=""
     while :; do
-        log_info "$prompt [Y]/N: "
+        log_info "$prompt Y/[N]: "
         read -r choice
 
         # Set default value if no input.
         if [ -z "$choice" ]; then
-            choice="Y"
+            choice="N"
         fi
 
         # Convert to lowercase.

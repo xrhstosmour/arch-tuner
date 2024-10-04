@@ -13,9 +13,6 @@ NETWORK_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$NETWORK_SCRIPT_DIRECTORY/../functions/packages.sh"
 source "$NETWORK_SCRIPT_DIRECTORY/../functions/services.sh"
 
-# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
-# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
-
 # Constant variables for reducing trackability configuration.
 NETWORK_MANAGER_PACKAGE="NetworkManager"
 NETWORK_MANAGER_CONFIGURATION_DIRECTORY="/etc/NetworkManager/conf.d"

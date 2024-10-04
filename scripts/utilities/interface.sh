@@ -13,9 +13,6 @@ INTERFACE_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$INTERFACE_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 source "$INTERFACE_SCRIPT_DIRECTORY/../helpers/functions/ui.sh"
 
-# ? Importing constants.sh is not needed, because it is already sourced in the logs script.
-# ? Importing logs.sh is not needed, because it is already sourced in the other function scripts.
-
 # Get the user's choice about display manager.
 declare -a DISPLAY_OPTIONS=("ly" "sddm")
 display_manager=$(choose_option "Choose a display manager" "${DISPLAY_OPTIONS[@]}")
@@ -35,4 +32,5 @@ esac
 # Install and configure GPU drivers.
 sh $INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/gpu.sh
 
-# TODO: Install dotfiles from existing repository.
+# Install dotfiles from existing repository.
+sh $INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/dotfiles.sh
