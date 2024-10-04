@@ -13,9 +13,8 @@ GPU_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$GPU_SCRIPT_DIRECTORY/../functions/packages.sh"
 source "$GPU_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 
-# TODO: Check if this is working or not.
 # Get an array of GPU vendors.
-readarray -t VENDORS < <(lspci -v -m | grep -A1 VGA | grep SVendor | awk "{print \$2}" | tr "[:upper:]" "[:lower:]")
+readarray -t VENDORS < <(lspci -v -m | grep -A1 VGA | grep Vendor | awk "{print \$2}" | tr "[:upper:]" "[:lower:]")
 
 # Loop through the array of GPU vendors and handle each one.
 for VENDOR in "${VENDORS[@]}"; do
@@ -43,7 +42,7 @@ for VENDOR in "${VENDORS[@]}"; do
 done
 
 # Additional handling if inside a virtual machine.
-VIRTUAL_MACHINE=$(systemd-detect-virt)
+VIRTUAL_MACHINE=$(systemd-detect-virt || true)
 case "$VIRTUAL_MACHINE" in
 "vmware")
     # Install VMWARE drivers and configure open VM tools.
@@ -57,6 +56,5 @@ case "$VIRTUAL_MACHINE" in
     ;;
 
 *)
-    log_warning "No valid $VIRTUAL_MACHINE drivers found!"
     ;;
 esac
