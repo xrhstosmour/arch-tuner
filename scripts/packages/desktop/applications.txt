@@ -15,7 +15,7 @@ pamac
 mission-center
 spacedrive-bin
 localsend-bin
-notepadqq-git
+notepadqq
 logseq-desktop
 appflowy-bin
 google-chrome
