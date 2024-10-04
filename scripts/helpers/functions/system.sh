@@ -267,6 +267,8 @@ reset_system_to_clean_state() {
     log_info "Changing the default shell to Bash..."
     sudo chsh -s /bin/bash $USER
 
+    # TODO: Reset core/constants and core/flags files too.
+
     log_info "System reset to a clean Arch Linux installation state!"
 
     # Change the value of the flag to 0 (true) after resetting the system and reboot.
