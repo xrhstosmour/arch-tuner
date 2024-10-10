@@ -9,25 +9,8 @@ set -e
 # Constant variable of the scripts' working directory to use for relative paths.
 INTERFACE_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-# Import functions.
-source "$INTERFACE_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
-source "$INTERFACE_SCRIPT_DIRECTORY/../helpers/functions/ui.sh"
-
-# Get the user's choice about display manager.
-declare -a DISPLAY_OPTIONS=("ly" "sddm")
-display_manager=$(choose_option "Choose a display manager" "${DISPLAY_OPTIONS[@]}")
-
-# Execute the corresponding script
-case $display_manager in
-ly)
-    # Install and configure greeter.
-    sh $INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/display_managers/ly.sh
-    ;;
-sddm)
-    # TODO: Implement sddm installation & configuration.
-    log_warning "Configuration for sddm display manager is not implemented yet!"
-    ;;
-esac
+# Install and configure greeter.
+user_answer=$(ask_user_before_execution "Would you like to install a greeter?" "true" "$INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/greeter.sh")
 
 # Install and configure GPU drivers.
 sh $INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/gpu.sh
