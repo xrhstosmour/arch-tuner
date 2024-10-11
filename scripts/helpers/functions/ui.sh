@@ -70,7 +70,7 @@ ask_user_before_execution() {
     # Proceed with the user choice.
     local choice=""
     while :; do
-        log_info "$prompt Y/[N]: "
+        log_info "$prompt [y/N]: "
         read -r choice
 
         # Set default value if no input.
