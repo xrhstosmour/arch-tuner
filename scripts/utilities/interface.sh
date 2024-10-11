@@ -9,6 +9,8 @@ set -e
 # Constant variable of the scripts' working directory to use for relative paths.
 INTERFACE_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
+source "$INSTALL_SCRIPT_DIRECTORY/../helpers/functions/ui.sh"
+
 # Install and configure greeter.
 user_answer=$(ask_user_before_execution "Would you like to install a greeter?" "true" "$INTERFACE_SCRIPT_DIRECTORY/../helpers/interface/greeter.sh")
 
