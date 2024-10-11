@@ -494,7 +494,7 @@ function git_merge_to_default_branch
     git --no-pager log --decorate --graph --oneline "$local_branch...$default_branch"
 
     # Prompt the user for confirmation.
-    log_warning "Would you like to push your local commits to `$default_branch`? (Y/N) "
+    log_warning "Would you like to push your local commits to `$default_branch`? [y/n] "
     read push_to_default_branch
     if test "$push_to_default_branch" = "y" -o "$push_to_default_branch" = "Y"
         git push "$remote" "$local_branch"
