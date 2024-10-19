@@ -3,7 +3,7 @@
   "logo": {
     "type": "auto",
     "padding": {
-      "top": 1
+      "top": 2
     },
     "color": {
       "1": "blue",
@@ -35,15 +35,15 @@
       "\u001b[48;2;43;43;69m",
       // Background output color.
       "\u001b[48;2;56;59;78m",
-      // Vertical bar at the start of the line and 75th character.
-      "\u001b[90m│                                                            │\u001b[60D\u001b[39m"
+      // Vertical bar at the start of the line and 50th character.
+      "\u001b[90m│                                   │\u001b[35D\u001b[39m"
     ]
   },
   "modules": [
     {
       "type": "custom",
       "key": "{#90}╭─────────────╮",
-      "format": "{#90}╭────────────────────────────────────────────────────────────╮"
+      "format": "{#90}╭───────────────────────────────────╮"
     },
     {
       "type": "title",
@@ -53,7 +53,7 @@
     {
       "type": "host",
       "key": "{#90}│ {#93}Machine     {#90}│",
-      "format": "{$3}{name}  {#2}{version}"
+      "format": "{$3}{name}"
     },
     {
       "type": "os",
@@ -63,12 +63,12 @@
     {
       "type": "kernel",
       "key": "{#90}│ {#93}Kernel      {#90}│",
-      "format": "{$3}{sysname}  {#2}{release}"
+      "format": "{$3}{sysname} {#2}[{release}]"
     },
     {
       "type": "bios",
       "key": "{#90}│ {#93}BIOS        {#90}│",
-      "format": "{$3}{version}  {#2}{release}"
+      "format": "{$3}{version} {#2}[{release}]"
     },
     {
       "type": "packages",
@@ -85,90 +85,60 @@
       "key": "{#90}│ {#91}CPU         {#90}│",
       "showPeCoreCount": true,
       "temp": true,
-      "format": "{$3}{}"
+      "format": "{$3}{name}"
     },
-    // TODO: Check if the GPU format is fine.
     {
       "type": "gpu",
       "key": "{#90}│ {#91}GPU         {#90}│",
       "detectionMethod": "auto",
       "hideType": "none",
       "temp": true,
-      "format": "{$3}{vendor} {name}  {#2}{frequency}  {#2}{temperature}"
+      "format": "{$3}{name}"
     },
     {
       "type": "memory",
       "key": "{#90}│ {#91}Memory      {#90}│",
-      "format": "{$3}{used} / {total} ({percentage})"
+      "format": "{$3}{used}/{total} ({percentage})"
     },
     {
       "type": "swap",
       "key": "{#90}│ {#91}Swap        {#90}│",
-      "format": "{$3}{used} / {total} ({percentage})"
+      "format": "{$3}{used}/{total} ({percentage})"
     },
     {
       "type": "disk",
       "key": "{#90}│ {#91}Disk        {#90}│",
-      "format": "{$3}{size-used} / {size-total} ({size-percentage})  {#2}{filesystem}"
-    },
-    // TODO: Check if the Battery format is fine.
-    {
-      "type": "battery",
-      "key": "{#90}│ {#91}Battery     {#90}│",
-      "temp": true,
-      "format": "{$3}{status}  ({capacity})  {#2}{temperature}  {#2}{cycle-count}"
+      "format": "{$3}{size-used}/{size-total} ({size-percentage}) {#2}[{filesystem}]"
     },
     {
       "type": "terminal",
       "key": "{#90}│ {#95}Terminal    {#90}│",
-      "format": "{$3}{pretty-name}  {#2}{version}"
-    },
-    // TODO: Check if the Terminal Font format is fine.
-    {
-      "type": "terminalfont",
-      "key": "{#90}│ {#95}Terminal Font{#90}│",
-      "format": "{$3}{name}  {#2}{size}  {#2}{style}"
+      "format": "{$3}{pretty-name}"
     },
     {
       "type": "shell",
       "key": "{#90}│ {#95}Shell       {#90}│",
-      "format": "{$3}{pretty-name}  {#2}{version}"
+      "format": "{$3}{pretty-name}"
     },
-    // TODO: Check if the DE format is fine.
     {
       "type": "de",
       "key": "{#90}│ {#92}DE          {#90}│",
-      "format": "{$3}{pretty-name}  {#2}{version}"
+      "format": "{$3}{pretty-name} {#2}[{version}]"
     },
-    // TODO: Check if the WM format is fine.
     {
       "type": "wm",
       "key": "{#90}│ {#92}WM          {#90}│",
-      "format": "{$3}{pretty-name}  {#2}{protocol-name}  {#2}{plugin-name}"
+      "format": "{$3}{pretty-name} {#2}[{protocol-name}]"
     },
-    // TODO: Check if the Theme format is fine.
-    {
-      "type": "theme",
-      "key": "{#90}│ {#92}Theme       {#90}│",
-      "format": "{$3}{theme1}"
-    },
-    // TODO: Check if the Font format is fine.
     {
       "type": "font",
       "key": "{#90}│ {#92}Font        {#90}│",
       "format": "{$3}{combined}"
     },
-    // TODO: Check if the Icons format is fine.
     {
       "type": "icons",
       "key": "{#90}│ {#92}Icons       {#90}│",
-      "format": "{$3}{icons1}  {#2}{icons2}"
-    },
-    {
-      "type": "users",
-      "key": "{#90}│ {#94}Login IP    {#90}│",
-      "myselfOnly": true,
-      "format": "{$3}{client-ip}  {#2}{login-time}"
+      "format": "{$3}{icons2}"
     },
     {
       "type": "localip",
@@ -176,30 +146,17 @@
       "showPrefixLen": true,
       "showIpv4": true,
       "showIpv6": false,
-      "format": "{$3}{ipv4}  {#2}{ifname}  {#2}{mtu}"
-    },
-    {
-      "type": "localip",
-      "key": "{#90}│ {#94}Local IPv6  {#90}│",
-      "showPrefixLen": true,
-      "showIpv4": false,
-      "showIpv6": true,
-      "format": "{$3}{ipv6}  {#2}{ifname}  {#2}{mtu}"
+      "format": "{$3}{ipv4} {#2}[{ifname}]"
     },
     {
       "type": "publicip",
       "key": "{#90}│ {#94}Public IPv4 {#90}│",
-      "format": "{$3}{ip}  {#2}{location}"
-    },
-    {
-      "type": "dns",
-      "key": "{#90}│ {#94}DNS         {#90}│",
-      "format": "{$3}{result}"
+      "format": "{$3}{ip} {#2}[{location}]"
     },
     {
       "type": "custom",
       "key": "{#90}╰─────────────╯",
-      "format": "{#90}╰────────────────────────────────────────────────────────────╯"
+      "format": "{#90}╰───────────────────────────────────╯"
     }
   ]
 }
