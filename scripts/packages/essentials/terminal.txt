@@ -9,6 +9,7 @@ eva
 zoxide
 fd
 jless
+less
 sd
 xh
 topgrade-bin
