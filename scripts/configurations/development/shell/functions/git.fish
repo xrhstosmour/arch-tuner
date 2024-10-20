@@ -84,7 +84,7 @@ function git_auto_fix_up
     end
 
     # Get the log of the current branch excluding commits from the upstream branch.
-    set commits_list (git log --oneline --pretty=format:'%h | %s' --no-merges $default_branch..$current_branch)
+    set -l commits_list (git log --oneline --pretty=format:'%h | %s' --no-merges $default_branch..$current_branch | string split '\n')
 
     # Check if the commits list is empty.
     if test -z "$commits_list"
@@ -93,7 +93,7 @@ function git_auto_fix_up
     end
 
     # Loop through the array.
-    echo "$commits_list" | while read -l line
+    for line in $commits_list
 
         # Get commit hash and message.
         set commit_hash (echo $line | awk '{print $1}')
@@ -119,7 +119,7 @@ function git_auto_fix_up
         # Color constants are not working in the preview window so we use the hardcoded ANSI escape codes.
         # Add "- " in front of each file line with green color.
         set formatted_files ""
-        for file in (echo $files)
+        for file in $files
             set formatted_files "$formatted_files\e[1;32m-\e[0m $file\n"
         end
 
@@ -147,7 +147,7 @@ end
 function git_stash_list
 
     # Get the stash list as an array.
-    set stash_list (git stash list -n 50 --pretty=format:'%h|%s')
+    set -l stash_list (git stash list -n 50 --pretty=format:'%h|%s' | string split '\n')
 
     # Check if the stash list is empty.
     if test -z "$stash_list"
@@ -156,7 +156,7 @@ function git_stash_list
     end
 
     # Loop through the array.
-    echo "$stash_list" | while read -l line
+    for line in $stash_list
 
         # Extract the stash hash by splitting based on "|".
         set stash_hash (echo "$line" | cut -d'|' -f1 | xargs)
@@ -187,7 +187,7 @@ function git_stash_list
         # Color constants are not working in the preview window so we use the hardcoded ANSI escape codes.
         # Add "- " in front of each file line with green color.
         set formatted_files ""
-        for file in (echo $files)
+        for file in $files
             set formatted_files "$formatted_files\e[1;32m-\e[0m $file\n"
         end
 
@@ -224,7 +224,7 @@ function git_log_current_branch
     end
 
     # Get the log of the current branch excluding commits from the upstream branch.
-    set log_list (git log --oneline --pretty=format:'%h | %s' $default_branch..$current_branch)
+    set -l log_list (git log --oneline --pretty=format:'%h | %s' $default_branch..$current_branch | string split '\n')
 
     # Check if the log list is empty.
     if test -z "$log_list"
@@ -233,7 +233,7 @@ function git_log_current_branch
     end
 
     # Loop through the array.
-    echo "$log_list" | while read -l line
+    for line in $log_list
 
         # Extract the commit hash and message.
         set commit_hash (echo "$line" | awk '{print $1}')
@@ -254,7 +254,7 @@ function git_log_current_branch
         # Color constants are not working in the preview window so we use the hardcoded ANSI escape codes.
         # Add "- " in front of each file line with green color.
         set formatted_files ""
-        for file in (echo $files)
+        for file in $files
             set formatted_files "$formatted_files\e[1;32m-\e[0m $file\n"
         end
 
@@ -290,26 +290,26 @@ function git_list_branches
     set current_branch (git branch --show-current)
 
     # Get the list of all branches.
-    set all_branches (git branch -av --format='%(refname:short)')
+    set -l all_branches (git branch -av --format='%(refname:short)' | string split '\n')
 
     # Get the list of all local not pushed branches.
-    set not_pushed_local_branches (git for-each-ref --format="%(refname:short) %(push:track)" refs/heads | grep '\[gone\]' | awk '{print $1}')
+    set -l not_pushed_local_branches (git for-each-ref --format="%(refname:short) %(push:track)" refs/heads | grep '\[gone\]' | awk '{print $1}' | string split '\n')
 
     # Get the list of all merged branches.
-    set merged_branches (git branch -a --merged $default_branch | sed 's/^[* ]*//')
+    set -l merged_branches (git branch -a --merged $default_branch | sed 's/^[* ]*//' | string split '\n')
 
     # Exclude merged branches from all branches.
-    set branch_list (echo "$all_branches" | grep -v -F -f <(echo "$merged_branches"))
+    set -l branch_list (echo "$all_branches" | grep -v -F -f <(echo "$merged_branches") | string split '\n')
 
     # Exclude remote branches that have a corresponding local branch.
-    set local_branches (git branch --format='%(refname:short)')
-    set branch_list (echo "$branch_list" | grep -v -F -f <(echo "$local_branches" | sed 's/^/origin\//'))
+    set -l local_branches (git branch --format='%(refname:short)' | string split '\n')
+    set -l branch_list (echo "$branch_list" | grep -v -F -f <(echo "$local_branches" | sed 's/^/origin\//') | string split '\n')
 
     # Exclude `origin/HEAD`
-    set branch_list (echo "$branch_list" | grep -v '^origin/HEAD$')
+    set -l branch_list (echo "$branch_list" | grep -v '^origin/HEAD$' | string split '\n')
 
     # Add the not pushed local branches to the list.
-    set branch_list (echo -e "$branch_list\n$not_pushed_local_branches" | sort -u)
+    set -l branch_list (echo -e "$branch_list\n$not_pushed_local_branches" | sort -u | string split '\n')
 
     # Check if the branch list is empty.
     if test -z "$branch_list"
@@ -318,7 +318,7 @@ function git_list_branches
     end
 
     # Loop through the array.
-    echo "$branch_list" | while read -l line
+    for line in $branch_list
         # Check if the branch is the current one.
         if test "$line" = "$current_branch"
             # Print the current branch name in green.
@@ -339,7 +339,7 @@ function git_list_branches
         # Color constants are not working in the preview window so we use the hardcoded ANSI escape codes.
         # Add "- " in front of each file line with green color.
         set formatted_files ""
-        for file in (echo $files)
+        for file in $files
             set formatted_files "$formatted_files\e[1;32m-\e[0m $file\n"
         end
 
@@ -367,7 +367,7 @@ function git_cherry_pick_commit
     set current_branch (git branch --show-current)
 
     # Get the list of commits from all remote branches except the current one.
-    set commits_list (git log --oneline --pretty=format:'%h | %s' --all --remotes | grep -v "origin/$current_branch")
+    set -l commits_list (git log --oneline --pretty=format:'%h | %s' --all --remotes | grep -v "origin/$current_branch" | string split '\n')
 
     # Check if the commit list is empty.
     if test -z "$commits_list"
@@ -376,7 +376,7 @@ function git_cherry_pick_commit
     end
 
     # Loop through the array.
-    echo "$commits_list" | while read -l line
+    for line in $commits_list
         # Get commit hash and message.
         set commit_hash (echo "$line" | awk '{print $1}')
         set commit_message (echo "$line" | cut -d' ' -f3-)
@@ -398,7 +398,7 @@ function git_cherry_pick_commit
         # Color constants are not working in the preview window so we use the hardcoded ANSI escape codes.
         # Add "- " in front of each file line with green color.
         set formatted_files ""
-        for file in (echo $files)
+        for file in $files
             set formatted_files "$formatted_files\e[1;32m-\e[0m $file\n"
         end
 
@@ -494,7 +494,7 @@ function git_merge_to_default_branch
     git --no-pager log --decorate --graph --oneline "$local_branch...$default_branch"
 
     # Prompt the user for confirmation.
-    log_warning "Would you like to push your local commits to `$default_branch`? [y/n] "
+    log_warning "Would you like to push your local commits to `$default_branch`? (Y/N) "
     read push_to_default_branch
     if test "$push_to_default_branch" = "y" -o "$push_to_default_branch" = "Y"
         git push "$remote" "$local_branch"
