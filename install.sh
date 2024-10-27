@@ -29,6 +29,7 @@ source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/ui.sh"
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh"
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/strings.sh"
 source "$FLAGS_SCRIPT_PATH"
+source "$CONSTANTS_SCRIPT_PATH"
 
 # Ask user for backup confirmation before proceeding.
 if [[ "$INITIAL_SETUP" -eq 0 ]]; then
@@ -38,6 +39,14 @@ fi
 # Ask user for system reset if not already completed, before proceeding.
 if [[ "$SYSTEM_RESET" -eq 1 ]]; then
     should_reset_system=$(ask_user_before_execution "Would you like to reset your system to a 'clean' state?" "true" "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh#reset_system_to_clean_state")
+fi
+
+# Ask user for the installation type, before proceeding.
+if [[ -z "$INSTALLATION_TYPE" ]]; then
+    declare -a INSTALLATION_TYPE_OPTIONS=("minimal" "desktop" "server")
+    installation_type=$(choose_option "Select installation type" "${INSTALLATION_TYPE_OPTIONS[@]}")
+    change_flag_value "INSTALLATION_TYPE" "$installation_type" "$CONSTANTS_SCRIPT_PATH"
+    source "$CONSTANTS_SCRIPT_PATH"
 fi
 
 # Update system.
