@@ -270,3 +270,18 @@ configure_fish_shell_files() {
         fi
     done
 }
+
+# Function to change a configuration value in a file.
+# Usage:
+#   change_configuration "key" "value" "configuration_file_path"
+change_configuration() {
+    local key=$1
+    local value=$2
+    local configuration_file_path=$3
+
+    if grep -q "^#*$key" "$configuration_file_path"; then
+        sudo sed -i "s/^#*$key.*/$key$value/" "$configuration_file_path"
+    else
+        echo "$key$value" | sudo tee -a "$configuration_file_path" >/dev/null
+    fi
+}
