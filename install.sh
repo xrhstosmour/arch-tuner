@@ -25,6 +25,13 @@ declare -A SCRIPTS=(
     ["security"]="SECURITY_COMPLETED|1"
 )
 
+# TODO: Add minimal installation type when there will be server scripts to differentiate.
+# Define allowed scripts for each installation type
+declare -A ALLOWED_SCRIPTS=(
+    ["desktop"]="essentials interface desktop development privacy security"
+    ["server"]="essentials privacy security"
+)
+
 # Import functions and flags.
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/ui.sh"
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh"
@@ -44,7 +51,7 @@ fi
 
 # Ask user for the installation type, before proceeding.
 if [[ -z "$INSTALLATION_TYPE" ]]; then
-    declare -a INSTALLATION_TYPE_OPTIONS=("minimal" "desktop" "server")
+    declare -a INSTALLATION_TYPE_OPTIONS=("desktop" "server")
     installation_type=$(choose_option "Select installation type" "${INSTALLATION_TYPE_OPTIONS[@]}")
     change_flag_value "INSTALLATION_TYPE" "$installation_type" "$CONSTANTS_SCRIPT_PATH"
     source "$CONSTANTS_SCRIPT_PATH"
@@ -55,6 +62,11 @@ update_system
 
 # Iterate over the scripts and execute them accordingly.
 for script in "${ORDERED_SCRIPTS[@]}"; do
+
+    # Skip scripts not allowed for the current installation type.
+    if [[ ! " ${ALLOWED_SCRIPTS[$INSTALLATION_TYPE]} " =~ " $script " ]]; then
+        continue
+    fi
 
     # Split the script info based on the delimiter "|".
     IFS="|" read -ra script_info <<<"${SCRIPTS[$script]}"
