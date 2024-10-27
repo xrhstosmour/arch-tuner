@@ -15,5 +15,5 @@ sh $DESKTOP_SCRIPT_DIRECTORY/../helpers/desktop/gpu.sh
 # Install dotfiles from existing repository.
 sh $DESKTOP_SCRIPT_DIRECTORY/../helpers/desktop/dotfiles.sh
 
-# TODO: Create a function to configure system like the following:
-# TODO:     - Suspend when lid is closed: https://www.reddit.com/r/archlinux/comments/2d2btn/configuring_suspend_when_lid_closes/
+# Configure system settings.
+sh $DESKTOP_SCRIPT_DIRECTORY/../helpers/desktop/settings.sh
