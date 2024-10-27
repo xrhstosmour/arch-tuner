@@ -17,9 +17,9 @@ declare -a ORDERED_SCRIPTS=("essentials" "interface" "desktop" "development" "pr
 # Scripts to run containing their completion flag, initial setup value and optional message, splitted by "|".
 declare -A SCRIPTS=(
     ["essentials"]="ESSENTIALS_COMPLETED|1"
-    ["interface"]="INTERFACE_COMPLETED|1|Would you like to set up the graphical interface?"
-    ["desktop"]="DESKTOP_COMPLETED|1|Would you like to install desktop applications?"
-    ["development"]="DEVELOPMENT_COMPLETED|1|Would you like to set up development applications and configurations?"
+    ["interface"]="INTERFACE_COMPLETED|1|Would you like to set up the graphical login interface?"
+    ["desktop"]="DESKTOP_COMPLETED|1|Would you like to set up the desktop environment?"
+    ["development"]="DEVELOPMENT_COMPLETED|1|Would you like to set up the development environment?"
     ["privacy"]="PRIVACY_COMPLETED|1"
     ["security"]="SECURITY_COMPLETED|1"
 )
