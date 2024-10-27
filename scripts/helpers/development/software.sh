@@ -11,7 +11,6 @@ SOFTWARE_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
 source "$SOFTWARE_SCRIPT_DIRECTORY/../functions/packages.sh"
-source "$SOFTWARE_SCRIPT_DIRECTORY/../functions/services.sh"
 source "$SOFTWARE_SCRIPT_DIRECTORY/../../core/flags.sh"
 
 # Constant variable for the file path containing the software tools to install.
@@ -26,16 +25,9 @@ if [ "$are_software_tool_packages_installed" = "false" ]; then
     install_packages "$SOFTWARE_TOOLS" "$AUR_PACKAGE_MANAGER"
 fi
 
-# ! DOCKER SECTION.
+# Docker installation and configuration.
 if grep -q "^docker$" "$SOFTWARE_TOOLS"; then
 
     # Install and configure Docker.
     sh $SOFTWARE_SCRIPT_DIRECTORY/tools/docker.sh
-fi
-
-# ! MISE SECTION.
-if grep -q "^mise-bin$" "$SOFTWARE_TOOLS"; then
-
-    # Install and configure mise.
-    sh $SOFTWARE_SCRIPT_DIRECTORY/tools/mise.sh
 fi
