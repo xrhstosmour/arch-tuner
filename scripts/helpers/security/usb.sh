@@ -25,6 +25,7 @@ install_packages "usbguard" "$AUR_PACKAGE_MANAGER" "Installing USB port protecti
 # Enable the USB port protection service.
 enable_service "usbguard" "Enabling USB port protection..."
 
+# TODO: Generate abbreviations to allow connected devices permantly and for now.
 # Generate an initial policy, if none exists and allow the already connected devices.
 # ? We will use the default police which allows only the already connected devices.
 # ? In case you want to allow permanently a device:

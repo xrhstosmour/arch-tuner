@@ -16,6 +16,7 @@ append_line_to_file() {
     local line_to_append="$2"
     local message="$3"
 
+    # TODO: Try using the `change_configuration` function.
     if ! grep -qxF "$line_to_append" "$file_path"; then
 
         # Print message if it exists.
@@ -258,6 +259,7 @@ configure_fish_shell_files() {
             mkdir -p "$target_directory"
             cp -f "$file" "$target_file"
 
+            # TODO: Try using the `change_configuration` function.
             # Add source $target_file to $configuration_file if not already added.
             source_line="source $target_file"
             if ! grep -qxF "$source_line" "$configuration_file"; then

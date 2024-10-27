@@ -34,6 +34,7 @@ if [ "$is_network_manager_installed" = "true" ] && [ "$is_network_manager_alread
         sudo mkdir -p "$NETWORK_MANAGER_CONFIGURATION_DIRECTORY"
     fi
 
+    # TODO: Try using the `change_configuration` function.
     # Check if the settings to reduce trackability are not set in the configuration file or the file does not exist.
     if [ ! -f "$NETWORK_MANAGER_CONFIGURATION" ] ||
         ! grep -q "$NETWORK_MANAGER_WIFI_SCAN_RAND_MAC_ADDRESS" "$NETWORK_MANAGER_CONFIGURATION" ||

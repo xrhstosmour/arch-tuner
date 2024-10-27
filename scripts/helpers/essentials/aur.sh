@@ -106,6 +106,7 @@ paru)
 
         # Add each configuration option if not already present.
         for configuration_option in "${CONFIGURATION_OPTIONS[@]}"; do
+            # TODO: Try using the `change_configuration` function.
             if ! grep -qxF "$configuration_option" "$PARU_CONFIGURATION"; then
                 log_info "Adding '$configuration_option' to $AUR_PACKAGE_MANAGER configuration..."
                 echo "$configuration_option" | sudo tee -a "$PARU_CONFIGURATION" >/dev/null

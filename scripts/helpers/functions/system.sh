@@ -268,6 +268,7 @@ reset_system_to_clean_state() {
     sudo chsh -s /bin/bash $USER
 
     # TODO: Reset core/constants and core/flags files too.
+    # TODO: Remove `LD_PRELOAD` too.
 
     log_info "System reset to a clean Arch Linux installation state!"
 

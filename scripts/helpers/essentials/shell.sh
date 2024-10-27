@@ -56,6 +56,7 @@ configure_fish_shell_files "$FISH_CONFIGURATION" "$FISH_FUNCTIONS_TO_PASS" "$FIS
 current_shell=$(basename "$SHELL")
 if [ "$current_shell" != "$FISH_SHELL" ]; then
     log_info "Setting default shell..."
+    # TODO: Try using the `change_configuration` function.
     grep -qxF "$FISH_BINARY_DIRECTORY" /etc/shells || echo "$FISH_BINARY_DIRECTORY" | sudo tee -a /etc/shells >/dev/null
     sudo chsh -s "$FISH_BINARY_DIRECTORY" $USER
 fi

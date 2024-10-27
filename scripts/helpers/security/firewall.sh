@@ -47,6 +47,7 @@ if ! sudo ufw status | grep -q '546/udp (v6)'; then
     firewall_changes_made=0
 fi
 
+# TODO: Try using the `change_configuration` function.
 # Check if ICMPv6 rule exists and if not add it.
 if ! grep -q 'ufw6-before-output -p ipv6-icmp -j ACCEPT' /etc/ufw/before6.rules; then
     log_info "Allowing ICMPv6 connections..."
