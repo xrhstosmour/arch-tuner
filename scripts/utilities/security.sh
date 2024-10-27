@@ -19,16 +19,6 @@ source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/system.sh"
 source "$SECURITY_SCRIPT_DIRECTORY/../core/flags.sh"
 
-# Check if the firewall script has not already been completed.
-if [ $COMPLETED_UP_TO_FIREWALL -eq 1 ]; then
-
-    # Install and configure firewall.
-    sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
-
-    # Reboot system if needed.
-    reboot_system $COMPLETED_UP_TO_FIREWALL "COMPLETED_UP_TO_FIREWALL"
-fi
-
 # Install and configure antivirus.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/antivirus.sh
 
@@ -52,15 +42,11 @@ sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/nts.sh
 # TODO: Implement Pluggable Authentication Modules (PAM) and U2F/FIDO2 authenticator choice.
 # TODO: Implement Mandatory Access Control via AppArmor and its policies/profiles.
 
-# Check if the mount script has not already been completed.
-if [ $COMPLETED_UP_TO_MOUNT -eq 1 ]; then
+# Install and configure firewall.
+sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
 
-    # Configure mount options.
-    sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/mount.sh
-
-    # Reboot system if needed.
-    reboot_system $COMPLETED_UP_TO_MOUNT "COMPLETED_UP_TO_MOUNT"
-fi
+# Configure mount points for extra hardening.
+sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/mount.sh
 
 # Configure owner user IDs.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/ids.sh

@@ -270,8 +270,8 @@ reset_system_to_clean_state() {
     # TODO: Reset core/constants and core/flags files too.
     # TODO: Remove `LD_PRELOAD` too.
 
-    log_info "System reset to a clean Arch Linux installation state!"
+    # Change the value of the flag to 0 (true).
+    change_flag_value "$SYSTEM_RESET" 0 "$flags_path"
 
-    # Change the value of the flag to 0 (true) after resetting the system and reboot.
-    reboot_system $SYSTEM_RESET "SYSTEM_RESET"
+    log_success "System reset to a clean Arch Linux installation state!"
 }

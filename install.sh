@@ -11,6 +11,7 @@ INSTALL_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Constant variable for the flags script path.
 FLAGS_SCRIPT_PATH="$INSTALL_SCRIPT_DIRECTORY/scripts/core/flags.sh"
+CONSTANTS_SCRIPT_PATH="$INSTALL_SCRIPT_DIRECTORY/scripts/core/constants.sh"
 
 declare -a ORDERED_SCRIPTS=("essentials" "interface" "desktop" "development" "privacy" "security")
 
@@ -95,8 +96,8 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
                 # Before rebooting, if the script is the first one the "essentials" one, change the INITIAL_SETUP flag to 1 (false).
                 [[ "$script" == "essentials" ]] && change_flag_value "INITIAL_SETUP" 1 "$FLAGS_SCRIPT_PATH"
 
-                # Proceed with rebooting the system.
-                reboot_system "${!completion_flag}" "$completion_flag"
+                # Change the completion flag value to 0 (true).
+                change_flag_value "$completion_flag" 0 "$FLAGS_SCRIPT_PATH"
             elif [ "$script" == "security" ]; then
                 log_success "Installation procedure finished!"
                 log_success "Your system is ready to use!"
