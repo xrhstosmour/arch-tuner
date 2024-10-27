@@ -19,22 +19,6 @@ source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 source "$SECURITY_SCRIPT_DIRECTORY/../helpers/functions/system.sh"
 source "$SECURITY_SCRIPT_DIRECTORY/../core/flags.sh"
 
-# Install only if the user chooses to install an interface.
-if [ $INTERFACE_COMPLETED -eq 0 ]; then
-
-    # Constant variable for the file path containing the security applications to install.
-    SECURITY_PACKAGES="$SECURITY_SCRIPT_DIRECTORY/../packages/security/applications.txt"
-
-    # Check if at least one security package is not installed.
-    are_security_packages_installed=$(are_packages_installed "$SECURITY_PACKAGES" "$AUR_PACKAGE_MANAGER")
-    if [ "$are_security_packages_installed" = "false" ]; then
-        log_info "Installing security applications..."
-
-        # Install security packages.
-        install_packages "$SECURITY_PACKAGES" "$AUR_PACKAGE_MANAGER"
-    fi
-fi
-
 # Check if the firewall script has not already been completed.
 if [ $COMPLETED_UP_TO_FIREWALL -eq 1 ]; then
 
