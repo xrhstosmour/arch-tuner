@@ -14,22 +14,6 @@ source "$PRIVACY_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 source "$PRIVACY_SCRIPT_DIRECTORY/../helpers/functions/packages.sh"
 source "$PRIVACY_SCRIPT_DIRECTORY/../core/flags.sh"
 
-# Install only if the user chooses to install an interface.
-if [ $INTERFACE_COMPLETED -eq 0 ]; then
-
-    # Constant variable for the file path containing the privacy applications to install.
-    PRIVACY_PACKAGES="$PRIVACY_SCRIPT_DIRECTORY/../packages/privacy/applications.txt"
-
-    # Check if at least one privacy package is not installed.
-    are_privacy_packages_installed=$(are_packages_installed "$PRIVACY_PACKAGES" "$AUR_PACKAGE_MANAGER")
-    if [ "$are_privacy_packages_installed" = "false" ]; then
-        log_info "Installing privacy applications..."
-
-        # Install privacy packages.
-        install_packages "$PRIVACY_PACKAGES" "$AUR_PACKAGE_MANAGER"
-    fi
-fi
-
 # Configure network.
 sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/network.sh
 
