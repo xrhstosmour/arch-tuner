@@ -35,54 +35,6 @@ append_line_to_file() {
     echo "false"
 }
 
-# Function to move existing files to a new mount before changing fstab.
-# Usage:
-#   move_files_to_temporary_mount "/mount/point" "device"
-move_files_to_temporary_mount() {
-    local mount_point="$1"
-    local device="$2"
-
-    # Before adding a new mount point, check if the directory contains any files.
-    if [[ $(sudo find "$mount_point" -mindepth 1 | wc -l) -gt 0 ]]; then
-        log_info "Moving $mount_point's files to a temporaty mount..."
-
-        # Mount the new device to a temporary migration location to transfer the files.
-        local temporary_directory="/mnt/mgrtn_${mount_point#/}"
-        sudo mkdir -p "$temporary_directory"
-
-        # Mount according to device.
-        if [[ "$device" == "tmpfs" ]]; then
-            sudo mount -t tmpfs tmpfs "$temporary_directory"
-        else
-            sudo mount "$device" "$temporary_directory"
-        fi
-
-        # Copy files from the old mount point to the new mount point.
-        sudo cp -a "$mount_point/"* "$temporary_directory/"
-
-        # Sleep for 10 seconds after copying files.
-        sleep 10
-
-        # Remove the mount point.
-        sudo rmdir --ignore-fail-on-non-empty "$mount_point"
-
-        # Sleep for 10 seconds after deleting mount point files.
-        sleep 10
-
-        # Unmount the temporary mount point.
-        sudo umount "$temporary_directory"
-
-        # Sleep for 10 seconds after unmounting temporary directory.
-        sleep 10
-
-        # Remove the temporaty directory.
-        sudo rmdir --ignore-fail-on-non-empty "$temporary_directory"
-
-        # Sleep for 10 seconds after deleting temporary directory's files.
-        sleep 10
-    fi
-}
-
 # Function to apply mount hardening options to a mount point in /etc/fstab.
 # Usage:
 #   update_mount_options "/mount/point" "option1,option2,option3"
@@ -140,37 +92,16 @@ update_mount_options() {
         local device=$(findmnt -nr -o SOURCE --target "$mount_point")
         device="${device%%[[]*}"
         local filesystem=$(findmnt -nr -o FSTYPE --target "$mount_point")
-        local uuid=""
 
         # Check if filesystem is valid.
         if [[ -n "$filesystem" ]]; then
 
-            # Get UUID when filesystem is not tmpfs.
-            if [[ "$filesystem" != "tmpfs" ]]; then
-                uuid=$(sudo blkid -s UUID -o value "$device")
+            # If the mount point is not found, add it to `/etc/fstab`.
+            log_info "Adding new mount point $mount_point with options $options..."
+            echo "$device $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
 
-                # Proceed with adding the new mount point.
-                if [[ -n "$uuid" ]]; then
-                    move_files_to_temporary_mount "$mount_point" "$device"
-                    log_info "Adding new mount point $mount_point with options $options..."
-                    echo "UUID=$uuid $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
-
-                    # Return true to indicate that a change was made.
-                    echo "true"
-                else
-                    log_error "Failed to retrieve UUID for mount point $mount_point and device $device!"
-
-                    # Return false to indicate that no change was made.
-                    echo "false"
-                fi
-            else
-                move_files_to_temporary_mount "$mount_point" "$device"
-                log_info "Adding new tmpfs mount point $mount_point with options $options..."
-                echo "$device $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
-
-                # Return true to indicate that a change was made.
-                echo "true"
-            fi
+            # Return true to indicate that a change was made.
+            echo "true"
         else
             log_error "Failed to retrieve filesystem type for mount point $mount_point!"
 

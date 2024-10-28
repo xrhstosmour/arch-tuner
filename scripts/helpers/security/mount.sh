@@ -22,8 +22,6 @@ MOUNT_NO_EXEC_OPTION="noexec"
 declare -A MOUNT_OPTIONS=(
     ["/home"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION,$MOUNT_NO_DEV_OPTION"
     ["/boot"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION,$MOUNT_NO_DEV_OPTION"
-    ["/var"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION"
-    ["/tmp"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_DEV_OPTION"
 )
 
 # Initialize a flag indicating if a mount options change has been made.
@@ -38,9 +36,3 @@ for mount_point in "${!MOUNT_OPTIONS[@]}"; do
         mount_options_changes_made=0
     fi
 done
-
-# Remount all filesystems with new options if any change is made.
-if [ $mount_options_changes_made -eq 0 ]; then
-    log_info "Enabling mount point hardening..."
-    sudo mount -a
-fi
