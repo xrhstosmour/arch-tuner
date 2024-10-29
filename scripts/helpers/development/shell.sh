@@ -20,7 +20,7 @@ FISH_ABBREVIATIONS_TO_PASS="$SHELL_SCRIPT_DIRECTORY/../../configurations/develop
 FISH_FUNCTIONS="$HOME/.config/fish/functions"
 FISH_FUNCTIONS_TO_PASS="$SHELL_SCRIPT_DIRECTORY/../../configurations/development/shell/functions"
 
-# Check if FISH_ABBREVIATIONS_TO_PASS is contained in FISH_ABBREVIATIONS and append if not.
+# Check if `FISH_ABBREVIATIONS_TO_PASS` is contained in `FISH_ABBREVIATIONS` and append if not.
 is_abbreviations_file_contained=$(is_file_contained_in_another "$FISH_ABBREVIATIONS" "$FISH_ABBREVIATIONS_TO_PASS")
 if [ "$is_abbreviations_file_contained" = "false" ]; then
     log_info "Appending development abbreviations to the shell configuration..."
