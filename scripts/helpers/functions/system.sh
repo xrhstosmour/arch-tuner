@@ -171,6 +171,10 @@ reset_system_to_clean_state() {
     # URL of a fresh Arch Linux installation package list.
     PACKAGE_LIST_URL="https://geo.mirror.pkgbuild.com/iso/latest/arch/pkglist.x86_64.txt"
 
+    # Constant variables for the hardened memory allocator configuration.
+    HARDENED_MEMORY_ALLOCATOR_CONFIGURATION="LD_PRELOAD=/usr/lib/libhardened_malloc.so"
+    HARDENED_MEMORY_ALLOCATOR_CONFIGURATION_DIRECTORY="/etc/environment"
+
     # Create a temporary file to store the package list.
     TEMPORARY_PACKAGE_LIST=$(mktemp)
 
@@ -268,8 +272,11 @@ reset_system_to_clean_state() {
     log_info "Changing the default shell to Bash..."
     sudo chsh -s /bin/bash $USER
 
-    # TODO: Reset core/constants and core/flags files too.
-    # TODO: Remove `LD_PRELOAD` too.
+    # Remove the hardened memory allocator configuration.
+    if grep -q "^$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION" "$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION_DIRECTORY"; then
+        log_info "Removing hardened memory allocator configuration..."
+        sudo sed -i "/^$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION/d" "$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION_DIRECTORY"
+    fi
 
     # Change the value of the flag to 0 (true).
     change_flag_value "$SYSTEM_RESET" 0 "$FLAGS_PATH"
