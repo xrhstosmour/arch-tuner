@@ -32,8 +32,8 @@ abbr up "topgrade"
 abbr mkdir "mkdir -p"
 abbr jsn "jless"
 abbr hlx "helix"
-# TODO: Change to `atuin` package.
-abbr h "history"
+abbr h "atuin history list"
+abbr hs "atuin search -i"
 abbr cl "clear"
 
 # Services abbreviations.
