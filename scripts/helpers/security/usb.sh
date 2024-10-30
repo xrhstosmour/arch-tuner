@@ -57,5 +57,6 @@ fi
 is_abbreviations_file_contained=$(is_file_contained_in_another "$FISH_ABBREVIATIONS" "$FISH_ABBREVIATIONS_TO_PASS")
 if [ "$is_abbreviations_file_contained" = "false" ]; then
     log_info "Appending USBguard abbreviations to the shell configuration..."
+    [ -n "$(tail -n 1 "$FISH_ABBREVIATIONS")" ] && echo "" | sudo tee -a "$FISH_ABBREVIATIONS" >/dev/null
     cat "$FISH_ABBREVIATIONS_TO_PASS" | sudo tee -a "$FISH_ABBREVIATIONS" >/dev/null
 fi

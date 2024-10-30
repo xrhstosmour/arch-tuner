@@ -195,8 +195,7 @@ configure_fish_shell_files() {
             source_line="source $target_file"
             if ! grep -qxF "$source_line" "$configuration_file"; then
                 log_info "Appending $filename $file_type to the shell configuration..."
-
-                echo "" | sudo tee -a "$configuration_file" >/dev/null
+                [ -n "$(tail -n 1 "$configuration_file")" ] && echo "" | sudo tee -a "$configuration_file" >/dev/null
                 echo "# Load $filename $file_type" | sudo tee -a "$configuration_file" >/dev/null
                 echo "$source_line" | sudo tee -a "$configuration_file" >/dev/null
             fi
