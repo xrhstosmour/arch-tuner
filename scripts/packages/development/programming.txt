@@ -1,3 +1,0 @@
-dotnet-sdk
-dotnet-runtime
-aspnet-runtime

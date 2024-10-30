@@ -39,6 +39,7 @@ for ly_configuration in "${LY_CONFIGURATIONS[@]}"; do
     # Uncomment the line.
     sudo sed -i "/^#\s*$ly_configuration_up_to_eqaul/c\\$ly_configuration" "$LY_CONFIGURATION_FILE"
 
+    # TODO: Try using the `change_configuration` function.
     # If the configuration exists proceed.
     if grep -q "^$ly_configuration_up_to_eqaul" "$LY_CONFIGURATION_FILE"; then
 

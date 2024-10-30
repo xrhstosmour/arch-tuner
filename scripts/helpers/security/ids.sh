@@ -62,18 +62,22 @@ if [[ -z "$suid_sgid_binary_files" ]]; then
     exit 0
 fi
 
-# Iterate to remove the setuid and setgid bits from the files which were found.
+# Iterate to remove the setuid and setgid bits from the files found.
 for binary_file in $suid_sgid_binary_files; do
 
-    # Check if the binary file has setuid bit set.
-    if [[ $(stat -c "%a" "$binary_file") == 4* ]]; then
-        log_info "Disabling Set Owner User ID (SUID) from $binary_file..."
-        sudo chmod u-s "$binary_file"
-    fi
+    # Check if the file exists and is a regular file before proceeding.
+    if [[ -e "$binary_file" && -f "$binary_file" ]]; then
 
-    # Check if the binary file has setgid bit set.
-    if [[ $(stat -c "%a" "$binary_file") == 2* ]]; then
-        log_info "Disabling Set Group ID (SGID) from $binary_file..."
-        sudo chmod g-s "$binary_file"
+        # Check if the binary file has setuid bit set.
+        if [[ $(stat -c "%a" "$binary_file" 2>/dev/null) == 4* ]]; then
+            log_info "Disabling Set Owner User ID (SUID) from $binary_file..."
+            sudo chmod u-s "$binary_file"
+        fi
+
+        # Check if the binary file has setgid bit set.
+        if [[ $(stat -c "%a" "$binary_file" 2>/dev/null) == 2* ]]; then
+            log_info "Disabling Set Group ID (SGID) from $binary_file..."
+            sudo chmod g-s "$binary_file"
+        fi
     fi
 done

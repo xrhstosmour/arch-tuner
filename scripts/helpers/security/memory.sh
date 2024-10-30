@@ -19,6 +19,7 @@ HARDENED_MEMORY_ALLOCATOR_CONFIGURATION_DIRECTORY="/etc/environment"
 # Install hardened memory allocator.
 install_packages "hardened_malloc" "$AUR_PACKAGE_MANAGER" "Installing hardened memory allocator..."
 
+# TODO: Try using the `change_configuration` function.
 # Enable hardened memory allocator.
 if ! grep -q "^$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION" "$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION_DIRECTORY"; then
     log_info "Enabling hardened memory allocator..."

@@ -9,9 +9,6 @@ set -e
 # Constant variable of the scripts' working directory to use for relative paths.
 DEVELOPMENT_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-# Import functions.
-source "$DEVELOPMENT_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
-
 # Configure shell for development purposes.
 sh $DEVELOPMENT_SCRIPT_DIRECTORY/../helpers/development/shell.sh
 

@@ -140,7 +140,7 @@ reboot_system() {
     local log_rerun_warning="${3:-0}"
 
     # Constant variable for the flags script path.
-    local flags_path="$SYSTEM_SCRIPT_DIRECTORY/../../core/flags.sh"
+    FLAGS_PATH="$SYSTEM_SCRIPT_DIRECTORY/../../core/flags.sh"
 
     # Check the value is not equal to 0 (true) and reboot.
     if [ "$flag" -ne 0 ]; then
@@ -152,7 +152,7 @@ reboot_system() {
         sleep 10
 
         # Change the value of the flag to 0 (true), before rebooting.
-        change_flag_value "$flag_name" 0 "$flags_path"
+        change_flag_value "$flag_name" 0 "$FLAGS_PATH"
 
         # Reboot the system immediately.
         exec sudo reboot
@@ -165,10 +165,15 @@ reboot_system() {
 reset_system_to_clean_state() {
 
     # Constant variable for the flags script path.
-    local flags_path="$SYSTEM_SCRIPT_DIRECTORY/../../core/flags.sh"
+    FLAGS_PATH="$SYSTEM_SCRIPT_DIRECTORY/../../core/flags.sh"
+    CONSTANTS_PATH="$SYSTEM_SCRIPT_DIRECTORY/../../core/constants.sh"
 
     # URL of a fresh Arch Linux installation package list.
     PACKAGE_LIST_URL="https://geo.mirror.pkgbuild.com/iso/latest/arch/pkglist.x86_64.txt"
+
+    # Constant variables for the hardened memory allocator configuration.
+    HARDENED_MEMORY_ALLOCATOR_CONFIGURATION="LD_PRELOAD=/usr/lib/libhardened_malloc.so"
+    HARDENED_MEMORY_ALLOCATOR_CONFIGURATION_DIRECTORY="/etc/environment"
 
     # Create a temporary file to store the package list.
     TEMPORARY_PACKAGE_LIST=$(mktemp)
@@ -267,10 +272,24 @@ reset_system_to_clean_state() {
     log_info "Changing the default shell to Bash..."
     sudo chsh -s /bin/bash $USER
 
-    # TODO: Reset core/constants and core/flags files too.
+    # Remove the hardened memory allocator configuration.
+    if grep -q "^$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION" "$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION_DIRECTORY"; then
+        log_info "Removing hardened memory allocator configuration..."
+        sudo sed -i "/^$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION/d" "$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION_DIRECTORY"
+    fi
 
-    log_info "System reset to a clean Arch Linux installation state!"
+    # Change the value of the flag to 0 (true).
+    change_flag_value "$SYSTEM_RESET" 0 "$FLAGS_PATH"
 
-    # Change the value of the flag to 0 (true) after resetting the system and reboot.
-    reboot_system $SYSTEM_RESET "SYSTEM_RESET"
+    # Reset core/constants and core/flags files too.
+    change_flag_value "$INSTALLATION_TYPE" "" "$CONSTANTS_PATH"
+    change_flag_value "$AUR_PACKAGE_MANAGER" "" "$CONSTANTS_PATH"
+    change_flag_value "$ESSENTIALS_COMPLETED" 1 "$FLAGS_PATH"
+    change_flag_value "$INTERFACE_COMPLETED" 1 "$FLAGS_PATH"
+    change_flag_value "$PRIVACY_COMPLETED" 1 "$FLAGS_PATH"
+    change_flag_value "$DEVELOPMENT_COMPLETED" 1 "$FLAGS_PATH"
+    change_flag_value "$DESKTOP_COMPLETED" 1 "$FLAGS_PATH"
+    change_flag_value "$SECURITY_COMPLETED" 1 "$FLAGS_PATH"
+
+    log_success "System reset to a clean Arch Linux installation state!"
 }

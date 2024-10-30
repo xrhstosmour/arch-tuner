@@ -56,4 +56,3 @@ abbr dcu "docker-compose up --build -d"
 abbr dcd "docker-compose down"
 abbr de "docker-compose exec --it /bin/bash"
 abbr dcp "docker compose down -v --remove-orphans && echo y | docker system prune -a --volumes"
-

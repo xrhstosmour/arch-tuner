@@ -22,12 +22,14 @@ if ! grep -q '^Color' "$PACMAN_CONFIGURATION" || ! grep -q '^ParallelDownloads' 
 fi
 
 # Enable colors in terminal.
+# TODO: Try using the `change_configuration` function.
 if ! grep -q '^Color' $PACMAN_CONFIGURATION; then
     log_info "Enabling colors in terminal..."
     sudo sed -i '/^#.*Color/s/^#//' $PACMAN_CONFIGURATION
 fi
 
 # Enable parallel downloads.
+# TODO: Try using the `change_configuration` function.
 if ! grep -q '^ParallelDownloads' $PACMAN_CONFIGURATION; then
     log_info "Enabling parallel downloads..."
     sudo sed -i '/^#.*ParallelDownloads/s/^#//' $PACMAN_CONFIGURATION

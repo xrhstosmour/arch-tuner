@@ -13,7 +13,7 @@ DOTFILES_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$DOTFILES_SCRIPT_DIRECTORY/../functions/logs.sh"
 
 # Constant variable for the file path containing the dotfile repository.
-DOTFILES="$DOTFILES_SCRIPT_DIRECTORY/../../configurations/interface/dotfiles/dotfiles.txt"
+DOTFILES="$DOTFILES_SCRIPT_DIRECTORY/../../configurations/desktop/dotfiles/dotfiles.txt"
 
 # Clone the dotfiles repository from the cofiguration file.
 log_info "Cloning dotfiles repository..."

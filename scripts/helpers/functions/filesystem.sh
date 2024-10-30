@@ -16,6 +16,7 @@ append_line_to_file() {
     local line_to_append="$2"
     local message="$3"
 
+    # TODO: Try using the `change_configuration` function.
     if ! grep -qxF "$line_to_append" "$file_path"; then
 
         # Print message if it exists.
@@ -32,54 +33,6 @@ append_line_to_file() {
 
     # Return false to indicate that no change was made.
     echo "false"
-}
-
-# Function to move existing files to a new mount before changing fstab.
-# Usage:
-#   move_files_to_temporary_mount "/mount/point" "device"
-move_files_to_temporary_mount() {
-    local mount_point="$1"
-    local device="$2"
-
-    # Before adding a new mount point, check if the directory contains any files.
-    if [[ $(sudo find "$mount_point" -mindepth 1 | wc -l) -gt 0 ]]; then
-        log_info "Moving $mount_point's files to a temporaty mount..."
-
-        # Mount the new device to a temporary migration location to transfer the files.
-        local temporary_directory="/mnt/mgrtn_${mount_point#/}"
-        sudo mkdir -p "$temporary_directory"
-
-        # Mount according to device.
-        if [[ "$device" == "tmpfs" ]]; then
-            sudo mount -t tmpfs tmpfs "$temporary_directory"
-        else
-            sudo mount "$device" "$temporary_directory"
-        fi
-
-        # Copy files from the old mount point to the new mount point.
-        sudo cp -a "$mount_point/"* "$temporary_directory/"
-
-        # Sleep for 10 seconds after copying files.
-        sleep 10
-
-        # Remove the mount point.
-        sudo rmdir --ignore-fail-on-non-empty "$mount_point"
-
-        # Sleep for 10 seconds after deleting mount point files.
-        sleep 10
-
-        # Unmount the temporary mount point.
-        sudo umount "$temporary_directory"
-
-        # Sleep for 10 seconds after unmounting temporary directory.
-        sleep 10
-
-        # Remove the temporaty directory.
-        sudo rmdir --ignore-fail-on-non-empty "$temporary_directory"
-
-        # Sleep for 10 seconds after deleting temporary directory's files.
-        sleep 10
-    fi
 }
 
 # Function to apply mount hardening options to a mount point in /etc/fstab.
@@ -139,37 +92,16 @@ update_mount_options() {
         local device=$(findmnt -nr -o SOURCE --target "$mount_point")
         device="${device%%[[]*}"
         local filesystem=$(findmnt -nr -o FSTYPE --target "$mount_point")
-        local uuid=""
 
         # Check if filesystem is valid.
         if [[ -n "$filesystem" ]]; then
 
-            # Get UUID when filesystem is not tmpfs.
-            if [[ "$filesystem" != "tmpfs" ]]; then
-                uuid=$(sudo blkid -s UUID -o value "$device")
+            # If the mount point is not found, add it to `/etc/fstab`.
+            log_info "Adding new mount point $mount_point with options $options..."
+            echo "$device $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
 
-                # Proceed with adding the new mount point.
-                if [[ -n "$uuid" ]]; then
-                    move_files_to_temporary_mount "$mount_point" "$device"
-                    log_info "Adding new mount point $mount_point with options $options..."
-                    echo "UUID=$uuid $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
-
-                    # Return true to indicate that a change was made.
-                    echo "true"
-                else
-                    log_error "Failed to retrieve UUID for mount point $mount_point and device $device!"
-
-                    # Return false to indicate that no change was made.
-                    echo "false"
-                fi
-            else
-                move_files_to_temporary_mount "$mount_point" "$device"
-                log_info "Adding new tmpfs mount point $mount_point with options $options..."
-                echo "$device $mount_point $filesystem $options 0 0" | sudo tee -a /etc/fstab
-
-                # Return true to indicate that a change was made.
-                echo "true"
-            fi
+            # Return true to indicate that a change was made.
+            echo "true"
         else
             log_error "Failed to retrieve filesystem type for mount point $mount_point!"
 
@@ -258,15 +190,30 @@ configure_fish_shell_files() {
             mkdir -p "$target_directory"
             cp -f "$file" "$target_file"
 
+            # TODO: Try using the `change_configuration` function.
             # Add source $target_file to $configuration_file if not already added.
             source_line="source $target_file"
             if ! grep -qxF "$source_line" "$configuration_file"; then
                 log_info "Appending $filename $file_type to the shell configuration..."
-
-                echo "" | sudo tee -a "$configuration_file" >/dev/null
+                [ -n "$(tail -n 1 "$configuration_file")" ] && echo "" | sudo tee -a "$configuration_file" >/dev/null
                 echo "# Load $filename $file_type" | sudo tee -a "$configuration_file" >/dev/null
                 echo "$source_line" | sudo tee -a "$configuration_file" >/dev/null
             fi
         fi
     done
+}
+
+# Function to change a configuration value in a file.
+# Usage:
+#   change_configuration "key" "value" "configuration_file_path"
+change_configuration() {
+    local key=$1
+    local value=$2
+    local configuration_file_path=$3
+
+    if grep -q "^#*$key" "$configuration_file_path"; then
+        sudo sed -i "s/^#*$key.*/$key$value/" "$configuration_file_path"
+    else
+        echo "$key$value" | sudo tee -a "$configuration_file_path" >/dev/null
+    fi
 }

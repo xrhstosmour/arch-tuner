@@ -40,6 +40,7 @@ if [ "$are_nts_files_the_same" = "false" ]; then
     nts_changes_made=0
 fi
 
+# TODO: Try using the `change_configuration` function.
 # Add the seccomp filter option to the environment file only if not exists.
 if ! grep -q 'OPTIONS="-F 1"' "$NTS_SYSTEM_CONFIGURATION" 2>/dev/null; then
     log_info "Limiting access to encrypted network time security application..."

@@ -12,9 +12,14 @@ USB_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import functions.
 source "$USB_SCRIPT_DIRECTORY/../functions/packages.sh"
 source "$USB_SCRIPT_DIRECTORY/../functions/services.sh"
+source "$USB_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 
 # Constant variable for keeping the USB configuration.
 USB_CONFIGURATION="/etc/usbguard/rules.conf"
+
+# Constant variables for configuring shell.
+FISH_ABBREVIATIONS="$HOME/.config/fish/conf.d/abbr.fish"
+FISH_ABBREVIATIONS_TO_PASS="$USB_SCRIPT_DIRECTORY/../../configurations/security/usb/shell/abbreviations.fish"
 
 # Initialize a flag indicating if a USB port protection change has been made.
 usb_chnages_made=1
@@ -46,4 +51,12 @@ fi
 if [ $usb_chnages_made -eq 0 ]; then
     stop_service "usbguard" "Stopping USB port protection..."
     start_service "usbguard" "Starting USB port protection..."
+fi
+
+# Check if `FISH_ABBREVIATIONS_TO_PASS` is contained in `FISH_ABBREVIATIONS` and append if not.
+is_abbreviations_file_contained=$(is_file_contained_in_another "$FISH_ABBREVIATIONS" "$FISH_ABBREVIATIONS_TO_PASS")
+if [ "$is_abbreviations_file_contained" = "false" ]; then
+    log_info "Appending USBguard abbreviations to the shell configuration..."
+    [ -n "$(tail -n 1 "$FISH_ABBREVIATIONS")" ] && echo "" | sudo tee -a "$FISH_ABBREVIATIONS" >/dev/null
+    cat "$FISH_ABBREVIATIONS_TO_PASS" | sudo tee -a "$FISH_ABBREVIATIONS" >/dev/null
 fi

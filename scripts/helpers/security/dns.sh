@@ -18,6 +18,7 @@ dns_changes_made=1
 # Constant variables for keeping the resolved configuration.
 RESOLVED_CONFIGURATION="/etc/systemd/resolved.conf"
 
+# TODO: Try using the `change_configuration` function.
 # Check if the 'DNSSEC' line already exists in the 'resolved.conf' file.
 if grep -q '^DNSSEC=' "$RESOLVED_CONFIGURATION"; then
 
