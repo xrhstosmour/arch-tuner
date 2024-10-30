@@ -9,7 +9,6 @@ abbr us "sudo pacman-db-upgrade && sudo pacman -Sy && sudo pacman -S --noconfirm
 abbr pi "paru -S --noconfirm --needed"
 abbr pr "paru -Rns --noconfirm"
 abbr ff "fastfetch"
-abbr btm "bottom"
 abbr ip "ip -br a | grep UP | awk '{print \"Interface: \" \$1 \"\nIPv4: \" \$3}'"
 abbr po "sudo systemctl poweroff"
 abbr zzz "sudo systemctl suspend"
