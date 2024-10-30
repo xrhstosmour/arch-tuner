@@ -28,25 +28,25 @@ sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/cpu.sh
 # Install and configure memory allocator.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/memory.sh
 
-# Configure DNS.
-sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/dns.sh
-
 # Install and configure USB port protection.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/usb.sh
 
 # Install and configure encrypted network time security.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/nts.sh
 
+# Configure DNS.
+sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/dns.sh
+
+# Install and configure firewall.
+sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
+
+# Configure owner user IDs.
+sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/ids.sh
+
 # TODO: Implement Linux kernel runtime guard when there is support for newer kernels.
 # TODO: Implement Secure Boot process.
 # TODO: Implement Pluggable Authentication Modules (PAM) and U2F/FIDO2 authenticator choice.
 # TODO: Implement Mandatory Access Control via AppArmor and its policies/profiles.
 
-# Install and configure firewall.
-sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
-
 # Configure mount points for extra hardening.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/mount.sh
-
-# Configure owner user IDs.
-sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/ids.sh
