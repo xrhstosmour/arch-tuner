@@ -20,7 +20,6 @@ MOUNT_NO_EXEC_OPTION="noexec"
 
 # Define mount points with their subdirectories (/*) and their associated options.
 declare -A MOUNT_OPTIONS=(
-    ["/home"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION,$MOUNT_NO_DEV_OPTION"
     ["/boot"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION,$MOUNT_NO_DEV_OPTION"
 )
 
