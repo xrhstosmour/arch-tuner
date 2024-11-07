@@ -13,24 +13,7 @@ GREETER_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$GREETER_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 source "$GREETER_SCRIPT_DIRECTORY/../functions/ui.sh"
 
-# Get the user's choice about greeter.
-declare -a DISPLAY_OPTIONS=("ly" "sddm")
-display_manager=$(choose_option "Choose a greeter" "${DISPLAY_OPTIONS[@]}")
+# Ask user to install and configure a greeter.
+user_answer=$(ask_user_before_execution "Would you like to install a login greeter?" "false" "$GREETER_SCRIPT_DIRECTORY/../interface/greeters/ly.sh")
 
-# Execute the corresponding script
-case $display_manager in
-ly)
-    # Install and configure greeter.
-    sh $GREETER_SCRIPT_DIRECTORY/../interface/greeters/ly.sh
-    ;;
-sddm)
-    # TODO: Implement `sddm` installation & configuration.
-    log_warning "Configuration for sddm greeter is not implemented yet!"
-    ;;
-gdm)
-    # TODO: Implement `gdm` installation & configuration.
-    log_warning "Configuration for gdm greeter is not implemented yet!"
-    ;;
-esac
-
-# TODO: Add a password dialog manager like `plymouth`.
+# TODO: Add a password dialog manager like `plymouth`. Help here: https://srijan.ch/graphical-password-prompt-for-disk-decryption
