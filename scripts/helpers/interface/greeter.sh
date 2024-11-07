@@ -24,7 +24,13 @@ ly)
     sh $GREETER_SCRIPT_DIRECTORY/../interface/greeters/ly.sh
     ;;
 sddm)
-    # TODO: Implement sddm installation & configuration.
+    # TODO: Implement `sddm` installation & configuration.
     log_warning "Configuration for sddm greeter is not implemented yet!"
     ;;
+gdm)
+    # TODO: Implement `gdm` installation & configuration.
+    log_warning "Configuration for gdm greeter is not implemented yet!"
+    ;;
 esac
+
+# TODO: Add a password dialog manager like `plymouth`.
