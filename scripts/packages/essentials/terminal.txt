@@ -12,5 +12,4 @@ jless
 less
 sd
 xh
-topgrade-bin
 atuin
