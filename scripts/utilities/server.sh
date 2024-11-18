@@ -15,6 +15,8 @@ SERVER_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # TODO: Change SSH to different port at the security script.
 
+# TODO: SSH via eliptic keys and 2FA only.
+
 # TODO: Configure fail2ban and geoIPfilter.sh at the security script. More help here: https://technicalciso.com/geoblocking-ssh-on-linux/
 
 # TODO: Set VPN using docker and wg-easy container at the privacy script.
