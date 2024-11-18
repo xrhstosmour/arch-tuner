@@ -19,7 +19,8 @@ declare -a ORDERED_SCRIPTS=("essentials" "interface" "desktop" "development" "pr
 declare -A SCRIPTS=(
     ["essentials"]="ESSENTIALS_COMPLETED|1"
     ["interface"]="INTERFACE_COMPLETED|1|Would you like to set up the graphical login interface?"
-    ["desktop"]="DESKTOP_COMPLETED|1|Would you like to set up the desktop environment?"
+    ["desktop"]="DESKTOP_COMPLETED|1"
+    ["server"]="SERVER_COMPLETED|1"
     ["development"]="DEVELOPMENT_COMPLETED|1|Would you like to set up the development environment?"
     ["privacy"]="PRIVACY_COMPLETED|1"
     ["security"]="SECURITY_COMPLETED|1"
@@ -29,7 +30,8 @@ declare -A SCRIPTS=(
 # Define allowed scripts for each installation type
 declare -A ALLOWED_SCRIPTS=(
     ["desktop"]="essentials interface desktop development privacy security"
-    ["server"]="essentials privacy security"
+    ["server"]="essentials server privacy security"
+    ["minimal"]="essentials privacy security"
 )
 
 # Import functions and flags.
@@ -51,7 +53,7 @@ fi
 
 # Ask user for the installation type, before proceeding.
 if [[ -z "$INSTALLATION_TYPE" ]]; then
-    declare -a INSTALLATION_TYPE_OPTIONS=("desktop" "server")
+    declare -a INSTALLATION_TYPE_OPTIONS=("desktop" "server" "minimal")
     installation_type=$(choose_option "Select installation type" "${INSTALLATION_TYPE_OPTIONS[@]}")
     change_flag_value "INSTALLATION_TYPE" "$installation_type" "$CONSTANTS_SCRIPT_PATH"
     source "$CONSTANTS_SCRIPT_PATH"
