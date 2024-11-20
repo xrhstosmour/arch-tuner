@@ -25,7 +25,7 @@ SERVER_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # TODO: Configure authelia at the security script.
 
-# TODO: Configure Adguard/piHole at the security script.
+# TODO: Configure Adguard/piHole at the security script. More help here: https://docs.techdox.nz/adguard/
 
 # TODO: Configure Syncthing as relay server.
 
