@@ -25,4 +25,16 @@ SERVER_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # TODO: Configure authelia at the security script.
 
+# TODO: Configure Adguard/piHole at the security script.
+
+# TODO: Configure Syncthing as relay server.
+
+# TODO: Configure Traefik at security script.
+
+# TODO: Configure Portainer.
+
+# TODO: Configure Dockge.
+
+# TODO: Configure File browser.
+
 # TODO: Add a dashboard home page with links to all services.
