@@ -106,7 +106,7 @@ function git_auto_fix_up
             # Print the commit hash and message.
             echo -e "$BOLD_YELLOW$commit_hash$NO_COLOR $BOLD_GREEN|$NO_COLOR $commit_message"
         end
-    end | fzf --multi --ansi --bind 'enter:execute(git commit --fixup {1})+abort,tab:execute(git diff {1}^!),?:toggle-preview' --preview '
+    end | fzf --multi --ansi --bind 'enter:execute(git commit --fixup {1} --no-verify)+abort,tab:execute(git diff {1}^!),?:toggle-preview' --preview '
 
         # Keep the commit hash and message.
         set commit_hash {1}
