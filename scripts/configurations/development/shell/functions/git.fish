@@ -33,23 +33,37 @@ end
 
 # Function to fetch and rebase the current branch onto default branch with autostash enabled by default.
 # Usage:
-#   git_fetch_and_rebase true/false
+#   git_fetch_and_rebase optional_branch/"" true/false
 function git_fetch_and_rebase
-    # Determine if autostash is enabled.
+    set branch_to_rebase_onto ""
+    set autostash_enabled "true"
+
+    # Parse arguments.
     if test -n "$argv[1]"
-        set autostash_enabled "$argv[1]"
+        set branch_to_rebase_onto "$argv[1]"
+    end
+
+    if test -n "$argv[2]"
+        set autostash_enabled "$argv[2]"
+    end
+
+    # Determine branch to rebase onto.
+    if test -z "$branch_to_rebase_onto"
+
+        # Get the default branch.
+        set branch_to_rebase_onto (git_get_default_branch)
+
+        # Check if the `git_get_default_branch` function succeeded.
+        if test $status -ne 0
+            log_error "Failed to determine the default branch!"
+            return 1
+        end
     else
-        set autostash_enabled "true"
+        # Fetch the specific branch if provided
+        git fetch origin $branch_to_rebase_onto
+        set branch_to_rebase_onto "origin/$branch_to_rebase_onto"
     end
 
-    # Get the default branch.
-    set default_branch (git_get_default_branch)
-
-    # Check if the git_get_default_branch function succeeded.
-    if test $status -ne 0
-        log_error "Failed to determine the default branch!"
-        return 1
-    end
 
     # Check for uncommitted changes if autostash is disabled.
     if test "$autostash_enabled" = "false" -a (not git diff-index --quiet HEAD --)
@@ -57,13 +71,13 @@ function git_fetch_and_rebase
         return 1
     end
 
-    log_info "Fetching and rebasing onto `$default_branch`..."
+    log_info "Fetching and rebasing onto `$branch_to_rebase_onto`..."
 
     # Perform fetch and rebase with or without autostash.
     if test "$autostash_enabled" = "true"
-        git fetch && git rebase -i "$default_branch" --autosquash --autostash
+        git fetch && git rebase -i "$branch_to_rebase_onto" --autosquash --autostash
     else
-        git fetch && git rebase -i "$default_branch" --autosquash
+        git fetch && git rebase -i "$branch_to_rebase_onto" --autosquash
     end
 end
 
@@ -453,7 +467,7 @@ function git_merge_to_default_branch
     log_info "Branch tracking the remote branch `$upstream_branch`."
 
     # Fetch and rebase current branch onto default branch.
-    git_fetch_and_rebase false
+    git_fetch_and_rebase "" false
     if test $status -ne 0
         log_error "Rebase failed, resolve conflicts/errors before running the script again!"
         return 1
