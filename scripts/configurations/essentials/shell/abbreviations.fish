@@ -33,6 +33,7 @@ abbr hlx "helix"
 abbr h "atuin history list"
 abbr hs "atuin search -i"
 abbr cl "clear"
+abbr rmdp "keep_best_file | xargs rm -v"
 
 # Services abbreviations.
 abbr sc "sudo systemctl"

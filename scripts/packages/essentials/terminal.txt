@@ -13,3 +13,4 @@ less
 sd
 xh
 atuin
+fdupes
