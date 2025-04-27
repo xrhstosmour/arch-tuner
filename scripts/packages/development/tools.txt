@@ -1,6 +1,6 @@
 docker
 docker-compose
-mise-bin
+mise
 lazydocker-bin
 lazygit
 github-cli
