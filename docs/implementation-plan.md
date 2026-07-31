@@ -53,7 +53,7 @@ Runtime flags are managed through `/var/lib/arch-tuner/state.sh` (PR 2). The sys
 
 **Files to create/modify:**
 - `scripts/helpers/functions/state.sh`
-- `scripts/helpers/functions/strings.sh` (updated change_flag_value function)
+- `scripts/helpers/functions/strings.sh` (remove the OLD change_flag_value function; the new one lives in state.sh, while strings.sh keeps its other string helpers)
 
 **Changes:**
 - Introduce new state mechanism with STATE_DIRECTORY defaulting to `/var/lib/arch-tuner/state.sh`
@@ -62,10 +62,10 @@ Runtime flags are managed through `/var/lib/arch-tuner/state.sh` (PR 2). The sys
 - Implement `source_state()` to source state overrides defaults
 - Implement `reset_state()` for clean state
 - Update all call sites in `scripts/helpers/functions/system.sh`
-- Convert `flags.sh` to documented defaults only (flags.sh becomes flags.defaults.sh?)
+- Convert `flags.sh` to documented defaults only (keep the same filename, no rename)
 - Keep `constants.sh` for static values only
 - Ensure runtime AUR_PACKAGE_MANAGER moves to state
-- Sourcing order: state.sh should be sourced before flags.sh and constants.sh in install.sh and helpers
+- Sourcing order: constants.sh and flags.sh defaults are sourced first, then state.sh, so runtime values override defaults
 
 **Acceptance Criteria:**
 - State file correctly stores and retrieves flag values
@@ -301,7 +301,7 @@ bash -n install.sh
 python3 -c "import json; json.load(open('.markdownlint.json'))" && python3 -c "import yaml; yaml.safe_load(open('.pre-commit-config.yaml'))"
 grep -rn "keyboard\|kloak" scripts/ || true
 git status --short
-git fetch origin && git log --oneline origin/docs/implementation-plan..HEAD
+git fetch origin && git log --oneline origin/<branch>..HEAD
 ```
 
 ## Coordination note
