@@ -8,7 +8,7 @@ BOLD_YELLOW='\e[1;33m'
 BOLD_RED='\e[1;31m'
 
 # Installation type.
-INSTALLATION_TYPE=""
+INSTALLATION_TYPE="server"
 
 # Package managers to use.
 ARCH_PACKAGE_MANAGER="pacman"
