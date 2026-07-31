@@ -142,9 +142,6 @@ reboot_system() {
     # Defaults to 0 (true) to log the warning.
     local log_rerun_warning="${3:-0}"
 
-    # Constant variable for the flags script path.
-    FLAGS_PATH="$SYSTEM_SCRIPT_DIRECTORY/../../core/flags.sh"
-
     # Check the value is not equal to 0 (true) and reboot.
     if [ "$flag" -ne 0 ]; then
         log_error "System requires a reboot to apply changes!"
@@ -166,10 +163,6 @@ reboot_system() {
 # Usage:
 #   reset_system_to_clean_state
 reset_system_to_clean_state() {
-
-    # Constant variable for the flags script path.
-    FLAGS_PATH="$SYSTEM_SCRIPT_DIRECTORY/../../core/flags.sh"
-    CONSTANTS_PATH="$SYSTEM_SCRIPT_DIRECTORY/../../core/constants.sh"
 
     # URL of a fresh Arch Linux installation package list.
     PACKAGE_LIST_URL="https://geo.mirror.pkgbuild.com/iso/latest/arch/pkglist.x86_64.txt"

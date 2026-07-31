@@ -15,36 +15,16 @@ change_flag_value() {
     # Ensure the state directory exists.
     mkdir -p "$STATE_DIRECTORY"
 
-    # If the state file doesn't exist, create it.
-    if [[ ! -f "$STATE_FILE" ]]; then
-        : > "$STATE_FILE"  # Empty file
-    fi
-
-    # Use a temporary file for atomic update.
+    # Write to a temporary file, then atomically replace the state file.
     local temp_file
-    temp_file=$(mktemp "$STATE_FILE.tmp.XXXXXX")
+    temp_file=$(mktemp "$STATE_DIRECTORY/.state.XXXXXX")
 
-    # Write the updated flag value.
+    # Drop any existing line for this flag, then append the new value.
+    grep -v "^$flag=" "$STATE_FILE" 2>/dev/null > "$temp_file" || true
     if [[ $value =~ ^[0-9]+$ ]]; then
-        # If it's an integer, don't add quotes.
-        if grep -q "^$flag=" "$STATE_FILE"; then
-            # Replace existing flag line
-            sed "s/^$flag=.*/$flag=$value/" "$STATE_FILE" > "$temp_file"
-        else
-            # Add new flag line
-            cat "$STATE_FILE" > "$temp_file"
-            echo "$flag=$value" >> "$temp_file"
-        fi
+        printf '%s=%s\n' "$flag" "$value" >> "$temp_file"
     else
-        # If it's not an integer, add quotes.
-        if grep -q "^$flag=" "$STATE_FILE"; then
-            # Replace existing flag line
-            sed "s/^$flag=.*/\"$flag=$value\"/" "$STATE_FILE" > "$temp_file"
-        else
-            # Add new flag line
-            cat "$STATE_FILE" > "$temp_file"
-            echo "$flag=\"$value\"" >> "$temp_file"
-        fi
+        printf '%s="%s"\n' "$flag" "$value" >> "$temp_file"
     fi
 
     # Atomically replace the state file.
