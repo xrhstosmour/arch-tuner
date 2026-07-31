@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2034  # mount_options_changes_made: pattern flag for mount hardening changes; used cross-file.
 
 # Catch exit signal (CTRL + C), to terminate the whole script.
 trap "exit" INT

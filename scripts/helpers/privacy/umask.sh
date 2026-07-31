@@ -20,7 +20,7 @@ LOGIN_FILE="/etc/login.defs"
 declare -a UMASK_FILES=("/etc/profile" "/etc/bash.bashrc" "$LOGIN_FILE")
 
 # Iterate over the files.
-for file in ${UMASK_FILES[@]}; do
+for file in "${UMASK_FILES[@]}"; do
 
     # Check if the file exists.
     if [ -f "$file" ]; then

@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2034  # Variables are sourced and consumed across files; shellcheck cannot see cross-file usage.
 
 # Colors for the script's messages.
 NO_COLOR='\e[0m'
