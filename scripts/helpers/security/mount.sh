@@ -27,5 +27,5 @@ declare -A MOUNT_OPTIONS=(
 for mount_point in "${!MOUNT_OPTIONS[@]}"; do
 
     # Proceed with changing the mounting points.
-    mount_options_changed=$(update_mount_options "$mount_point" "${MOUNT_OPTIONS[$mount_point]}")
+    update_mount_options "$mount_point" "${MOUNT_OPTIONS[$mount_point]}"
 done
