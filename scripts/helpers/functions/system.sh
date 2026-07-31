@@ -286,13 +286,9 @@ reset_system_to_clean_state() {
     change_flag_value "$SYSTEM_RESET" 0 "$FLAGS_PATH"
 
     # Reset core/constants and core/flags files too.
-    change_flag_value "$INSTALLATION_TYPE" "" "$CONSTANTS_PATH"
+    change_flag_value "$INSTALLATION_TYPE" "server" "$CONSTANTS_PATH"
     change_flag_value "$AUR_PACKAGE_MANAGER" "" "$CONSTANTS_PATH"
     change_flag_value "$ESSENTIALS_COMPLETED" 1 "$FLAGS_PATH"
-    change_flag_value "$INTERFACE_COMPLETED" 1 "$FLAGS_PATH"
-    change_flag_value "$PRIVACY_COMPLETED" 1 "$FLAGS_PATH"
-    change_flag_value "$DEVELOPMENT_COMPLETED" 1 "$FLAGS_PATH"
-    change_flag_value "$DESKTOP_COMPLETED" 1 "$FLAGS_PATH"
     change_flag_value "$SECURITY_COMPLETED" 1 "$FLAGS_PATH"
 
     log_success "System reset to a clean Arch Linux installation state!"

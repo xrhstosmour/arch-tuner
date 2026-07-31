@@ -97,4 +97,4 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
             fi
         fi
     fi
-    done
+done
