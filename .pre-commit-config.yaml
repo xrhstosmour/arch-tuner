@@ -1,0 +1,12 @@
+- repo: https://github.com/koalaman/shellcheck-precommit
+  hooks:
+    - id: shellcheck
+      args: [-x, -S, warning]
+
+- repo: https://github.com/gitleaks/gitleaks
+  hooks:
+    - id: gitleaks
+
+- repo: https://github.com/igorshubovych/markdownlint-cli
+  hooks:
+    - id: markdownlint

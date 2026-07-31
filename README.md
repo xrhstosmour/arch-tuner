@@ -1,78 +1,36 @@
-# arch-tuner
+# Arch VPS Hardening Toolkit
 
-A comprehensive suite of bash scripts designed to fine-tune and optimize your setup following an Arch Linux installation. This toolkit streamlines the installation and configuration of essential functionalities, spanning interface, desktop, development, privacy and security. It offers users an intuitive interface to seamlessly guide them through the customization process.
+An Arch Linux VPS hardening toolkit for securing and hardening your Arch-based Virtual Private Server. Originally evolved from an Arch desktop post-install toolkit, this project is now focused exclusively on server hardening.
 
-⚠️ **Caution**: Before proceeding, ensure you've backed up your system. I cannot be held accountable for any disruptions or damages to your installation.
+## Why Server-Only
 
-## Features
+This toolkit is purpose-built for Arch VPS deployments, focusing on essential security hardening, privacy protection, and system essentials. Features that were relevant for desktop systems have been removed to keep the toolkit lean and secure for server environments.
 
-- 🛠 **Essentials**: Set up core packages, utilities, and optimize your terminal experience.
-- ⚙️ **Interface**: Streamline the installation of GPU drivers and display managers for an optimized visual experience.
-- 🖥 **Desktop**: Set up your desktop with essential applications.
-- 💻 **Development**: Elevate your coding environment with tools and programming languages.
-- 🕶 **Privacy**: Apply key adjustments for a more private experience.
-- 🛡 **Security**: Strengthen your Arch installation with best security measures.
+Desktop-specific components like display managers, graphical login interfaces, and desktop environments have all been removed.
 
-## Usage
+## What It Includes
 
-1. Clone this repository.
-2. Navigate to the cloned directory.
-3. Execute the installation script: `./install.sh`
+- **Essentials Phase**: Core system setup including package manager configuration, essential packages, and basic system utilities
+- **Privacy Phase**: System hardening for privacy, including secure networking configurations and privacy-enhancing tools
+- **Security Phase**: Comprehensive security hardening including firewall, antivirus, DNSSEC, and system hardening measures
 
-## Inspiration & Helpful Links
+## Future Plans
 
-A massive thank you to the broader open-source community. This toolkit was inspired and informed by the following resources:
+This toolkit is prepared to integrate with a future containers repository that will manage container applications. For now, container applications like filebrowser, uptime-kuma, traefik, and tailscale are intentionally out of scope here.
 
-### Arch Linux Optimization
+## Installation
 
-- [Optimizing Mirror List with `rate-mirrors`](https://github.com/westandskif/rate-mirrors)
-- [Clean Arch Linux](https://averagelinuxuser.com/clean-arch-linux/)
-- [Create `systemd` service as a non `root` user](https://sekor.eu.org/techlog/systemd-without-root-instances/)
-- [Implementing ZRAM-Swap](https://www.dwarmstrong.org/zram-swap/)
-- [Arch Linux Official Documentation](https://wiki.archlinux.org/)
-
-### Arch Linux Display Configuration
-
-- [NVIDIA Driver Guide](https://wiki.archlinux.org/title/NVIDIA)
-- [AMD Driver Guide](https://wiki.archlinux.org/title/AMDGPU)
-- [Intel Driver Guide](https://wiki.archlinux.org/title/Intel_graphics)
-- [Introduction to Wayland](https://www.fosskers.ca/en/blog/wayland)
-
-### Terminal Setup & Customization
-
-- [Discover Rust Terminal Tools](https://deepu.tech/rust-terminal-tools-linux-mac-windows-fish-zsh/)
-- [Migrating to Starship & Fish Shell](https://www.joshfinnie.com/blog/moving-from-oh-my-zsh-to-starship-and-fish-shell/)
-- [Configuring Starship Prompt](https://starship.rs/config/#prompt)
-- [Dive into Starship](https://mvolkmann.github.io/blog/starship/)
-- [Enhanced Terminal Aesthetics with Starship & Exa](https://fadeevab.com/my-configs-for-fancy-looking-terminal-starship-exa/)
-- [Fastfetch Configuration](https://github.com/jan-rex/my-fastfetch-config/tree/main)
-
-### Linux System Protection
-
-- [Securing Your Linux Server](https://github.com/imthenachoman/How-To-Secure-A-Linux-Server#why-secure-your-server)
-- [Quick Firewall Setup for Arch Linux](https://skybert.net/linux/set-up-a-firewall-in-2-minutes-on-arch-linux/)
-- [Guidelines for Desktop Linux Security](https://privsec.dev/posts/linux/desktop-linux-hardening/)
-- [Linux System Protection in 2022](https://blog.privacyguides.org/2022/04/22/linux-system-hardening/)
-- [Elevate Linux Desktop Security](https://the-empire.systems/a-more-secure-linux-desktop)
-- [Docker & OCI Security Best Practices](https://privsec.dev/posts/linux/docker-and-oci-hardening/)
-- [AppArmor Profile Collection](https://github.com/krathalan/apparmor-profiles)
-- [Chrony Setup by GrapheneOS](https://github.com/GrapheneOS/infrastructure/blob/main/chrony.conf)
-- [Setting up Chrony on Arch Linux](https://dokuwiki.tachtler.net/doku.php?id=tachtler:chrony_archlinux)
-- [Madaidan's Guide to Linux Protection](https://madaidans-insecurities.github.io/guides/linux-hardening.html#choosing-the-right-distro)
-- [Akbu's Linux Security Handbook](https://akbu.medium.com/linux-hardening-guide-9acab386d047)
+See the project documentation for detailed installation instructions.
 
 ## Contributing
 
-🚧 **Note**: This project is a work in progress. Your contributions, suggestions, and feedback are always welcome!
-
-### Getting Started
-
-1. **Open Issues**: Check out the open issues to see where you can help out. These are a good place to start, especially if you're new to the project.
-
-2. **TODOs Inside the Code**: While browsing the codebase, you might come across `TODO` comments. These represent areas of the code that need attention or improvement. Feel free to tackle any of these!
-
-Remember, every contribution, no matter how small, is valuable. If you have questions or need guidance, don't hesitate to ask. Together, we can make this project better for everyone!
+Contributions are welcome! Please read the contributing guidelines.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE.md file for details.
+MIT License. See `LICENSE` file for details.
+
+## Links
+
+- [Arch Wiki](https://wiki.archlinux.org/)
+- [Arch Linux Documentation](https://wiki.archlinux.org/index.php/Main_page)

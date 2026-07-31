@@ -1,11 +1,14 @@
 #!/bin/bash
 
-# Flags to mark the completion of each section.
+# shellcheck disable=SC2034 # Reason: These variables are sourced and consumed cross-file.
+
+# Initial setup flag (0: not set, 1: set)
 INITIAL_SETUP=0
-SYSTEM_RESET=1
+
+# System reset flag (0: not set, 1: set)
+SYSTEM_RESET=0
+
+# Phase completion flags
 ESSENTIALS_COMPLETED=1
-INTERFACE_COMPLETED=1
 PRIVACY_COMPLETED=1
-DEVELOPMENT_COMPLETED=1
-DESKTOP_COMPLETED=1
 SECURITY_COMPLETED=1

@@ -13,30 +13,24 @@ INSTALL_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 FLAGS_SCRIPT_PATH="$INSTALL_SCRIPT_DIRECTORY/scripts/core/flags.sh"
 CONSTANTS_SCRIPT_PATH="$INSTALL_SCRIPT_DIRECTORY/scripts/core/constants.sh"
 
-declare -a ORDERED_SCRIPTS=("essentials" "interface" "desktop" "development" "privacy" "security")
+declare -a ORDERED_SCRIPTS=("essentials" "privacy" "security")
 
 # Scripts to run containing their completion flag, initial setup value and optional message, splitted by "|".
 declare -A SCRIPTS=(
     ["essentials"]="ESSENTIALS_COMPLETED|1"
-    ["interface"]="INTERFACE_COMPLETED|1|Would you like to set up the graphical login interface?"
-    ["desktop"]="DESKTOP_COMPLETED|1|Would you like to set up the desktop environment?"
-    ["development"]="DEVELOPMENT_COMPLETED|1|Would you like to set up the development environment?"
     ["privacy"]="PRIVACY_COMPLETED|1"
     ["security"]="SECURITY_COMPLETED|1"
 )
 
-# TODO: Add minimal installation type when there will be server scripts to differentiate.
-# Define allowed scripts for each installation type
-declare -A ALLOWED_SCRIPTS=(
-    ["desktop"]="essentials interface desktop development privacy security"
-    ["server"]="essentials privacy security"
-)
-
 # Import functions and flags.
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/ui.sh"
+# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh"
+# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/strings.sh"
+# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$FLAGS_SCRIPT_PATH"
+# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$CONSTANTS_SCRIPT_PATH"
 
 # Ask user for backup confirmation before proceeding.
@@ -46,15 +40,7 @@ fi
 
 # Ask user for system reset if not already completed, before proceeding.
 if [[ "$SYSTEM_RESET" -eq 1 ]]; then
-    should_reset_system=$(ask_user_before_execution "Would you like to reset your system to a 'clean' state?" "true" "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh#reset_system_to_clean_state")
-fi
-
-# Ask user for the installation type, before proceeding.
-if [[ -z "$INSTALLATION_TYPE" ]]; then
-    declare -a INSTALLATION_TYPE_OPTIONS=("desktop" "server")
-    installation_type=$(choose_option "Select installation type" "${INSTALLATION_TYPE_OPTIONS[@]}")
-    change_flag_value "INSTALLATION_TYPE" "$installation_type" "$CONSTANTS_SCRIPT_PATH"
-    source "$CONSTANTS_SCRIPT_PATH"
+    ask_user_before_execution "Would you like to reset your system to a 'clean' state?" "true" "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh#reset_system_to_clean_state"
 fi
 
 # Update system.
@@ -63,17 +49,12 @@ update_system
 # Iterate over the scripts and execute them accordingly.
 for script in "${ORDERED_SCRIPTS[@]}"; do
 
-    # Skip scripts not allowed for the current installation type.
-    if [[ ! " ${ALLOWED_SCRIPTS[$INSTALLATION_TYPE]} " =~ " $script " ]]; then
-        continue
-    fi
-
     # Split the script info based on the delimiter "|".
     IFS="|" read -ra script_info <<<"${SCRIPTS[$script]}"
     completion_flag="${script_info[0]}"
     message="${script_info[2]}"
 
-    # Check if script has not already been completed.
+# Check if script has not already been completed.
     if [ "${!completion_flag}" -eq 1 ]; then
 
         # Flag to track if the user executed a script, 1 (false) by default.
@@ -99,11 +80,8 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
         # Check if the user executed the script before marking as complete and reboot.
         if [[ "$user_choice" -eq 0 ]]; then
 
-            # Set completion flag to 0 (true) if it's "desktop" or "development".
-            [[ "$script" == "desktop" || "$script" == "development" ]] && change_flag_value "$completion_flag" 0 "$FLAGS_SCRIPT_PATH"
-
             # Reboot system for the rest of the scripts.
-            if [[ "$script" == "essentials" || "$script" == "interface" || "$script" == "privacy" ]]; then
+            if [[ "$script" == "essentials" || "$script" == "privacy" ]]; then
 
                 # Before rebooting, if the script is the first one the "essentials" one, change the INITIAL_SETUP flag to 1 (false).
                 [[ "$script" == "essentials" ]] && change_flag_value "INITIAL_SETUP" 1 "$FLAGS_SCRIPT_PATH"

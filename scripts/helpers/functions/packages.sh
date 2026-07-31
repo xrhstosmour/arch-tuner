@@ -75,7 +75,8 @@ are_packages_installed() {
 # Function to install a package if it is not already installed.
 # process_package "package" "install_command" "message"
 process_package() {
-    local package="$(trim_string "$1")"
+    local package
+    package=$(trim_string "$1")
     local install_command="$2"
     local message="${3:-"Installing '$package' package..."}"
 

@@ -90,7 +90,8 @@ stop_process() {
     local message="${2:-"Stopping $process_name process..."}"
 
     # Find the process IDs of the process name.
-    local process_ids=$(ps aux | grep "$process_name" | grep -v 'grep' | awk '{print $2}')
+    local process_ids
+    process_ids=$(ps aux | grep "$process_name" | grep -v 'grep' | awk '{print $2}')
 
     # Check if any process IDs were found.
     if [ -n "$process_ids" ]; then
@@ -119,7 +120,8 @@ is_process_running() {
     local process_name="$1"
 
     # Find the process IDs of the process name.
-    local process_ids=$(ps aux | grep "$process_name" | grep -v 'grep' | awk '{print $2}')
+    local process_ids
+    process_ids=$(ps aux | grep "$process_name" | grep -v 'grep' | awk '{print $2}')
 
     # Check if any process IDs were found.
     if [ -n "$process_ids" ]; then
@@ -198,7 +200,9 @@ reset_system_to_clean_state() {
 
     # Mark all installed packages as dependencies.
     log_info "Marking all installed packages as dependencies..."
-    sudo $ARCH_PACKAGE_MANAGER -D --asdeps $($ARCH_PACKAGE_MANAGER -Qqe)
+    local fresh_packages
+    fresh_packages=$(sudo $ARCH_PACKAGE_MANAGER -Qqe)
+    sudo $ARCH_PACKAGE_MANAGER -D --asdeps "$fresh_packages"
 
     # Define essential packages.
     declare -a ESSENTIAL_PACKAGES=(
@@ -282,14 +286,11 @@ reset_system_to_clean_state() {
     change_flag_value "$SYSTEM_RESET" 0 "$FLAGS_PATH"
 
     # Reset core/constants and core/flags files too.
-    change_flag_value "$INSTALLATION_TYPE" "" "$CONSTANTS_PATH"
+    change_flag_value "$INSTALLATION_TYPE" "server" "$CONSTANTS_PATH"
     change_flag_value "$AUR_PACKAGE_MANAGER" "" "$CONSTANTS_PATH"
     change_flag_value "$ESSENTIALS_COMPLETED" 1 "$FLAGS_PATH"
-    change_flag_value "$INTERFACE_COMPLETED" 1 "$FLAGS_PATH"
-    change_flag_value "$PRIVACY_COMPLETED" 1 "$FLAGS_PATH"
-    change_flag_value "$DEVELOPMENT_COMPLETED" 1 "$FLAGS_PATH"
-    change_flag_value "$DESKTOP_COMPLETED" 1 "$FLAGS_PATH"
     change_flag_value "$SECURITY_COMPLETED" 1 "$FLAGS_PATH"
+    change_flag_value "$PRIVACY_COMPLETED" 1 "$FLAGS_PATH"
 
     log_success "System reset to a clean Arch Linux installation state!"
 }
