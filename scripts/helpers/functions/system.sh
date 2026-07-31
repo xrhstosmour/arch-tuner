@@ -290,6 +290,7 @@ reset_system_to_clean_state() {
     change_flag_value "$AUR_PACKAGE_MANAGER" "" "$CONSTANTS_PATH"
     change_flag_value "$ESSENTIALS_COMPLETED" 1 "$FLAGS_PATH"
     change_flag_value "$SECURITY_COMPLETED" 1 "$FLAGS_PATH"
+    change_flag_value "$PRIVACY_COMPLETED" 1 "$FLAGS_PATH"
 
     log_success "System reset to a clean Arch Linux installation state!"
 }
