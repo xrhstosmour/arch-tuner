@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# shellcheck disable=SC2034 # Reason: This variable is sourced and consumed by other scripts.
+
 # Constant variable of the scripts' working directory to use for relative paths.
 STRINGS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 

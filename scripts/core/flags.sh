@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# shellcheck disable=SC2034 # Reason: These variables are sourced and consumed cross-file.
+
 # Initial setup flag (0: not set, 1: set)
 INITIAL_SETUP=0
 

@@ -92,6 +92,7 @@ ask_user_before_execution() {
                 if [[ "$script_or_function_or_command" == *"#"* ]]; then
 
                     # Before executing the function, we must source the script where it is defined.
+                    # shellcheck disable=SC1090 # Reason: This is an intended pattern for sourcing functions from other scripts.
                     source "$script_or_function_or_command_path"
                     "$script_or_function_or_command_name" "${arguments[@]}"
                 elif [[ -f "$script_or_function_or_command" ]]; then
@@ -128,6 +129,7 @@ ask_user_before_execution() {
 # Function to ask user to choose an option with the fist one as default.
 # Usage:
 #   choose_option "prompt_message" "options_array"
+# shellcheck disable=SC2034 # Reason: default_option is part of the option-picker pattern; it is implicitly used as the default selection.
 choose_option() {
     local prompt="$1"
     shift

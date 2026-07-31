@@ -90,7 +90,8 @@ stop_process() {
     local message="${2:-"Stopping $process_name process..."}"
 
     # Find the process IDs of the process name.
-    local process_ids=$(ps aux | grep "$process_name" | grep -v 'grep' | awk '{print $2}')
+    local process_ids
+    process_ids=$(ps aux | grep "$process_name" | grep -v 'grep' | awk '{print $2}')
 
     # Check if any process IDs were found.
     if [ -n "$process_ids" ]; then
@@ -119,7 +120,8 @@ is_process_running() {
     local process_name="$1"
 
     # Find the process IDs of the process name.
-    local process_ids=$(ps aux | grep "$process_name" | grep -v 'grep' | awk '{print $2}')
+    local process_ids
+    process_ids=$(ps aux | grep "$process_name" | grep -v 'grep' | awk '{print $2}')
 
     # Check if any process IDs were found.
     if [ -n "$process_ids" ]; then
@@ -198,7 +200,9 @@ reset_system_to_clean_state() {
 
     # Mark all installed packages as dependencies.
     log_info "Marking all installed packages as dependencies..."
-    sudo $ARCH_PACKAGE_MANAGER -D --asdeps $($ARCH_PACKAGE_MANAGER -Qqe)
+    local fresh_packages
+    fresh_packages=$(sudo $ARCH_PACKAGE_MANAGER -Qqe)
+    sudo $ARCH_PACKAGE_MANAGER -D --asdeps "$fresh_packages"
 
     # Define essential packages.
     declare -a ESSENTIAL_PACKAGES=(

@@ -24,9 +24,13 @@ declare -A SCRIPTS=(
 
 # Import functions and flags.
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/ui.sh"
+# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh"
+# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/strings.sh"
+# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$FLAGS_SCRIPT_PATH"
+# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$CONSTANTS_SCRIPT_PATH"
 
 # Ask user for backup confirmation before proceeding.
@@ -36,7 +40,7 @@ fi
 
 # Ask user for system reset if not already completed, before proceeding.
 if [[ "$SYSTEM_RESET" -eq 1 ]]; then
-    should_reset_system=$(ask_user_before_execution "Would you like to reset your system to a 'clean' state?" "true" "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh#reset_system_to_clean_state")
+    ask_user_before_execution "Would you like to reset your system to a 'clean' state?" "true" "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh#reset_system_to_clean_state"
 fi
 
 # Update system.
