@@ -29,6 +29,10 @@ source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh"
 # shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/strings.sh"
 # shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
+source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/state.sh"
+# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
+source_state
+# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$FLAGS_SCRIPT_PATH"
 # shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$CONSTANTS_SCRIPT_PATH"
@@ -84,10 +88,10 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
             if [[ "$script" == "essentials" || "$script" == "privacy" ]]; then
 
                 # Before rebooting, if the script is the first one the "essentials" one, change the INITIAL_SETUP flag to 1 (false).
-                [[ "$script" == "essentials" ]] && change_flag_value "INITIAL_SETUP" 1 "$FLAGS_SCRIPT_PATH"
+                [[ "$script" == "essentials" ]] && change_flag_value "INITIAL_SETUP" 1
 
                 # Change the completion flag value to 0 (true).
-                change_flag_value "$completion_flag" 0 "$FLAGS_SCRIPT_PATH"
+                change_flag_value "$completion_flag" 0
             elif [ "$script" == "security" ]; then
                 log_success "Installation procedure finished!"
                 log_success "Your system is ready to use!"
