@@ -21,6 +21,12 @@ if ! grep -q '^Color' "$PACMAN_CONFIGURATION" || ! grep -q '^ParallelDownloads' 
     log_info "Configuring $ARCH_PACKAGE_MANAGER package manager..."
 fi
 
+# Add pacman signature hardening.
+source "$PACMAN_SCRIPT_DIRECTORY/../functions/filesystem.sh"
+if ! append_line_to_file "$PACMAN_CONFIGURATION" "SigLevel = Required DatabaseOptional TrustedOnly" "Adding pacman signature hardening..."; then
+    log_info "Pacman signature hardening already configured."
+fi
+
 # Enable colors in terminal.
 # TODO: Try using the `change_configuration` function.
 if ! grep -q '^Color' $PACMAN_CONFIGURATION; then

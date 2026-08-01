@@ -89,7 +89,17 @@ paru)
     declare -a CONFIGURATION_OPTIONS=("BottomUp" "Devel" "Provides" "PgpFetch" "CombinedUpgrade" "FailFast" "SudoLoop" "SkipReview")
 
     # Constant variable for the paru AUR helper configuration file.
-    PARU_CONFIGURATION="/etc/paru.conf"
+    PARU_CONFIGURATION="$HOME/.config/paru/paru.conf"
+
+    # Add CleanMethod = KeepInstalled to paru configuration.
+    if [ -f "$PARU_CONFIGURATION" ]; then
+        if ! grep -qxF "CleanMethod = KeepInstalled" "$PARU_CONFIGURATION"; then
+            log_info "Adding CleanMethod = KeepInstalled to $aur_helper configuration..."
+            echo "CleanMethod = KeepInstalled" | sudo tee -a "$PARU_CONFIGURATION" >/dev/null
+        else
+            log_info "CleanMethod = KeepInstalled already configured."
+        fi
+    fi
 
     # Check if at least one configuration option does not exist or is commented out.
     configuration_option_missing=false
