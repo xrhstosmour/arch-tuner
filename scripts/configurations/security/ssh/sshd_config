@@ -1,0 +1,14 @@
+# Hardened SSH daemon configuration for VPS use.
+
+Port 2222
+PermitRootLogin no
+PasswordAuthentication no
+PubkeyAuthentication yes
+MaxAuthTries 3
+MaxSessions 10
+ClientAliveInterval 300
+ClientAliveCountMax 2
+AuthenticationMethods publickey
+UsePAM yes
+X11Forwarding no
+PrintMotd no
