@@ -1,0 +1,10 @@
+# Fail2ban jail configuration for VPS use.
+
+[DEFAULT]
+bantime = 1h
+findtime = 10m
+maxretry = 3
+ignoreip = 127.0.0.1/8 ::1
+
+[sshd]
+enabled = true
