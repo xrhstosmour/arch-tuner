@@ -10,35 +10,26 @@ set -e
 SSH_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
-source "$SSH_SCRIPT_DIRECTORY/../functions/packages.sh"
-source "$SSH_SCRIPT_DIRECTORY/../functions/services.sh"
 source "$SSH_SCRIPT_DIRECTORY/../functions/logs.sh"
+source "$SSH_SCRIPT_DIRECTORY/../functions/services.sh"
 source "$SSH_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 
-# SSH hardening helper
+# Constant variables for the SSH server configuration paths.
+SSH_CONFIGURATION="/etc/ssh/sshd_config"
+SSH_CONFIGURATION_TO_PASS="$SSH_SCRIPT_DIRECTORY/../../configurations/security/ssh/sshd_config"
 
-# Source sshd configuration
-source_file="$SSH_SCRIPT_DIRECTORY/../../configurations/security/ssh/sshd_config"
-target_file="/etc/ssh/sshd_config"
+# Stop the SSH service before modifying its configuration.
+stop_service sshd
 
-# Check if source file exists
-if [ ! -f "$source_file" ]; then
-    log_error "Source SSH configuration file not found: $source_file"
-    exit 1
-fi
+# Copy the hardened SSH configuration if it differs from the current one.
+are_ssh_files_the_same=$(compare_files "$SSH_CONFIGURATION" "$SSH_CONFIGURATION_TO_PASS")
 
-# Compare and copy if different
-compare_result=$(compare_files "$target_file" "$source_file")
-if [ "$compare_result" = "false" ]; then
-    log_info "SSH configuration differs from source. Copying..."
-    mkdir -p "$(dirname "$target_file")"
-    cp -f "$source_file" "$target_file"
-    log_info "SSH configuration copied successfully."
+if [[ "$are_ssh_files_the_same" != "true" ]]; then
+    sudo cp -f "$SSH_CONFIGURATION_TO_PASS" "$SSH_CONFIGURATION"
+    log_success "SSH configuration updated."
 else
-    log_info "SSH configuration matches source. No changes needed."
+    log_info "SSH configuration already up to date."
 fi
 
-# Reload SSH service
-start_service "sshd" "Restarting SSH service..."
-
-log_info "SSH hardening completed successfully."
+# Start the SSH service.
+start_service sshd
