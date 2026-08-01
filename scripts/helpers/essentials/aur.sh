@@ -14,25 +14,26 @@ source "$AUR_SCRIPT_DIRECTORY/../functions/packages.sh"
 source "$AUR_SCRIPT_DIRECTORY/../functions/ui.sh"
 
 # Check if an AUR helper is already installed.
-aur_helper=""
-if command -v paru &>/dev/null; then
+    aur_helper=""
+    if command -v paru &>/dev/null; then
 
-    # Change the 'constant' value to "paru".
-    aur_helper="paru"
-    change_flag_value "AUR_PACKAGE_MANAGER" "paru" "$AUR_SCRIPT_DIRECTORY/../../core/constants.sh"
-elif command -v yay &>/dev/null; then
+        # Change the 'constant' value to "paru".
+        aur_helper="paru"
+        change_flag_value "AUR_PACKAGE_MANAGER" "paru"
+    elif command -v yay &>/dev/null; then
 
-    # Change the 'constant' value to "paru".
-    aur_helper="yay"
-    change_flag_value "AUR_PACKAGE_MANAGER" "yay" "$AUR_SCRIPT_DIRECTORY/../../core/constants.sh"
-else
+        # Change the 'constant' value to "yay".
+        aur_helper="yay"
+        change_flag_value "AUR_PACKAGE_MANAGER" "yay"
+    else
 
-    # Get the user's choice about AUR helper.
-    declare -a AUR_OPTIONS=("paru" "yay")
-    aur_helper=$(choose_option "Choose an AUR helper" "${AUR_OPTIONS[@]}")
+        # Get the user's choice about AUR helper.
+        declare -a AUR_OPTIONS=("paru" "yay")
+        aur_helper=$(choose_option "Choose an AUR helper" "${AUR_OPTIONS[@]}")
 
-    # Change the 'constant' value to the one user choosed.
-    change_flag_value "AUR_PACKAGE_MANAGER" "$aur_helper" "$AUR_SCRIPT_DIRECTORY/../../core/constants.sh"
+        # Change the 'constant' value to the one user chose.
+        change_flag_value "AUR_PACKAGE_MANAGER" "$aur_helper"
+    fi
 
     # Constant variables for installing and configuring the AUR helper.
     AUR_DIRECTORY="$aur_helper"
@@ -79,7 +80,6 @@ else
     makepkg -si --noconfirm
     cd ..
     rm -rf $AUR_DIRECTORY
-fi
 
 # Configure the AUR helper.
 case $aur_helper in

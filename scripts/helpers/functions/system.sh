@@ -6,6 +6,7 @@ SYSTEM_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import log functions and flags.
 source "$SYSTEM_SCRIPT_DIRECTORY/logs.sh"
 source "$SYSTEM_SCRIPT_DIRECTORY/strings.sh"
+source "$SYSTEM_SCRIPT_DIRECTORY/state.sh"
 source "$SYSTEM_SCRIPT_DIRECTORY/../../core/flags.sh"
 
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
@@ -141,9 +142,6 @@ reboot_system() {
     # Defaults to 0 (true) to log the warning.
     local log_rerun_warning="${3:-0}"
 
-    # Constant variable for the flags script path.
-    FLAGS_PATH="$SYSTEM_SCRIPT_DIRECTORY/../../core/flags.sh"
-
     # Check the value is not equal to 0 (true) and reboot.
     if [ "$flag" -ne 0 ]; then
         log_error "System requires a reboot to apply changes!"
@@ -154,7 +152,7 @@ reboot_system() {
         sleep 10
 
         # Change the value of the flag to 0 (true), before rebooting.
-        change_flag_value "$flag_name" 0 "$FLAGS_PATH"
+        change_flag_value "$flag_name" 0
 
         # Reboot the system immediately.
         exec sudo reboot
@@ -165,10 +163,6 @@ reboot_system() {
 # Usage:
 #   reset_system_to_clean_state
 reset_system_to_clean_state() {
-
-    # Constant variable for the flags script path.
-    FLAGS_PATH="$SYSTEM_SCRIPT_DIRECTORY/../../core/flags.sh"
-    CONSTANTS_PATH="$SYSTEM_SCRIPT_DIRECTORY/../../core/constants.sh"
 
     # URL of a fresh Arch Linux installation package list.
     PACKAGE_LIST_URL="https://geo.mirror.pkgbuild.com/iso/latest/arch/pkglist.x86_64.txt"
@@ -283,14 +277,14 @@ reset_system_to_clean_state() {
     fi
 
     # Change the value of the flag to 0 (true).
-    change_flag_value "$SYSTEM_RESET" 0 "$FLAGS_PATH"
+    change_flag_value "$SYSTEM_RESET" 0
 
     # Reset core/constants and core/flags files too.
-    change_flag_value "$INSTALLATION_TYPE" "server" "$CONSTANTS_PATH"
-    change_flag_value "$AUR_PACKAGE_MANAGER" "" "$CONSTANTS_PATH"
-    change_flag_value "$ESSENTIALS_COMPLETED" 1 "$FLAGS_PATH"
-    change_flag_value "$SECURITY_COMPLETED" 1 "$FLAGS_PATH"
-    change_flag_value "$PRIVACY_COMPLETED" 1 "$FLAGS_PATH"
+    change_flag_value "$INSTALLATION_TYPE" "server"
+    change_flag_value "$AUR_PACKAGE_MANAGER" ""
+    change_flag_value "$ESSENTIALS_COMPLETED" 1
+    change_flag_value "$SECURITY_COMPLETED" 1
+    change_flag_value "$PRIVACY_COMPLETED" 1
 
     log_success "System reset to a clean Arch Linux installation state!"
 }
