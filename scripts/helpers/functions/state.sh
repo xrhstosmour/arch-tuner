@@ -12,6 +12,12 @@ change_flag_value() {
     local flag="$1"
     local value="$2"
 
+    # Guard against values that could corrupt the state file.
+    if [[ $value == *\"* || $value == *\\* || $value == *$'\n'* ]]; then
+        echo "invalid value" >&2
+        return 1
+    fi
+
     # Ensure the state directory exists.
     mkdir -p "$STATE_DIRECTORY"
 
@@ -20,7 +26,7 @@ change_flag_value() {
     temp_file=$(mktemp "$STATE_DIRECTORY/.state.XXXXXX")
 
     # Drop any existing line for this flag, then append the new value.
-    grep -v "^$flag=" "$STATE_FILE" 2>/dev/null > "$temp_file" || true
+    grep -v -F -- "$flag=" "$STATE_FILE" 2>/dev/null > "$temp_file" || true
     if [[ $value =~ ^[0-9]+$ ]]; then
         printf '%s=%s\n' "$flag" "$value" >> "$temp_file"
     else

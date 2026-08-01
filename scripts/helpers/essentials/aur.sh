@@ -22,7 +22,7 @@ source "$AUR_SCRIPT_DIRECTORY/../functions/ui.sh"
         change_flag_value "AUR_PACKAGE_MANAGER" "paru"
     elif command -v yay &>/dev/null; then
 
-        # Change the 'constant' value to "paru".
+        # Change the 'constant' value to "yay".
         aur_helper="yay"
         change_flag_value "AUR_PACKAGE_MANAGER" "yay"
     else
@@ -31,8 +31,9 @@ source "$AUR_SCRIPT_DIRECTORY/../functions/ui.sh"
         declare -a AUR_OPTIONS=("paru" "yay")
         aur_helper=$(choose_option "Choose an AUR helper" "${AUR_OPTIONS[@]}")
 
-        # Change the 'constant' value to the one user choosed.
+        # Change the 'constant' value to the one user chose.
         change_flag_value "AUR_PACKAGE_MANAGER" "$aur_helper"
+    fi
 
     # Constant variables for installing and configuring the AUR helper.
     AUR_DIRECTORY="$aur_helper"
@@ -79,7 +80,6 @@ source "$AUR_SCRIPT_DIRECTORY/../functions/ui.sh"
     makepkg -si --noconfirm
     cd ..
     rm -rf $AUR_DIRECTORY
-fi
 
 # Configure the AUR helper.
 case $aur_helper in

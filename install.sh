@@ -27,10 +27,6 @@ source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/ui.sh"
 # shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh"
 # shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
-source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/strings.sh"
-# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
-source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/state.sh"
-# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source_state
 # shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$FLAGS_SCRIPT_PATH"
