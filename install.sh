@@ -9,8 +9,7 @@ set -e
 # Constant variable of the scripts' working directory to use for relative paths.
 INSTALL_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-# Constant variable for the flags script path.
-FLAGS_SCRIPT_PATH="$INSTALL_SCRIPT_DIRECTORY/scripts/core/flags.sh"
+# Constant variable for the constants script path.
 CONSTANTS_SCRIPT_PATH="$INSTALL_SCRIPT_DIRECTORY/scripts/core/constants.sh"
 
 declare -a ORDERED_SCRIPTS=("essentials" "privacy" "security")
@@ -27,11 +26,9 @@ source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/ui.sh"
 # shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$INSTALL_SCRIPT_DIRECTORY/scripts/helpers/functions/system.sh"
 # shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
-source_state
-# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
-source "$FLAGS_SCRIPT_PATH"
-# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
 source "$CONSTANTS_SCRIPT_PATH"
+# shellcheck disable=SC1090 # Intended pattern for sourcing core configuration files.
+source_state
 
 # Ask user for backup confirmation before proceeding.
 if [[ "$INITIAL_SETUP" -eq 0 ]]; then
