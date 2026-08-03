@@ -20,7 +20,53 @@ This toolkit is prepared to integrate with a future containers repository that w
 
 ## Installation
 
-See the project documentation for detailed installation instructions.
+To use the toolkit:
+
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd arch-tuner
+   ```
+
+2. Review the scripts and configuration files as needed.
+
+3. Run the installer:
+   ```bash
+   sudo ./install.sh
+   ```
+   or without sudo if you have appropriate permissions:
+   ```bash
+   ./install.sh
+   ```
+
+The installer runs in three phases:
+
+- **Essentials**: Core system setup including package manager configuration, essential packages, and basic system utilities
+- **Privacy**: System hardening for privacy, including secure networking configurations and privacy-enhancing tools
+- **Security**: Comprehensive security hardening including firewall, antivirus, DNSSEC, and system hardening measures
+
+The installer asks for confirmation before each phase and reboots between phases. Runtime state is stored in `/var/lib/arch-tuner/state.sh` and can be overridden with `ARCH_TUNER_STATE_DIRECTORY` environment variable for testing purposes.
+
+## Hardening Checklist
+
+The toolkit implements the following hardening measures:
+
+- Pacman signature verification
+- Non-root administrative user creation
+- SSH key-only authentication on port 2222
+- Sudoers hardening
+- Fail2ban installation and configuration
+- Kernel sysctl hardening
+- Systemd service hardening and journald log retention
+- AIDE integrity monitoring
+- Audit daemon configuration
+- Automatic daily system updates
+- Docker engine hardening (user namespaces, no new privileges, ICC off)
+- Firewall denying incoming connections except SSH 2222
+- DNS over TLS
+- Mount points hardening
+- SUID/SGID stripping with pacman hook
+- Antivirus with daily scan timer
 
 ## Contributing
 
