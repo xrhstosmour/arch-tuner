@@ -1,0 +1,10 @@
+[Unit]
+Description=Trigger Arch Tuner Antivirus Scan
+Wants=arch-tuner-antivirus-scan.service
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target

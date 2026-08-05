@@ -38,9 +38,28 @@ else
     dns_changes_made=0
 fi
 
+# Check if 'DNSOverTLS' line already exists in the 'resolved.conf' file.
+if grep -q '^DNSOverTLS=' "$RESOLVED_CONFIGURATION"; then
+
+    # Check if 'DNSOverTLS' is set to 'yes', if not, replace it with 'DNSOverTLS=yes'
+    if ! grep -q '^DNSOverTLS=yes' "$RESOLVED_CONFIGURATION"; then
+        sudo sed -i 's/^DNSOverTLS=.*/DNSOverTLS=yes/' "$RESOLVED_CONFIGURATION"
+
+        # Set the dns_changes_made flag to 0 (true).
+        dns_changes_made=0
+    fi
+else
+
+    # If the 'DNSOverTLS' line doesn't exist, add 'DNSOverTLS=yes' to the end of the file
+    echo 'DNSOverTLS=yes' | sudo tee -a "$RESOLVED_CONFIGURATION" >/dev/null
+
+    # Set the dns_changes_made flag to 0 (true).
+    dns_changes_made=0
+fi
+
 # If a change was made, restart the 'systemd-resolved' service to apply the changes
 if [ $dns_changes_made -eq 0 ]; then
-    log_info "Enabling DNSSEC..."
+    log_info "Enabling DNSSEC and DNSOverTLS..."
     stop_service "systemd-resolved" "Stopping DNS service..."
     start_service "systemd-resolved" "Starting DNS service..."
 fi

@@ -47,8 +47,12 @@ elif [[ $cpu_manufacturer == *"$AMD_MANUFACTURER"* ]]; then
     fi
 fi
 
-# Update grub to apply CPU updates at boot.
+# Update grub to apply CPU updates at boot, only if GRUB is the bootloader in use.
 if [ $cpu_update_installed -eq 0 ]; then
-    log_info "Applying CPU updates..."
-    sudo grub-mkconfig -o /boot/grub/grub.cfg
+    if command -v grub-mkconfig &>/dev/null && [ -d /boot/grub ]; then
+        log_info "Applying CPU updates..."
+        sudo grub-mkconfig -o /boot/grub/grub.cfg
+    else
+        log_info "GRUB not detected, skipping bootloader regeneration for CPU updates."
+    fi
 fi

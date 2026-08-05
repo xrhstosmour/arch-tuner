@@ -2,10 +2,6 @@ fzf
 helix
 bottom
 bat
-exa
-trashy
-xcp
-eva
 zoxide
 fd
 jless
