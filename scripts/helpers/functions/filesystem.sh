@@ -29,6 +29,7 @@ append_line_to_file() {
 
         # Return true to indicate that a change was made.
         echo "true"
+        return
     fi
 
     # Return false to indicate that no change was made.
