@@ -42,24 +42,24 @@ declare -a EXCLUDE_PATHS=(
 )
 
 # Start with the basic command.
-FIND_COMMAND="sudo find /"
+FIND_COMMAND=(sudo find /)
 
 # Then we add each excluded path.
 for path in "${EXCLUDE_PATHS[@]}"; do
 
     # If this is not the last path in EXCLUDE_PATHS add the '-o' otherwise omit it.
     if [[ "$path" != "${EXCLUDE_PATHS[-1]}" ]]; then
-        FIND_COMMAND="${FIND_COMMAND} -path $path -prune -o"
+        FIND_COMMAND+=(-path "$path" -prune -o)
     else
-        FIND_COMMAND="${FIND_COMMAND} -path $path -prune"
+        FIND_COMMAND+=(-path "$path" -prune)
     fi
 done
 
 # Finally, we add the part that selects the files of interest.
-FIND_COMMAND="${FIND_COMMAND} -o -type f \( -perm -4000 -o -perm -2000 \) -print"
+FIND_COMMAND+=(-o -type f "(" -perm -4000 -o -perm -2000 ")" -print)
 
 # Execute the final command.
-suid_sgid_binary_files=$(eval $FIND_COMMAND 2>&1 | grep -v "File system loop detected" || true)
+suid_sgid_binary_files=$("${FIND_COMMAND[@]}" 2>&1 | grep -v "File system loop detected" || true)
 if [[ -z "$suid_sgid_binary_files" ]]; then
     log_info "No SUID/SGID binaries found!"
     exit 0
