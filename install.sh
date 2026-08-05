@@ -16,9 +16,9 @@ declare -a ORDERED_SCRIPTS=("essentials" "privacy" "security")
 
 # Scripts to run containing their completion flag, initial setup value and optional message, splitted by "|".
 declare -A SCRIPTS=(
-    ["essentials"]="ESSENTIALS_COMPLETED|1"
-    ["privacy"]="PRIVACY_COMPLETED|1"
-    ["security"]="SECURITY_COMPLETED|1"
+    ["essentials"]="ESSENTIALS_COMPLETED|1|Would you like to run the essentials setup script?"
+    ["privacy"]="PRIVACY_COMPLETED|1|Would you like to run the privacy setup script?"
+    ["security"]="SECURITY_COMPLETED|1|Would you like to run the security setup script?"
 )
 
 # Import functions and flags.
