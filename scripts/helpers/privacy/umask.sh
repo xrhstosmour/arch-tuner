@@ -27,27 +27,27 @@ for file in "${UMASK_FILES[@]}"; do
 
         # If the file contains an umask setting that doesn't match the desired value, change it.
         # If there's no umask setting and the file isn't /etc/login.defs, add it.
-        if grep -q "^umask" $file; then
-            if ! grep -q "^umask $UMASK_VALUE" $file; then
+        if grep -q "^umask" "$file"; then
+            if ! grep -q "^umask $UMASK_VALUE" "$file"; then
                 log_info "Setting permissions on file $file..."
-                sudo sed -i "s/^umask.*/umask $UMASK_VALUE/" $file
+                sudo sed -i "s/^umask.*/umask $UMASK_VALUE/" "$file"
             fi
         elif [ "$file" != "$LOGIN_FILE" ]; then
             log_info "Adding permissions on file $file..."
-            echo "umask $UMASK_VALUE" | sudo tee -a $file >/dev/null
+            echo "umask $UMASK_VALUE" | sudo tee -a "$file" >/dev/null
         fi
 
         # If the file is /etc/login.defs and contains a UMASK setting that doesn't match the desired value, change it.
         # If there's no UMASK setting, add it.
         if [ "$file" == "$LOGIN_FILE" ]; then
-            if grep -q "^UMASK" $file; then
-                if ! grep -q "^UMASK $UMASK_VALUE" $file; then
+            if grep -q "^UMASK" "$file"; then
+                if ! grep -q "^UMASK $UMASK_VALUE" "$file"; then
                     log_info "Setting permissions on file $file..."
-                    sudo sed -i "s/^UMASK.*/UMASK $UMASK_VALUE/" $file
+                    sudo sed -i "s/^UMASK.*/UMASK $UMASK_VALUE/" "$file"
                 fi
             else
                 log_info "Adding permissions on file $file..."
-                echo "UMASK $UMASK_VALUE" | sudo tee -a $file >/dev/null
+                echo "UMASK $UMASK_VALUE" | sudo tee -a "$file" >/dev/null
             fi
         fi
     fi
