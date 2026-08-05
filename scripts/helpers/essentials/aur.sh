@@ -75,11 +75,11 @@ source "$AUR_SCRIPT_DIRECTORY/../functions/ui.sh"
 
     # Proceed with installation.
     log_info "Installing $aur_helper AUR helper..."
-    git clone $AUR_GIT_URL
-    cd $AUR_DIRECTORY
+    git clone "$AUR_GIT_URL"
+    cd "$AUR_DIRECTORY"
     makepkg -si --noconfirm
     cd ..
-    rm -rf $AUR_DIRECTORY
+    rm -rf "$AUR_DIRECTORY"
 
 # Configure the AUR helper.
 case $aur_helper in
