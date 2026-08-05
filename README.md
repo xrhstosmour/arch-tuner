@@ -2,6 +2,8 @@
 
 An Arch Linux VPS hardening toolkit for securing and hardening your Arch-based Virtual Private Server. Originally evolved from an Arch desktop post-install toolkit, this project is now focused exclusively on server hardening.
 
+See [`AGENTS.md`](AGENTS.md) if you are an agent.
+
 ## Why Server-Only
 
 This toolkit is purpose-built for Arch VPS deployments, focusing on essential security hardening, privacy protection, and system essentials. Features that were relevant for desktop systems have been removed to keep the toolkit lean and secure for server environments.
@@ -72,9 +74,15 @@ The toolkit implements the following hardening measures:
 - SUID/SGID stripping with pacman hook
 - Antivirus with daily scan timer
 
+## Roadmap
+
+See [`documents/roadmap.md`](documents/roadmap.md) for what is merged, what is in review, and
+what remains.
+
 ## Contributing
 
-Contributions are welcome! Please read the contributing guidelines.
+Contributions are welcome. See [`AGENTS.md`](AGENTS.md) for repository conventions and the merge
+workflow.
 
 ## License
 
