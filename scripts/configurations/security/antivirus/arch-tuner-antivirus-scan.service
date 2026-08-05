@@ -1,0 +1,8 @@
+[Unit]
+Description=Arch Tuner Antivirus Daily Scan
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/clamscan -r / --exclude-dir=/proc --exclude-dir=/sys --exclude-dir=/dev --exclude-dir=/run --exclude-dir=/tmp --exclude-dir=/var/log --exclude-dir=/var/lib/clamav --exclude-dir=/qrntn
+User=root

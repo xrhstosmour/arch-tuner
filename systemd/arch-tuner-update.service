@@ -1,0 +1,6 @@
+[Unit]
+Description=Arch Tuner automatic system upgrade
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/pacman -Syu --noconfirm

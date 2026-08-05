@@ -12,6 +12,9 @@ IDS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import functions.
 source "$IDS_SCRIPT_DIRECTORY/../functions/logs.sh"
 
+# Initialize a flag to track whether a change was made.
+ids_changes_made=1
+
 # UID constant configuration variables.
 declare -a EXCLUDE_PATHS=(
     "/sys"
@@ -81,3 +84,26 @@ for binary_file in $suid_sgid_binary_files; do
         fi
     fi
 done
+
+# Deploy the pacman hook to automatically strip SUID/SGID after updates.
+HOOK_DIRECTORY="$IDS_SCRIPT_DIRECTORY/../../configurations/security/ids"
+HOOK_SOURCE="$HOOK_DIRECTORY/99-strip-suid-sgid.hook"
+HOOK_TARGET="/etc/pacman.d/hooks/99-strip-suid-sgid.hook"
+
+# Ensure the target hook directory exists.
+if [ ! -d "/etc/pacman.d/hooks" ]; then
+    sudo mkdir -p "/etc/pacman.d/hooks"
+fi
+
+# Copy the hook file if different from the target.
+sudo cp "$HOOK_SOURCE" "$HOOK_TARGET"
+are_files_the_same=$(compare_files "$HOOK_TARGET" "$HOOK_SOURCE")
+if [ "$are_files_the_same" = "false" ]; then
+    ids_changes_made=0
+fi
+
+# If a change was made, reload systemd to ensure the hook is loaded.
+if [ $ids_changes_made -eq 0 ]; then
+    log_info "Deploying SUID/SGID stripping pacman hook."
+    # Note: pacman hooks are loaded automatically at runtime, no need for daemon-reload
+fi
