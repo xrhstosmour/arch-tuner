@@ -21,9 +21,6 @@ DOCKER_LOGS="/var/lib/docker/containers/*/*-json.log"
 DOCKER_DAEMON_CONFIGURATION="/etc/docker/daemon.json"
 DOCKER_DAEMON_CONFIGURATION_TO_PASS="$DOCKER_SCRIPT_DIRECTORY/../../configurations/security/docker/daemon.json"
 
-# Initialize changes made flag.
-docker_changes_made=1
-
 # Install Docker packages.
 log_info "Installing Docker packages..."
 install_packages "$DOCKER_SCRIPT_DIRECTORY/../../packages/security/docker.txt" "$AUR_PACKAGE_MANAGER" "Installing Docker packages..."
@@ -33,7 +30,6 @@ install_packages "$DOCKER_SCRIPT_DIRECTORY/../../packages/security/docker.txt" "
 if ! id dockremap &>/dev/null; then
     log_info "Creating dockremap user for user namespace remapping..."
     sudo useradd -r dockremap
-    docker_changes_made=0
 fi
 
 # Ensure /etc/subuid contains entry for dockremap.
@@ -42,7 +38,6 @@ if ! grep -q "^dockremap:" /etc/subuid; then
     dockremap_uid=$(id -u dockremap)
     log_info "Adding subordinate uid range for dockremap..."
     echo "dockremap:$dockremap_uid:65536" | sudo tee -a /etc/subuid >/dev/null
-    docker_changes_made=0
 fi
 
 # Ensure /etc/subgid contains entry for dockremap.
@@ -51,7 +46,6 @@ if ! grep -q "^dockremap:" /etc/subgid; then
     dockremap_gid=$(id -g dockremap)
     log_info "Adding subordinate gid range for dockremap..."
     echo "dockremap:$dockremap_gid:65536" | sudo tee -a /etc/subgid >/dev/null
-    docker_changes_made=0
 fi
 
 # Stop Docker service.
@@ -82,13 +76,10 @@ if [ "$are_docker_daemon_files_the_same" = "false" ]; then
     log_info "Configuring Docker..."
     sudo mkdir -p "$DOCKER_DIRECTORY"
     sudo cp -f "$DOCKER_DAEMON_CONFIGURATION_TO_PASS" "$DOCKER_DAEMON_CONFIGURATION"
-    docker_changes_made=0
 fi
 
-# Only restart Docker if changes were made.
-if [ "$docker_changes_made" -eq 0 ]; then
-    # Start Docker service.
-    start_service "docker"
-    # Enable Docker service.
-    enable_service "docker"
-fi
+# Start Docker service.
+start_service "docker"
+
+# Enable Docker service.
+enable_service "docker"
