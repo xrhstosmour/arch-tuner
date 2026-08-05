@@ -174,14 +174,20 @@ reset_system_to_clean_state() {
     # Create a temporary file to store the package list.
     TEMPORARY_PACKAGE_LIST=$(mktemp)
 
-    # Download the package list.
-    if ! curl -s $PACKAGE_LIST_URL -o $TEMPORARY_PACKAGE_LIST; then
+    # Download the package list. --fail surfaces HTTP errors instead of writing an empty/error page.
+    if ! curl --fail -sS "$PACKAGE_LIST_URL" -o "$TEMPORARY_PACKAGE_LIST"; then
         log_error "Failed to download the fresh Arch Linux installation package list!"
         return 1
     fi
 
+    # Reject an empty or truncated download instead of silently proceeding with no packages.
+    if [ ! -s "$TEMPORARY_PACKAGE_LIST" ]; then
+        log_error "Downloaded package list is empty!"
+        return 1
+    fi
+
     # Extract package names from the list.
-    FRESH_INSTALLTION_PACKAGES=$(awk '{print $1}' $TEMPORARY_PACKAGE_LIST)
+    FRESH_INSTALLATION_PACKAGES=$(awk '{print $1}' "$TEMPORARY_PACKAGE_LIST")
 
     # TODO: Remove packages used in pacman hooks.
 
@@ -250,7 +256,7 @@ reset_system_to_clean_state() {
     done
 
     log_info "Excluding fresh installation packages from removal..."
-    for package in $FRESH_INSTALLTION_PACKAGES; do
+    for package in $FRESH_INSTALLATION_PACKAGES; do
         if pacman -Q $package &> /dev/null; then
             sudo $ARCH_PACKAGE_MANAGER -D --asexplicit $package
         fi
@@ -264,7 +270,7 @@ reset_system_to_clean_state() {
     fi
 
     # Delete the temporary package list file.
-    rm $TEMPORARY_PACKAGE_LIST
+    rm "$TEMPORARY_PACKAGE_LIST"
 
     # Change the default shell to Bash.
     log_info "Changing the default shell to Bash..."
