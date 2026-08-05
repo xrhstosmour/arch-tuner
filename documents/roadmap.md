@@ -11,9 +11,6 @@ integrity monitoring, automatic updates, firewall and DNS refinement, Docker eng
 and essentials and usbguard trimming are merged to `main`. Every security helper is wired into
 `security.sh`, and the hardening checklist in `README.md` reflects what actually runs.
 
-A follow-up pull request should fold `docs/implementation-plan.md` into this file and remove the
-old `docs/` directory, since `documents/roadmap.md` is now the living plan.
-
 ## Remaining
 
 - Encrypted swap, tracked as a `TODO` in `privacy.sh`.
