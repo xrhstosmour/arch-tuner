@@ -250,15 +250,15 @@ reset_system_to_clean_state() {
     # Mark essential packages as explicitly installed.
     log_info "Excluding essential packages from removal..."
     for package in "${ESSENTIAL_PACKAGES[@]}"; do
-        if pacman -Q $package &> /dev/null; then
-            sudo $ARCH_PACKAGE_MANAGER -D --asexplicit $package
+        if pacman -Q "$package" &> /dev/null; then
+            sudo $ARCH_PACKAGE_MANAGER -D --asexplicit "$package"
         fi
     done
 
     log_info "Excluding fresh installation packages from removal..."
     for package in $FRESH_INSTALLATION_PACKAGES; do
-        if pacman -Q $package &> /dev/null; then
-            sudo $ARCH_PACKAGE_MANAGER -D --asexplicit $package
+        if pacman -Q "$package" &> /dev/null; then
+            sudo $ARCH_PACKAGE_MANAGER -D --asexplicit "$package"
         fi
     done
 
