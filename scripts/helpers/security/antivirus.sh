@@ -15,6 +15,9 @@ source "$ANTIVIRUS_SCRIPT_DIRECTORY/../functions/services.sh"
 source "$ANTIVIRUS_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 source "$ANTIVIRUS_SCRIPT_DIRECTORY/../functions/system.sh"
 
+# Initialize a flag to track whether a change was made.
+antivirus_changes_made=1
+
 # Constant variable containing the ClamAV database directory.
 CLAMAV_DATABASE_DIRECTORY="/var/lib/clamav"
 
@@ -153,4 +156,38 @@ is_clamonacc_running=$(is_process_running "clamonacc")
 if [ "$is_clamonacc_running" = "false" ]; then
     log_info "Enabling and starting antivirus real-time scanning in the background..."
     sudo clamonacc --move="$REAL_TIME_SCANNING_QUARANTINE_FOLDER"
+fi
+
+# Deploy daily antivirus scan systemd timer.
+SERVICE_DIRECTORY="$ANTIVIRUS_SCRIPT_DIRECTORY/../../configurations/security/antivirus"
+SERVICE_SOURCE="$SERVICE_DIRECTORY/arch-tuner-antivirus-scan.service"
+SERVICE_TARGET="/etc/systemd/system/arch-tuner-antivirus-scan.service"
+TIMER_SOURCE="$SERVICE_DIRECTORY/arch-tuner-antivirus-scan.timer"
+TIMER_TARGET="/etc/systemd/system/arch-tuner-antivirus-scan.timer"
+
+# Ensure the systemd system directory exists.
+if [ ! -d "/etc/systemd/system" ]; then
+    sudo mkdir -p "/etc/systemd/system"
+fi
+
+# Copy the service file if different from the target.
+sudo cp "$SERVICE_SOURCE" "$SERVICE_TARGET"
+are_service_files_the_same=$(compare_files "$SERVICE_TARGET" "$SERVICE_SOURCE")
+if [ "$are_service_files_the_same" = "false" ]; then
+    antivirus_changes_made=0
+fi
+
+# Copy the timer file if different from the target.
+sudo cp "$TIMER_SOURCE" "$TIMER_TARGET"
+are_timer_files_the_same=$(compare_files "$TIMER_TARGET" "$TIMER_SOURCE")
+if [ "$are_timer_files_the_same" = "false" ]; then
+    antivirus_changes_made=0
+fi
+
+# If a change was made, reload systemd and enable/start the timer.
+if [ $antivirus_changes_made -eq 0 ]; then
+    log_info "Deploying antivirus scan systemd timer."
+    sudo systemctl daemon-reload
+    enable_service "arch-tuner-antivirus-scan.timer" "Enabling antivirus scan timer..."
+    start_service "arch-tuner-antivirus-scan.timer" "Starting antivirus scan timer..."
 fi

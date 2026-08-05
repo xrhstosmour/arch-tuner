@@ -21,6 +21,8 @@ MOUNT_NO_EXEC_OPTION="noexec"
 # Define mount points with their subdirectories (/*) and their associated options.
 declare -A MOUNT_OPTIONS=(
     ["/boot"]="$MOUNT_DEFAULTS_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION,$MOUNT_NO_DEV_OPTION"
+    ["/tmp"]="$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION"
+    ["/var/tmp"]="$MOUNT_NO_DEV_OPTION,$MOUNT_NO_SUID_OPTION,$MOUNT_NO_EXEC_OPTION"
 )
 
 # Iterate through each mount point and apply the associated options accordingly.
