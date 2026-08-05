@@ -13,8 +13,17 @@ USER_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$USER_SCRIPT_DIRECTORY/../functions/logs.sh"
 source "$USER_SCRIPT_DIRECTORY/../functions/ui.sh"
 
-# Prompt for the administrative username.
-username=$(prompt_user_input "Enter username for administrative user" "admin")
+# Prompt for the administrative username, requiring a valid Linux username as defense-in-depth
+# before it reaches `useradd`/`passwd`.
+while :; do
+    username=$(prompt_user_input "Enter username for administrative user" "admin")
+
+    if [[ "$username" =~ ^[a-z_][a-z0-9_-]{0,31}$ ]]; then
+        break
+    fi
+
+    log_error "Invalid username: '$username'. Use up to 32 lowercase letters, digits, underscores, or hyphens, starting with a letter or underscore."
+done
 
 # Check if the user already exists.
 if id "$username" &>/dev/null; then
