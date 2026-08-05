@@ -19,26 +19,24 @@ are_packages_installed() {
     local package_manager="$2"
     local package_not_found=0
 
-    # Initialize the query command.
-    local query_command=""
-
-    # Determine the installation command based on the chosen package manager.
-    case "$package_manager" in
-    "$AUR_PACKAGE_MANAGER")
-        query_command="$AUR_PACKAGE_MANAGER -Qq"
-        ;;
-    "$ARCH_PACKAGE_MANAGER")
-        query_command="$ARCH_PACKAGE_MANAGER -Qq"
-        ;;
-    "")
-        # If no package manager is specified, we'll use `command -V`.
-        query_command="command -v"
-        ;;
-    *)
-        log_error "Unsupported package manager: '$package_manager'"
-        exit 1
-        ;;
-    esac
+    # For a real package manager, list all installed packages once instead of
+    # shelling out per package below. If no package manager is specified,
+    # each package is checked individually via `command -v` below instead.
+    local -A installed_packages_set=()
+    if [ -n "$package_manager" ]; then
+        case "$package_manager" in
+        "$AUR_PACKAGE_MANAGER" | "$ARCH_PACKAGE_MANAGER")
+            local installed_package
+            while IFS= read -r installed_package; do
+                installed_packages_set["$installed_package"]=1
+            done < <("$package_manager" -Qq)
+            ;;
+        *)
+            log_error "Unsupported package manager: '$package_manager'"
+            exit 1
+            ;;
+        esac
+    fi
 
     # Check if the argument is a file.
     if [ -f "$input" ]; then
@@ -59,7 +57,11 @@ are_packages_installed() {
         fi
 
         # Check if the package is already installed.
-        if ! $query_command "$package" >/dev/null 2>&1; then
+        if [ -n "$package_manager" ]; then
+            if [[ -z "${installed_packages_set[$package]+x}" ]]; then
+                package_not_found=1
+            fi
+        elif ! command -v "$package" >/dev/null 2>&1; then
             package_not_found=1
         fi
     done
