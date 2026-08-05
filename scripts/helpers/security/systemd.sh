@@ -15,7 +15,8 @@ source "$SYSTEMD_SCRIPT_DIRECTORY/../functions/services.sh"
 source "$SYSTEMD_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 
 # Constant variables for the systemd configuration paths.
-SYSTEMD_SERVICE_NAMES=("sshd" "chronyd" "docker")
+# Docker is excluded, its namespace/kernel-module needs conflict with this drop-in; it is hardened via daemon.json instead.
+SYSTEMD_SERVICE_NAMES=("sshd" "chronyd")
 SYSTEMD_CONFIGURATION_TO_PASS="$SYSTEMD_SCRIPT_DIRECTORY/../../configurations/security/systemd/99-hardening"
 
 # Flag to track if any changes were made. 1 = no change, 0 = change made.
