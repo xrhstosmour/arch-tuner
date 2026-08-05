@@ -112,6 +112,7 @@ find scripts -name '*.sh' -type f -exec bash -n {} \;
 bash -n install.sh
 markdownlint README.md --config .markdownlint.json
 grep -rn "keyboard\|kloak" scripts/ || true
+bats test/
 ```
 
 ## Security
