@@ -101,7 +101,7 @@ ask_user_before_execution() {
                     sh "$script_or_function_or_command"
                 else
                     # It's a plain command, so execute it.
-                    eval "$script_or_function_or_command ${arguments[*]}"
+                    "$script_or_function_or_command" "${arguments[@]}"
                 fi
             else
                 log_error "Invalid script or function or command: $script_or_function_or_command"
