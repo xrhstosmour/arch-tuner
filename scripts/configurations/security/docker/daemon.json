@@ -1,4 +1,8 @@
 {
+    "userns-remap": "default",
+    "live-restore": true,
+    "no-new-privileges": true,
+    "icc": false,
     "log-driver": "json-file",
     "log-opts": {
         "max-size": "10m",
