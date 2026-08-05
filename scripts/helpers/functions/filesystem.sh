@@ -69,7 +69,9 @@ update_mount_options() {
         # Update the fstab entry if necessary.
         if [[ "$modified_options" != "$current_options" ]]; then
             log_info "Appending options $options to mount point $mount_point..."
-            sudo awk -v mount="$mount_point" -v opts="$modified_options" '\
+            local temp_fstab
+            temp_fstab=$(sudo mktemp /etc/fstab.tmp.XXXXXX)
+            if sudo awk -v mount="$mount_point" -v opts="$modified_options" '\
             {\
                 # If the line contains the target mount point and is not commented\
                 if ($2 == mount && $1 !~ /^#/) {\
@@ -79,7 +81,13 @@ update_mount_options() {
                 # Print each line (modified or not)\
                 print\
             }\
-            ' /etc/fstab | sudo tee /tmp/fstab.tmp >/dev/null && sudo mv /tmp/fstab.tmp /etc/fstab
+            ' /etc/fstab | sudo tee "$temp_fstab" >/dev/null; then
+                sudo chmod 644 "$temp_fstab"
+                sudo chown root:root "$temp_fstab"
+                sudo mv "$temp_fstab" /etc/fstab
+            else
+                sudo rm -f "$temp_fstab"
+            fi
 
             # Return true to indicate that a change was made.
             echo "true"
