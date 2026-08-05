@@ -289,6 +289,52 @@ Runtime flags are managed through `/var/lib/arch-tuner/state.sh` (PR 2). The sys
 - CI validation passes all checks
 - System can be installed and hardened end-to-end
 
+### PR 14 `fix/fail2ban-ssh-port`
+
+**Files to create/modify:**
+- `scripts/configurations/security/fail2ban/jail.local` (modified)
+
+**Changes:**
+- Add `port = 2222` under `[sshd]` so fail2ban's ban action targets the hardened SSH port instead of the default port 22
+
+**Acceptance Criteria:**
+- Fail2ban bans actually block traffic on port 2222
+
+### PR 15 `security/cpu-microcode-bootloader-guard`
+
+**Files to create/modify:**
+- `scripts/helpers/security/cpu.sh` (modified)
+
+**Changes:**
+- Skip `grub-mkconfig` when GRUB is not the bootloader in use (check `command -v grub-mkconfig` and `/boot/grub` before calling), logging a skip message instead of aborting the security phase on non-GRUB VPS images
+
+**Acceptance Criteria:**
+- CPU microcode installation no longer aborts the security phase on hosts without GRUB
+
+### PR 16 `chore/essentials-server-trim`
+
+**Files to create/modify:**
+- `scripts/utilities/essentials.sh` (modified)
+- `scripts/helpers/essentials/information.sh`, `prompt.sh`, `fonts.sh` (removed)
+- `scripts/configurations/essentials/information/`, `prompt/` (removed)
+- `scripts/packages/essentials/fonts.txt` (removed)
+- `scripts/packages/essentials/terminal.txt` (modified)
+- `scripts/configurations/essentials/shell/configuration.fish`, `abbreviations.fish` (modified)
+- `scripts/configurations/essentials/shell/functions/copy.fish`, `trashy.fish` (removed)
+- `scripts/helpers/security/usb.sh` (removed)
+- `scripts/configurations/security/usb/` (removed)
+
+**Changes:**
+- Remove desktop-oriented personalization with no purpose on a headless VPS: fastfetch banner, starship prompt, nerd fonts
+- Trim `terminal.txt` to drop purely decorative desktop-workflow-analog tools (`exa`, `eva`, `trashy`, `xcp`) and their now-dead shell abbreviations/functions
+- Remove `usbguard` (physical USB port protection is a no-op on a VPS with no physical USB bus)
+- Must merge after PR 13 (`chore/wire-up-and-docs`), which removes the `usb.sh` call site from `security.sh`
+
+**Acceptance Criteria:**
+- Essentials phase installs no display-dependent or physical-USB-dependent tooling
+- No dangling shell abbreviation or function references a removed package
+- System can still be installed and hardened end-to-end
+
 ## Verification command block
 
 All verification commands (exact commands, must exit 0):

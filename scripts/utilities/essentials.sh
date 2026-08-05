@@ -31,17 +31,8 @@ sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/aur.sh
 # Install and configure mirror list manager.
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/mirrors.sh
 
-# Install and configure system information tool.
-sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/information.sh
-
 # Install terminal tools.
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/terminal.sh
-
-# Install and configure prompt.
-sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/prompt.sh
-
-# Install fonts.
-sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/fonts.sh
 
 # Install and configure shell.
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/shell.sh
