@@ -9,6 +9,20 @@ source "$PACKAGES_SCRIPT_DIRECTORY/strings.sh"
 
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 
+# Function to populate an associative array (passed by name) with every package
+# currently installed via the given package manager, queried once.
+# populate_installed_packages_set "package_manager" "array_name"
+populate_installed_packages_set() {
+    local package_manager="$1"
+    local -n installed_packages_set_ref="$2"
+
+    local installed_package
+    while IFS= read -r installed_package; do
+        # shellcheck disable=SC2034 # Reason: nameref, written into the caller's array by name, not read here.
+        installed_packages_set_ref["$installed_package"]=1
+    done < <("$package_manager" -Qq)
+}
+
 # Function to check if all packages are installed.
 # The file should contain one package per line.
 # The variable should contain packages separated by spaces.
@@ -19,26 +33,21 @@ are_packages_installed() {
     local package_manager="$2"
     local package_not_found=0
 
-    # Initialize the query command.
-    local query_command=""
-
-    # Determine the installation command based on the chosen package manager.
-    case "$package_manager" in
-    "$AUR_PACKAGE_MANAGER")
-        query_command="$AUR_PACKAGE_MANAGER -Qq"
-        ;;
-    "$ARCH_PACKAGE_MANAGER")
-        query_command="$ARCH_PACKAGE_MANAGER -Qq"
-        ;;
-    "")
-        # If no package manager is specified, we'll use `command -V`.
-        query_command="command -v"
-        ;;
-    *)
-        log_error "Unsupported package manager: '$package_manager'"
-        exit 1
-        ;;
-    esac
+    # For a real package manager, list all installed packages once instead of
+    # shelling out per package below. If no package manager is specified,
+    # each package is checked individually via `command -v` below instead.
+    local -A installed_packages_set=()
+    if [ -n "$package_manager" ]; then
+        case "$package_manager" in
+        "$AUR_PACKAGE_MANAGER" | "$ARCH_PACKAGE_MANAGER")
+            populate_installed_packages_set "$package_manager" installed_packages_set
+            ;;
+        *)
+            log_error "Unsupported package manager: '$package_manager'"
+            exit 1
+            ;;
+        esac
+    fi
 
     # Check if the argument is a file.
     if [ -f "$input" ]; then
@@ -59,7 +68,11 @@ are_packages_installed() {
         fi
 
         # Check if the package is already installed.
-        if ! $query_command "$package" >/dev/null 2>&1; then
+        if [ -n "$package_manager" ]; then
+            if [[ -z "${installed_packages_set[$package]+x}" ]]; then
+                package_not_found=1
+            fi
+        elif ! command -v "$package" >/dev/null 2>&1; then
             package_not_found=1
         fi
     done
@@ -73,12 +86,13 @@ are_packages_installed() {
 }
 
 # Function to install a package if it is not already installed.
-# process_package "package" "install_command" "message"
+# process_package "package" "install_command" "message" "installed_packages_set_array_name"
 process_package() {
     local package
     package=$(trim_string "$1")
     local install_command="$2"
     local message="${3:-"Installing '$package' package..."}"
+    local -n installed_set_ref="$4"
 
     # Skip if it's a comment or empty.
     [[ "$package" == \#* ]] || [[ -z "$package" ]] && return
@@ -95,8 +109,7 @@ process_package() {
     fi
 
     # Install package if it is not already installed.
-    is_package_installed=$(are_packages_installed "$package" "$manager")
-    if [ "$is_package_installed" = "false" ]; then
+    if [[ -z "${installed_set_ref[$package]+x}" ]]; then
 
         # Print message.
         log_info "$message"
@@ -131,15 +144,19 @@ install_packages() {
         ;;
     esac
 
+    # List installed packages once for this whole batch instead of once per package below.
+    local -A installed_packages_set=()
+    populate_installed_packages_set "$manager" installed_packages_set
+
     # Determine if the input is a file or variable and act accordingly.
     if [[ -r "$input" ]]; then
         while IFS= read -r package; do
-            process_package "$package" "$install_command" "$message"
+            process_package "$package" "$install_command" "$message" installed_packages_set
         done <"$input"
     else
         IFS=' ' read -ra packages_array <<<"$input"
         for package in "${packages_array[@]}"; do
-            process_package "$package" "$install_command" "$message"
+            process_package "$package" "$install_command" "$message" installed_packages_set
         done
     fi
 }
