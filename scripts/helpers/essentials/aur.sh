@@ -74,9 +74,17 @@ source "$AUR_SCRIPT_DIRECTORY/../functions/ui.sh"
     esac
 
     # Proceed with installation.
+    # ? AUR packages are unsigned, user-submitted content, there is no PGP/signature verification
+    # ? available for a PKGBUILD, unlike official repository packages. Bootstrapping the AUR helper
+    # ? itself cannot go through an AUR helper's own review/verification options, since none is
+    # ? installed yet. Only the HTTPS transport to aur.archlinux.org is verified here.
     log_info "Installing $aur_helper AUR helper..."
     git clone "$AUR_GIT_URL"
     cd "$AUR_DIRECTORY"
+    if [ ! -f PKGBUILD ]; then
+        log_error "PKGBUILD not found after cloning $AUR_DIRECTORY, aborting installation!"
+        exit 1
+    fi
     makepkg -si --noconfirm
     cd ..
     rm -rf "$AUR_DIRECTORY"
