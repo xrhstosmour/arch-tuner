@@ -1,0 +1,10 @@
+-w /usr/bin/sudo -p x -k privileged
+-w /usr/bin/sudoedit -p x -k privileged
+-w /usr/bin/su -p x -k privileged
+-w /usr/bin/passwd -p x -k privileged
+-w /usr/bin/gpasswd -p x -k privileged
+-w /usr/bin/chsh -p x -k privileged
+-w /usr/bin/chfn -p x -k privileged
+-w /usr/bin/setfacl -p x -k privileged
+-w /usr/bin/chmod -p wa -k privileged
+-w /usr/bin/chown -p wa -k privileged
