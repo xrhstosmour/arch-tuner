@@ -23,6 +23,7 @@ This toolkit is prepared to integrate with a future containers repository that w
 To use the toolkit:
 
 1. Clone the repository:
+
    ```bash
    git clone <repository-url>
    cd arch-tuner
@@ -31,10 +32,13 @@ To use the toolkit:
 2. Review the scripts and configuration files as needed.
 
 3. Run the installer:
+
    ```bash
    sudo ./install.sh
    ```
+
    or without sudo if you have appropriate permissions:
+
    ```bash
    ./install.sh
    ```
@@ -61,7 +65,7 @@ The toolkit implements the following hardening measures:
 - AIDE integrity monitoring
 - Audit daemon configuration
 - Automatic daily system updates
-- Docker engine hardening (user namespaces, no new privileges, ICC off)
+- Docker engine hardening: user namespaces, no new privileges, ICC off
 - Firewall denying incoming connections except SSH 2222
 - DNS over TLS
 - Mount points hardening
