@@ -166,3 +166,22 @@ choose_option() {
         fi
     done
 }
+
+# Function to prompt user for input with a default value.
+# Usage:
+#   prompt_user_input "prompt_message" "default_value"
+prompt_user_input() {
+    local prompt="$1"
+    local default_value="$2"
+    local input=""
+
+    log_info -n "$prompt [$default_value]: "
+    read -r input
+
+    # Use default value if input is empty.
+    if [ -z "$input" ]; then
+        input="$default_value"
+    fi
+
+    echo "$input"
+}

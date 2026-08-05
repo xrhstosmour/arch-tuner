@@ -1,0 +1,12 @@
+[Trigger]
+Operation = Upgrade
+Operation = Install
+Type = Path
+Target = usr/bin/*
+Target = usr/sbin/*
+Target = usr/lib/*
+
+[Action]
+Description = Re-running SUID/SGID stripping after package update
+When = PostTransaction
+Exec = /bin/sh -c 'find / -path /sys -prune -o -path /proc -prune -o -path /dev -prune -o -path /run -prune -o -path /boot -prune -o -path /usr/bin/sudo -prune -o -path /usr/bin/su -prune -o -path /usr/bin/passwd -prune -o -path /usr/bin/gpasswd -prune -o -path /usr/bin/newgrp -prune -o -path /usr/bin/chsh -prune -o -path /usr/bin/chfn -prune -o -path /usr/libexec/openssh/ssh-keysign -prune -o -path /usr/bin/crontab -prune -o -path /usr/bin/at -prune -o -path /usr/bin/screen -prune -o -path /usr/sbin/unix_chkpwd -prune -o -path /usr/bin/pkexec -prune -o -path /usr/bin/mtr -prune -o -path /usr/bin/ksu -prune -o -type f \( -perm -4000 -o -perm -2000 \) -exec chmod u-s,g-s {} +'
