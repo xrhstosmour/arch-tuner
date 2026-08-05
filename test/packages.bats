@@ -18,6 +18,9 @@ EOF
     chmod +x "$fake_bin/fakepacman"
     PATH="$fake_bin:$PATH"
 
+    sudo() { command "$@"; }
+    export -f sudo
+
     source "$BATS_TEST_DIRNAME/../scripts/helpers/functions/logs.sh"
     source "$BATS_TEST_DIRNAME/../scripts/helpers/functions/strings.sh"
     source "$packages_under_test"
@@ -47,4 +50,17 @@ EOF
 
     [ "$output" = "true" ]
     [ ! -s "$calls_log" ]
+}
+
+@test "install_packages lists installed packages once and installs only the missing, applying --nocheck only to !-prefixed packages" {
+    ARCH_PACKAGE_MANAGER="fakepacman"
+    printf 'bash\nwget\n!vim\n# comment\n\n' >"$BATS_TEST_TMPDIR/packages.txt"
+
+    install_packages "$BATS_TEST_TMPDIR/packages.txt" "fakepacman" "Installing..."
+
+    [ "$(grep -c '^call: -Qq$' "$calls_log")" -eq 1 ]
+    [ "$(grep -c '^call: -S' "$calls_log")" -eq 2 ]
+    grep -qxF 'call: -S --noconfirm --needed wget' "$calls_log"
+    grep -qxF 'call: -S --noconfirm --needed --mflags --nocheck vim' "$calls_log"
+    ! grep -q -- '-S.*bash' "$calls_log"
 }
