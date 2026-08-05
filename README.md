@@ -1,12 +1,12 @@
-# Arch VPS Hardening Toolkit
+# Arch Server Hardening Toolkit
 
-An Arch Linux VPS hardening toolkit for securing and hardening your Arch-based Virtual Private Server. Originally evolved from an Arch desktop post-install toolkit, this project is now focused exclusively on server hardening.
+An Arch Linux server hardening toolkit for securing and hardening your Arch-based server, whether a VPS, a cloud instance, or bare metal. Originally evolved from an Arch desktop post-install toolkit, this project is now focused exclusively on server hardening.
 
 See [`AGENTS.md`](AGENTS.md) if you are an agent.
 
 ## Why Server-Only
 
-This toolkit is purpose-built for Arch VPS deployments, focusing on essential security hardening, privacy protection, and system essentials. Features that were relevant for desktop systems have been removed to keep the toolkit lean and secure for server environments.
+This toolkit is purpose-built for Arch server deployments, whether a VPS, a cloud instance, or bare metal, focusing on essential security hardening, privacy protection, and system essentials. Features that were relevant for desktop systems have been removed to keep the toolkit lean and secure for server environments.
 
 Desktop-specific components like display managers, graphical login interfaces, and desktop environments have all been removed.
 
