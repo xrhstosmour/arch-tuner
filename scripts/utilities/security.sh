@@ -28,9 +28,6 @@ sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/cpu.sh
 # Install and configure memory allocator.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/memory.sh
 
-# Install and configure USB port protection.
-sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/usb.sh
-
 # Install and configure encrypted network time security.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/nts.sh
 
