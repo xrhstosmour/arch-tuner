@@ -19,13 +19,16 @@ where neither helper's model fits. `aur.sh` cleans the pacman cache with `paccac
 bootstrapping an AUR helper, and `reset_system_to_clean_state` removes packages that only existed
 to support a pacman hook.
 
+Encrypted swap (`privacy/swap.sh`), PAM U2F/FIDO2 authentication for `sudo`
+(`security/pam-u2f.sh`), AppArmor Mandatory Access Control in complain mode
+(`security/apparmor.sh`), and Secure Boot key creation (`security/secure-boot.sh`) are merged and
+wired into `privacy.sh`/`security.sh`. Enrolling Secure Boot keys into firmware and signing the
+bootloader and kernel stay a manual, administrator-reviewed step, see `AGENTS.md`, as does
+enabling AppArmor's kernel `lsm=` parameter and enforcing any profile beyond complain mode.
+
 ## Remaining
 
-- Encrypted swap, tracked as a `TODO` in `privacy.sh`.
 - A Linux kernel runtime guard, once one exists with support for current kernels.
-- Secure Boot.
-- Pluggable Authentication Modules and a U2F/FIDO2 authenticator choice.
-- Mandatory Access Control via AppArmor and its policies and profiles.
 
 ## Rejected
 

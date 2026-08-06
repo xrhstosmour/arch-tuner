@@ -20,4 +20,5 @@ sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/network.sh
 # Configure umask.
 sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/umask.sh
 
-# TODO: Implement encrypted swap.
+# Configure encrypted swap.
+sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/swap.sh

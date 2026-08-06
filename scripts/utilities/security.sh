@@ -41,9 +41,15 @@ sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/firewall.sh
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/ids.sh
 
 # TODO: Implement Linux kernel runtime guard when there is support for newer kernels.
-# TODO: Implement Secure Boot process.
-# TODO: Implement Pluggable Authentication Modules (PAM) and U2F/FIDO2 authenticator choice.
-# TODO: Implement Mandatory Access Control via AppArmor and its policies/profiles.
+
+# Manage Secure Boot keys.
+sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/secure-boot.sh
+
+# Configure PAM U2F/FIDO2 authentication for sudo.
+sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/pam-u2f.sh
+
+# Configure Mandatory Access Control via AppArmor.
+sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/apparmor.sh
 
 # Configure mount points for extra hardening.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/mount.sh
