@@ -73,6 +73,10 @@ The toolkit implements the following hardening measures:
 - Mount points hardening
 - SUID/SGID stripping with pacman hook
 - Antivirus with daily scan timer
+- Encrypted swap with a random, never-persisted per-boot key
+- Optional PAM U2F/FIDO2 authentication for sudo, needs a hardware key
+- AppArmor Mandatory Access Control, complain mode by default
+- Secure Boot key creation, enrollment and signing stay manual, see `AGENTS.md`
 
 ## Roadmap
 
