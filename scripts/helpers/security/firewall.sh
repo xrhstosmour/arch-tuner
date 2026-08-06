@@ -12,6 +12,7 @@ FIREWALL_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import functions.
 source "$FIREWALL_SCRIPT_DIRECTORY/../functions/packages.sh"
 source "$FIREWALL_SCRIPT_DIRECTORY/../functions/services.sh"
+source "$FIREWALL_SCRIPT_DIRECTORY/../functions/ui.sh"
 
 # Initialize a flag indicating if a firewall change has been made.
 firewall_changes_made=1
@@ -38,10 +39,12 @@ if ! sudo ufw status verbose | grep -q 'Default: deny (incoming), deny (outgoing
     firewall_changes_made=0
 fi
 
-# Allow SSH on port 2222/tcp (covers both IPv4 and IPv6).
-if ! sudo ufw status | grep -q '2222/tcp'; then
-    log_info "Allowing SSH (2222/TCP) connections."
-    sudo ufw allow in 2222/tcp
+# Allow SSH on the chosen port (covers both IPv4 and IPv6), shared with
+# ssh.sh and fail2ban.sh via state.sh so all three agree on the same port.
+ssh_port=$(get_ssh_port)
+if ! sudo ufw status | grep -q "$ssh_port/tcp"; then
+    log_info "Allowing SSH ($ssh_port/TCP) connections."
+    sudo ufw allow in "$ssh_port/tcp"
 
     # Set the firewall_changes_made flag to 0 (true).
     firewall_changes_made=0

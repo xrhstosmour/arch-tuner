@@ -6,6 +6,9 @@ UI_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import log functions.
 source "$UI_SCRIPT_DIRECTORY/logs.sh"
 
+# Import state functions.
+source "$UI_SCRIPT_DIRECTORY/state.sh"
+
 # Function to ask for user approval before proceeding.
 # Usage:
 #   ask_for_user_backup_before_proceeding
@@ -184,4 +187,32 @@ prompt_user_input() {
     fi
 
     echo "$input"
+}
+
+# Function to get the SSH port, prompting for it once and persisting the
+# choice across scripts and re-runs. Never allows the classic port 22.
+# Usage:
+#   get_ssh_port
+get_ssh_port() {
+    source_state
+
+    # Reuse the already-chosen port without prompting again.
+    if [ -n "$SSH_PORT" ]; then
+        echo "$SSH_PORT"
+        return
+    fi
+
+    local port=""
+    while :; do
+        port=$(prompt_user_input "Enter SSH port (1024-65535, avoid the classic 22)" "2222")
+
+        if [[ "$port" =~ ^[0-9]+$ ]] && [ "$port" -ge 1024 ] && [ "$port" -le 65535 ] && [ "$port" -ne 22 ]; then
+            break
+        fi
+
+        log_error "Invalid SSH port: '$port'. Use a number between 1024 and 65535, not 22."
+    done
+
+    change_flag_value "SSH_PORT" "$port"
+    echo "$port"
 }
