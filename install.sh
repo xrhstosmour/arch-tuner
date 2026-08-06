@@ -85,6 +85,9 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
 
                 # Change the completion flag value to 0 (true).
                 change_flag_value "$completion_flag" 0
+
+                # Reboot now, the rest of the phases need to be rerun afterward.
+                reboot_system "${!completion_flag}" "$completion_flag"
             elif [ "$script" == "security" ]; then
                 log_success "Installation procedure finished!"
                 log_success "Your system is ready to use!"
