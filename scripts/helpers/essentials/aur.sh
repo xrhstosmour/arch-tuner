@@ -137,4 +137,8 @@ yay)
     ;;
 esac
 
-# TODO: Clean AUR cache configuration using paccache.
+# Clean the pacman package cache, keeping only the most recent version of
+# each package. AUR packages install through pacman too, so their old
+# cached versions build up here just like official repository packages.
+install_packages "pacman-contrib" "$ARCH_PACKAGE_MANAGER" "Installing cache clearing package..."
+sudo paccache -r
