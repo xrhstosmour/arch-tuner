@@ -30,3 +30,13 @@ setup() {
 
     ! grep -E 'change_flag_value "\$[A-Z_]+"' <<<"$function_body"
 }
+
+@test "change_flag_value keeps the state directory and file root-only" {
+    change_flag_value "EXAMPLE_FLAG" "1"
+
+    directory_permissions=$(stat -c '%a' "$STATE_DIRECTORY" 2>/dev/null || stat -f '%OLp' "$STATE_DIRECTORY")
+    [ "$directory_permissions" = "700" ]
+
+    file_permissions=$(stat -c '%a' "$STATE_FILE" 2>/dev/null || stat -f '%OLp' "$STATE_FILE")
+    [ "$file_permissions" = "600" ]
+}
