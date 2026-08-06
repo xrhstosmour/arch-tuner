@@ -14,9 +14,6 @@ source "$PRIVACY_SCRIPT_DIRECTORY/../helpers/functions/filesystem.sh"
 source "$PRIVACY_SCRIPT_DIRECTORY/../helpers/functions/packages.sh"
 source "$PRIVACY_SCRIPT_DIRECTORY/../core/flags.sh"
 
-# Configure network.
-sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/network.sh
-
 # Configure umask.
 sh $PRIVACY_SCRIPT_DIRECTORY/../helpers/privacy/umask.sh
 
