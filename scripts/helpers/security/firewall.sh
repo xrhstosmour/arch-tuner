@@ -90,7 +90,9 @@ if ! sudo ufw status | grep -q '123/udp'; then
     firewall_changes_made=0
 fi
 
-# TODO: Try using the `change_configuration` function.
+# change_configuration does not apply here, it replaces or appends a single
+# key's value, this needs a multi-line rule inserted before the COMMIT line,
+# appending after COMMIT would break the ufw rules file.
 # Check if ICMPv6 rule exists and if not add it.
 if ! grep -q 'ufw6-before-output -p ipv6-icmp -j ACCEPT' /etc/ufw/before6.rules; then
     log_info "Allowing ICMPv6 connections."
