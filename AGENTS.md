@@ -41,6 +41,23 @@ series adds, and what remains. Read it before picking up work.
 - Every helper is idempotent through `compare_files` or `are_packages_installed`, safe to run
   more than once, a second run should report no changes and skip service restarts.
 
+## Automated tests
+
+- `tests/unit/` holds `bats` tests for `scripts/helpers/functions/*.sh`, the only layer that can
+  be exercised without a real Arch host: `tests/unit/test_helper/common.bash` provides
+  `setup_mock_bin` and `create_mock` to stub `sudo`, `pacman`, `systemctl`, and similar commands
+  on `PATH`, so tests never touch the real system.
+- Run the whole suite with `bats tests/unit`, or a single file with `bats tests/unit/state.bats`.
+- macOS ships bash 3.2 and BSD `sed`, both too old for some of the functions under test and for
+  `bats` itself. Put a newer `bash` (`brew install bash`) and GNU `sed` (`brew install gnu-sed`,
+  installed as `gsed`) ahead of the system ones on `PATH` before running the suite locally:
+  `PATH="/opt/homebrew/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH" bats tests/unit`.
+  CI runs on `ubuntu-latest`, where the default `bash` and `sed` are already the GNU ones this
+  toolkit targets.
+- These tests cover pure function logic only. Behavior that depends on a real Arch userland,
+  actual package installs, `systemd` under a live PID 1, is exercised by the Docker-based
+  integration harness instead, see `documents/roadmap.md`.
+
 ## Shared helper functions
 
 Source `scripts/helpers/functions/*.sh` for these instead of writing a new equivalent:
@@ -112,6 +129,7 @@ find scripts -name '*.sh' -type f -exec bash -n {} \;
 bash -n install.sh
 markdownlint README.md --config .markdownlint.json
 grep -rn "keyboard\|kloak" scripts/ || true
+bats tests/unit
 ```
 
 ## Security
