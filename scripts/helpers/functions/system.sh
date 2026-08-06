@@ -189,7 +189,18 @@ reset_system_to_clean_state() {
     # Extract package names from the list.
     FRESH_INSTALLATION_PACKAGES=$(awk '{print $1}' "$TEMPORARY_PACKAGE_LIST")
 
-    # TODO: Remove packages used in pacman hooks.
+    # Remove packages that only exist to support a pacman hook this toolkit
+    # deployed, they were installed explicitly and would otherwise survive
+    # this reset instead of being cleaned up as orphans.
+    declare -a HOOK_ONLY_PACKAGES=(
+        pacman-contrib
+    )
+    for hook_only_package in "${HOOK_ONLY_PACKAGES[@]}"; do
+        if pacman -Q "$hook_only_package" &>/dev/null; then
+            log_info "Removing hook-only package '$hook_only_package'..."
+            sudo "$ARCH_PACKAGE_MANAGER" -Rns --noconfirm "$hook_only_package"
+        fi
+    done
 
     # Remove all AUR packages.
     log_info "Removing all AUR packages..."
