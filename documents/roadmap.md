@@ -11,6 +11,14 @@ integrity monitoring, automatic updates, firewall and DNS refinement, Docker eng
 and essentials and usbguard trimming are merged to `main`. Every security helper is wired into
 `security.sh`, and the hardening checklist in `README.md` reflects what actually runs.
 
+A `bats` unit test harness (`test/`) and a Docker-based Arch Linux integration harness
+(`test/integration/`) are merged, see `AGENTS.md`. `pacman.sh`, `aur.sh`, `dns.sh`, `memory.sh`,
+and `nts.sh` now use the shared `change_configuration` function instead of ad-hoc `sed`/`grep`,
+`shell.sh` uses `append_line_to_file` instead, and `firewall.sh` and `filesystem.sh` keep theirs
+where neither helper's model fits. `aur.sh` cleans the pacman cache with `paccache` after
+bootstrapping an AUR helper, and `reset_system_to_clean_state` removes packages that only existed
+to support a pacman hook.
+
 ## Remaining
 
 - Encrypted swap, tracked as a `TODO` in `privacy.sh`.
@@ -27,10 +35,5 @@ and essentials and usbguard trimming are merged to `main`. Every security helper
 
 ## Backlog
 
-- Adopt the existing `change_configuration` function in `pacman.sh`, `aur.sh`, `dns.sh`,
-  `memory.sh`, `firewall.sh`, `nts.sh`, `shell.sh`, and `filesystem.sh`, which still edit
-  configuration files with ad-hoc `sed`/`grep` instead of the shared helper.
-- Clean the AUR cache using `paccache` in `aur.sh`.
-- Remove packages that are only used inside pacman hooks, tracked in `system.sh`.
 - Integration with a future containers repository for application hosting. Traefik, filebrowser,
   uptime-kuma, and tailscale stay out of scope for this repository.
