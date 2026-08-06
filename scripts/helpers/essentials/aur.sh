@@ -12,6 +12,7 @@ AUR_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Import functions.
 source "$AUR_SCRIPT_DIRECTORY/../functions/packages.sh"
 source "$AUR_SCRIPT_DIRECTORY/../functions/ui.sh"
+source "$AUR_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 
 # Check if an AUR helper is already installed.
     aur_helper=""
@@ -103,7 +104,7 @@ paru)
     if [ -f "$PARU_CONFIGURATION" ]; then
         if ! grep -qxF "CleanMethod = KeepInstalled" "$PARU_CONFIGURATION"; then
             log_info "Adding CleanMethod = KeepInstalled to $aur_helper configuration..."
-            echo "CleanMethod = KeepInstalled" | sudo tee -a "$PARU_CONFIGURATION" >/dev/null
+            change_configuration "CleanMethod" " = KeepInstalled" "$PARU_CONFIGURATION"
         else
             log_info "CleanMethod = KeepInstalled already configured."
         fi
@@ -124,10 +125,9 @@ paru)
 
         # Add each configuration option if not already present.
         for configuration_option in "${CONFIGURATION_OPTIONS[@]}"; do
-            # TODO: Try using the `change_configuration` function.
             if ! grep -qxF "$configuration_option" "$PARU_CONFIGURATION"; then
                 log_info "Adding '$configuration_option' to $AUR_PACKAGE_MANAGER configuration..."
-                echo "$configuration_option" | sudo tee -a "$PARU_CONFIGURATION" >/dev/null
+                change_configuration "$configuration_option" "" "$PARU_CONFIGURATION"
             fi
         done
     fi
