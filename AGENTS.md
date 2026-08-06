@@ -115,6 +115,27 @@ grep -rn "keyboard\|kloak" scripts/ || true
 bats test/
 ```
 
+## Docker integration testing
+
+`test/integration/` runs a helper, or `install.sh`, inside a real Arch Linux container under a
+real `systemd` PID 1, closer to an actual server than `bats test/`'s mocked `sudo`/`pacman`/
+`systemctl`.
+
+- `test/integration/run.sh <path/to/helper.sh>` builds the image and runs one target manually.
+- `test/integration/smoke.sh` runs a small curated set of container-safe helpers twice each,
+  checking they succeed and that the second run is a true no-op. This is the `integration` `CI`
+  job, triggered manually with `workflow_dispatch` rather than on every pull request, since it is
+  slower and needs `--privileged`.
+- Helpers that touch real hardware, a bootloader, or the host's own kernel sysctl namespace
+  (`cpu.sh`, anything relying on `grub-mkconfig`, `sysctl.sh`) are not in the curated list, they
+  need a real host or VM instead. Widen the list in `test/integration/smoke.sh` as more helpers
+  prove container-safe.
+- The official Arch Linux image only ships `amd64`, `run.sh` and `smoke.sh` force
+  `--platform=linux/amd64` so this also builds under emulation on an `arm64` machine. `systemd`
+  itself does not run under that emulation, `qemu-user` crashes it before it prints anything, even
+  `--version`. Everything else, package installs, file copies, works fine emulated. `CI` runs on
+  native `amd64` `ubuntu-latest` runners, so this only affects local verification on `arm64`.
+
 ## Security
 
 - This is a hardening toolkit. Never weaken a default, such as a wider firewall rule or a
