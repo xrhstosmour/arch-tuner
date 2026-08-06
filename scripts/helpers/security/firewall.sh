@@ -47,6 +47,39 @@ if ! sudo ufw status | grep -q '2222/tcp'; then
     firewall_changes_made=0
 fi
 
+# Allow inbound HTTP (80/tcp) for the reverse proxy (Traefik). Plain `ufw
+# status` prints inbound rules as "ALLOW ... Anywhere" and outbound rules as
+# "ALLOW OUT ... Anywhere", with no "IN" marker, so the check must require
+# "Anywhere" directly after "ALLOW" to avoid matching the outbound rule below.
+if ! sudo ufw status | grep -qE '80/tcp[[:space:]]+ALLOW[[:space:]]+Anywhere'; then
+    log_info "Allowing inbound HTTP (80/TCP) connections."
+    sudo ufw allow in 80/tcp
+
+    # Set the firewall_changes_made flag to 0 (true).
+    firewall_changes_made=0
+fi
+
+# Allow inbound HTTPS (443/tcp) for the reverse proxy (Traefik), fronting
+# Netbird's dashboard, management, signal and relay, and Authelia. Same
+# direction-aware check as the HTTP rule above.
+if ! sudo ufw status | grep -qE '443/tcp[[:space:]]+ALLOW[[:space:]]+Anywhere'; then
+    log_info "Allowing inbound HTTPS (443/TCP) connections."
+    sudo ufw allow in 443/tcp
+
+    # Set the firewall_changes_made flag to 0 (true).
+    firewall_changes_made=0
+fi
+
+# Allow inbound Netbird Coturn STUN/TURN (3478/udp). It cannot be proxied
+# through the reverse proxy and must stay directly reachable.
+if ! sudo ufw status | grep -q '3478/udp'; then
+    log_info "Allowing Netbird Coturn (3478/UDP) connections."
+    sudo ufw allow in 3478/udp
+
+    # Set the firewall_changes_made flag to 0 (true).
+    firewall_changes_made=0
+fi
+
 # Allow outbound DNS (53/tcp and 53/udp).
 if ! sudo ufw status | grep -q '53/tcp'; then
     log_info "Allowing DNS (53/TCP) connections."
@@ -63,8 +96,9 @@ if ! sudo ufw status | grep -q '53/udp'; then
     firewall_changes_made=0
 fi
 
-# Allow outbound HTTP (80/tcp).
-if ! sudo ufw status | grep -q '80/tcp'; then
+# Allow outbound HTTP (80/tcp). Direction-aware check, an inbound 80/tcp rule
+# now exists above and would otherwise satisfy a plain "80/tcp" match.
+if ! sudo ufw status | grep -qE '80/tcp[[:space:]]+ALLOW OUT'; then
     log_info "Allowing HTTP (80/TCP) connections."
     sudo ufw allow out 80/tcp
 
@@ -72,8 +106,8 @@ if ! sudo ufw status | grep -q '80/tcp'; then
     firewall_changes_made=0
 fi
 
-# Allow outbound HTTPS (443/tcp).
-if ! sudo ufw status | grep -q '443/tcp'; then
+# Allow outbound HTTPS (443/tcp). Direction-aware check, same reason as HTTP.
+if ! sudo ufw status | grep -qE '443/tcp[[:space:]]+ALLOW OUT'; then
     log_info "Allowing HTTPS (443/TCP) connections."
     sudo ufw allow out 443/tcp
 
