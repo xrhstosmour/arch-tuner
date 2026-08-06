@@ -19,8 +19,7 @@ where neither helper's model fits. `aur.sh` cleans the pacman cache with `paccac
 bootstrapping an AUR helper, and `reset_system_to_clean_state` removes packages that only existed
 to support a pacman hook.
 
-Encrypted swap (`privacy/swap.sh`), PAM U2F/FIDO2 authentication for `sudo`
-(`security/pam-u2f.sh`), AppArmor Mandatory Access Control in complain mode
+Encrypted swap (`privacy/swap.sh`), AppArmor Mandatory Access Control in complain mode
 (`security/apparmor.sh`), and Secure Boot key creation (`security/secure-boot.sh`) are merged and
 wired into `privacy.sh`/`security.sh`. Enrolling Secure Boot keys into firmware and signing the
 bootloader and kernel stay a manual, administrator-reviewed step, see `AGENTS.md`, as does
@@ -35,6 +34,8 @@ enabling AppArmor's kernel `lsm=` parameter and enforcing any profile beyond com
 - A hardened kernel. Manual sysctl hardening stays on the stable default kernel instead, driver,
   language, virtualization, and process compatibility problems outweigh the benefit for a
   general-purpose VPS.
+- PAM U2F/FIDO2 authentication for `sudo`. Needs a hardware authenticator physically attached to
+  the machine, not available here, dropped rather than kept as a feature nobody can use or verify.
 
 ## Backlog
 
