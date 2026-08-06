@@ -45,9 +45,6 @@ sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/ids.sh
 # Manage Secure Boot keys.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/secure-boot.sh
 
-# Configure PAM U2F/FIDO2 authentication for sudo.
-sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/pam-u2f.sh
-
 # Configure Mandatory Access Control via AppArmor.
 sh $SECURITY_SCRIPT_DIRECTORY/../helpers/security/apparmor.sh
 
