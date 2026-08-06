@@ -27,7 +27,7 @@ To use the toolkit:
 1. Clone the repository:
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/xrhstosmour/arch-tuner.git
    cd arch-tuner
    ```
 
@@ -44,6 +44,19 @@ To use the toolkit:
    ```bash
    ./install.sh
    ```
+
+### Quick Install
+
+`bootstrap.sh` clones the repository into a temporary directory and runs the installer for you,
+skipping the manual clone step above:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/xrhstosmour/arch-tuner/main/bootstrap.sh | sudo bash
+```
+
+This is a hardening toolkit that runs with root privileges, review the cloned steps above first
+if you would rather read the scripts before running them. `bootstrap.sh` itself is short enough to
+audit in seconds, unlike the rest of the repository it goes on to fetch and run.
 
 The installer runs in three phases:
 
