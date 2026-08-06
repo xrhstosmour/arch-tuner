@@ -65,7 +65,7 @@ The toolkit implements the following hardening measures:
 - Audit daemon configuration
 - Automatic daily system updates
 - Docker engine hardening: user namespaces, no new privileges, ICC off
-- Firewall denying incoming connections except SSH 2222
+- Firewall denying incoming connections except SSH 2222, HTTP 80, HTTPS 443, and Netbird Coturn 3478/UDP
 - DNS over TLS
 - Mount points hardening
 - SUID/SGID stripping with pacman hook
