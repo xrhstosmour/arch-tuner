@@ -107,9 +107,10 @@ Run before every push, all must exit 0.
 
 ```bash
 find scripts -name '*.sh' -type f -print0 | xargs -0 shellcheck -x -S warning
-shellcheck -x -S warning install.sh
+shellcheck -x -S warning install.sh bootstrap.sh
 find scripts -name '*.sh' -type f -exec bash -n {} \;
 bash -n install.sh
+bash -n bootstrap.sh
 markdownlint README.md --config .markdownlint.json
 grep -rn "keyboard\|kloak" scripts/ || true
 bats test/
