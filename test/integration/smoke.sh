@@ -17,6 +17,8 @@ CONTAINER_NAME="arch-tuner-integration-smoke-$$"
 TARGETS=(
     "scripts/helpers/security/journald.sh"
     "scripts/helpers/security/automatic-updates.sh"
+    "scripts/helpers/essentials/pacman.sh"
+    "scripts/helpers/security/dns.sh"
 )
 
 docker build --platform=linux/amd64 -t "$IMAGE_NAME" -f "$REPOSITORY_ROOT/test/integration/Dockerfile" "$REPOSITORY_ROOT"
