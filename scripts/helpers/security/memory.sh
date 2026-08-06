@@ -11,6 +11,7 @@ MEMORY_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
 source "$MEMORY_SCRIPT_DIRECTORY/../functions/packages.sh"
+source "$MEMORY_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 
 # Constant variables for keeping the hardened memory allocator configuration.
 HARDENED_MEMORY_ALLOCATOR_CONFIGURATION="LD_PRELOAD=/usr/lib/libhardened_malloc.so"
@@ -19,11 +20,8 @@ HARDENED_MEMORY_ALLOCATOR_CONFIGURATION_DIRECTORY="/etc/environment"
 # Install hardened memory allocator.
 install_packages "hardened_malloc" "$AUR_PACKAGE_MANAGER" "Installing hardened memory allocator..."
 
-# TODO: Try using the `change_configuration` function.
 # Enable hardened memory allocator.
 if ! grep -q "^$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION" "$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION_DIRECTORY"; then
     log_info "Enabling hardened memory allocator..."
-
-    # Add 'LD_PRELOAD=/usr/lib/libhardened_malloc.so' to the end of the file.
-    echo "$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION" | sudo tee -a "$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION_DIRECTORY" >/dev/null
+    change_configuration "LD_PRELOAD=" "/usr/lib/libhardened_malloc.so" "$HARDENED_MEMORY_ALLOCATOR_CONFIGURATION_DIRECTORY"
 fi
