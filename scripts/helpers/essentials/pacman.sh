@@ -28,17 +28,15 @@ if ! append_line_to_file "$PACMAN_CONFIGURATION" "SigLevel = Required DatabaseOp
 fi
 
 # Enable colors in terminal.
-# TODO: Try using the `change_configuration` function.
-if ! grep -q '^Color' $PACMAN_CONFIGURATION; then
+if ! grep -q '^Color' "$PACMAN_CONFIGURATION"; then
     log_info "Enabling colors in terminal..."
-    sudo sed -i '/^#.*Color/s/^#//' $PACMAN_CONFIGURATION
+    change_configuration "Color" "" "$PACMAN_CONFIGURATION"
 fi
 
 # Enable parallel downloads.
-# TODO: Try using the `change_configuration` function.
-if ! grep -q '^ParallelDownloads' $PACMAN_CONFIGURATION; then
+if ! grep -q '^ParallelDownloads' "$PACMAN_CONFIGURATION"; then
     log_info "Enabling parallel downloads..."
-    sudo sed -i '/^#.*ParallelDownloads/s/^#//' $PACMAN_CONFIGURATION
+    change_configuration "ParallelDownloads" " = 5" "$PACMAN_CONFIGURATION"
 fi
 
 # Enable cache clearing after package installation.

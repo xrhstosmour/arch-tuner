@@ -16,7 +16,9 @@ append_line_to_file() {
     local line_to_append="$2"
     local message="$3"
 
-    # TODO: Try using the `change_configuration` function.
+    # change_configuration does not apply here, it replaces a single key's
+    # value, this appends an exact, possibly key-less line and dedupes on the
+    # whole line instead.
     if ! grep -qxF "$line_to_append" "$file_path"; then
 
         # Print message if it exists.
@@ -201,7 +203,9 @@ configure_fish_shell_files() {
             mkdir -p "$target_directory"
             cp -f "$file" "$target_file"
 
-            # TODO: Try using the `change_configuration` function.
+            # change_configuration does not apply here either, this appends a
+            # comment header and a source line as one formatted unit, not a
+            # single key's value.
             # Add source $target_file to $configuration_file if not already added.
             source_line="source $target_file"
             if ! grep -qxF "$source_line" "$configuration_file"; then
@@ -223,7 +227,7 @@ change_configuration() {
     local configuration_file_path=$3
 
     if grep -q "^#*$key" "$configuration_file_path"; then
-        sudo sed -i "s/^#*$key.*/$key$value/" "$configuration_file_path"
+        sudo sed -i "s|^#*$key.*|$key$value|" "$configuration_file_path"
     else
         echo "$key$value" | sudo tee -a "$configuration_file_path" >/dev/null
     fi
