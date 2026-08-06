@@ -11,6 +11,7 @@ DNS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 # Import functions.
 source "$DNS_SCRIPT_DIRECTORY/../functions/services.sh"
+source "$DNS_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 
 # Initialize a flag to track whether a change was made.
 dns_changes_made=1
@@ -18,40 +19,19 @@ dns_changes_made=1
 # Constant variables for keeping the resolved configuration.
 RESOLVED_CONFIGURATION="/etc/systemd/resolved.conf"
 
-# TODO: Try using the `change_configuration` function.
-# Check if the 'DNSSEC' line already exists in the 'resolved.conf' file.
-if grep -q '^DNSSEC=' "$RESOLVED_CONFIGURATION"; then
-
-    # Check if 'DNSSEC' is set to 'yes', if not, replace it with 'DNSSEC=yes'
-    if ! grep -q '^DNSSEC=yes' "$RESOLVED_CONFIGURATION"; then
-        sudo sed -i 's/^DNSSEC=.*/DNSSEC=yes/' "$RESOLVED_CONFIGURATION"
-
-        # Set the dns_changes_made flag to 0 (true).
-        dns_changes_made=0
-    fi
-else
-
-    # If the 'DNSSEC' line doesn't exist, add 'DNSSEC=yes' to the end of the file
-    echo 'DNSSEC=yes' | sudo tee -a "$RESOLVED_CONFIGURATION" >/dev/null
+# Set 'DNSSEC' to 'yes', whether the line is missing, commented out, or set
+# to something else.
+if ! grep -q '^DNSSEC=yes' "$RESOLVED_CONFIGURATION"; then
+    change_configuration "DNSSEC=" "yes" "$RESOLVED_CONFIGURATION"
 
     # Set the dns_changes_made flag to 0 (true).
     dns_changes_made=0
 fi
 
-# Check if 'DNSOverTLS' line already exists in the 'resolved.conf' file.
-if grep -q '^DNSOverTLS=' "$RESOLVED_CONFIGURATION"; then
-
-    # Check if 'DNSOverTLS' is set to 'yes', if not, replace it with 'DNSOverTLS=yes'
-    if ! grep -q '^DNSOverTLS=yes' "$RESOLVED_CONFIGURATION"; then
-        sudo sed -i 's/^DNSOverTLS=.*/DNSOverTLS=yes/' "$RESOLVED_CONFIGURATION"
-
-        # Set the dns_changes_made flag to 0 (true).
-        dns_changes_made=0
-    fi
-else
-
-    # If the 'DNSOverTLS' line doesn't exist, add 'DNSOverTLS=yes' to the end of the file
-    echo 'DNSOverTLS=yes' | sudo tee -a "$RESOLVED_CONFIGURATION" >/dev/null
+# Set 'DNSOverTLS' to 'yes', whether the line is missing, commented out, or
+# set to something else.
+if ! grep -q '^DNSOverTLS=yes' "$RESOLVED_CONFIGURATION"; then
+    change_configuration "DNSOverTLS=" "yes" "$RESOLVED_CONFIGURATION"
 
     # Set the dns_changes_made flag to 0 (true).
     dns_changes_made=0
