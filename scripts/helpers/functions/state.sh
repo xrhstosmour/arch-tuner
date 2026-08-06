@@ -18,12 +18,15 @@ change_flag_value() {
         return 1
     fi
 
-    # Ensure the state directory exists.
+    # Ensure the state directory exists and stays root-only, this file is
+    # sourced as executable bash on every run.
     mkdir -p "$STATE_DIRECTORY"
+    chmod 0700 "$STATE_DIRECTORY"
 
     # Write to a temporary file, then atomically replace the state file.
     local temp_file
     temp_file=$(mktemp "$STATE_DIRECTORY/.state.XXXXXX")
+    chmod 0600 "$temp_file"
 
     # Drop any existing line for this flag, then append the new value.
     grep -v -F -- "$flag=" "$STATE_FILE" 2>/dev/null > "$temp_file" || true
