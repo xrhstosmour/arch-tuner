@@ -56,7 +56,7 @@ The toolkit implements the following hardening measures:
 
 - Pacman signature verification
 - Non-root administrative user creation
-- SSH key-only authentication on port 2222
+- SSH key-only authentication on a custom port chosen at install time, never the default 22
 - Sudoers hardening
 - Fail2ban installation and configuration
 - Kernel sysctl hardening
@@ -65,7 +65,7 @@ The toolkit implements the following hardening measures:
 - Audit daemon configuration
 - Automatic daily system updates
 - Docker engine hardening: user namespaces, no new privileges, ICC off
-- Firewall denying incoming connections except SSH 2222
+- Firewall denying incoming connections except the chosen SSH port
 - DNS over TLS
 - Mount points hardening
 - SUID/SGID stripping with pacman hook

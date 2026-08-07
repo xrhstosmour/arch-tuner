@@ -13,6 +13,7 @@ SSH_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$SSH_SCRIPT_DIRECTORY/../functions/logs.sh"
 source "$SSH_SCRIPT_DIRECTORY/../functions/services.sh"
 source "$SSH_SCRIPT_DIRECTORY/../functions/filesystem.sh"
+source "$SSH_SCRIPT_DIRECTORY/../functions/ui.sh"
 
 # Constant variables for the SSH server configuration paths.
 SSH_CONFIGURATION="/etc/ssh/sshd_config"
@@ -30,6 +31,10 @@ if [[ "$are_ssh_files_the_same" != "true" ]]; then
 else
     log_info "SSH configuration already up to date."
 fi
+
+# Apply the chosen SSH port, shared with firewall.sh and fail2ban.sh via state.sh.
+ssh_port=$(get_ssh_port)
+change_configuration "Port " "$ssh_port" "$SSH_CONFIGURATION"
 
 # Start the SSH service.
 start_service sshd

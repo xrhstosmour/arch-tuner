@@ -14,6 +14,7 @@ source "$FAIL2BAN_SCRIPT_DIRECTORY/../functions/logs.sh"
 source "$FAIL2BAN_SCRIPT_DIRECTORY/../functions/packages.sh"
 source "$FAIL2BAN_SCRIPT_DIRECTORY/../functions/services.sh"
 source "$FAIL2BAN_SCRIPT_DIRECTORY/../functions/filesystem.sh"
+source "$FAIL2BAN_SCRIPT_DIRECTORY/../functions/ui.sh"
 
 # Constant variables for the fail2ban configuration paths.
 FAIL2BAN_CONFIGURATION="/etc/fail2ban/jail.local"
@@ -31,6 +32,12 @@ if [[ "$are_fail2ban_files_the_same" != "true" ]]; then
 else
     log_info "Fail2ban configuration already up to date."
 fi
+
+# Apply the chosen SSH port, shared with ssh.sh and firewall.sh via state.sh.
+# fail2ban's sshd jail otherwise resolves its ban target through the "ssh"
+# service name, which means port 22, and would silently miss the real port.
+ssh_port=$(get_ssh_port)
+change_configuration "port = " "$ssh_port" "$FAIL2BAN_CONFIGURATION"
 
 # Enable and start the fail2ban service.
 enable_service fail2ban
