@@ -37,7 +37,16 @@ enabling AppArmor's kernel `lsm=` parameter and enforcing any profile beyond com
 - PAM U2F/FIDO2 authentication for `sudo`. Needs a hardware authenticator physically attached to
   the machine, not available here, dropped rather than kept as a feature nobody can use or verify.
 
+## Containers integration
+
+Traefik, Authelia, and a self-hosted Netbird stack, from
+`https://github.com/xrhstosmour/containers`, are now in scope. Traefik already exists there
+(`networking/proxies/traefik`), Authelia and a self-hosted Netbird stack still need adding. Each
+lands as its own future pull request, this repository only opens the firewall ports and documents
+the prerequisites they need, see `documents/containers-integration.md`. This repository
+standardizes on Netbird instead of Tailscale for VPN.
+
 ## Backlog
 
-- Integration with a future containers repository for application hosting. Traefik, filebrowser,
-  uptime-kuma, and tailscale stay out of scope for this repository.
+- `filebrowser` and `uptime-kuma` from the `xrhstosmour/containers` repository stay out of scope
+  for now.
