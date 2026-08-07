@@ -36,3 +36,6 @@ sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/terminal.sh
 
 # Install and configure shell.
 sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/shell.sh
+
+# Set the machine's hostname if not already configured.
+sh $ESSENTIALS_SCRIPT_DIRECTORY/../helpers/essentials/hostname.sh
