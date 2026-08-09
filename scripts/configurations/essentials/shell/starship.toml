@@ -1,0 +1,126 @@
+# Base configuration.
+command_timeout = 10000
+add_newline = true
+
+# Command duration.
+[cmd_duration]
+min_time = 500
+format = " 󱎫 [$duration]($style) "
+style = "bold italic #87A752"
+
+# Directory.
+[directory]
+truncation_length = 5
+format = "[$path]($style)[$lock_symbol]($lock_style) "
+style = "bold cyan"
+
+# Hostname.
+[hostname]
+ssh_only = true
+format = "[<$hostname>]($style)"
+trim_at = "-"
+style = "bold dimmed white"
+
+# Character.
+[character]
+success_symbol = "[➜](bold green) "
+error_symbol = "[✖](bold red) "
+
+# Packages.
+[package]
+disabled = false
+
+# Background jobs.
+[jobs]
+format = "[$symbol$jobs]($style) "
+symbol = "🔃 "
+style = "bold blue"
+
+# Git.
+[git_branch]
+format = "on [$symbol$branch]($style) "
+symbol = ""
+style = "bold yellow"
+
+[git_commit]
+commit_hash_length = 4
+style = "bold white"
+
+[git_state]
+format = '[\($state( $progress_current of $progress_total)\)]($style) '
+
+[git_status]
+conflicted = "󰞇 "
+ahead = "󰶣 ×${count} "
+behind = "󰶡 ×${count} "
+diverged = "󰶣 ×${ahead_count} 󰶡 ×${behind_count} "
+untracked = "󰇘 ×${count} "
+stashed = "󰏗 ×${count} "
+modified = "󰏫 ×${count} "
+staged = "󰐖 ×${count} "
+renamed = "󰑕 ×${count} "
+deleted = "󰆴 ×${count} "
+style = "bright-white"
+format = "$all_status$ahead_behind"
+
+# Languages & Tools.
+[nodejs]
+format = "|  $version "
+style = "bold green"
+
+[rust]
+format = "|  $version "
+style = "bold red"
+
+[python]
+format = "|  $version "
+style = "bold blue"
+
+[golang]
+format = "|  $version "
+style = "bold cyan"
+
+[java]
+format = "|  $version "
+style = "bold purple"
+
+[docker_context]
+format = "|  $context "
+style = "blue bold"
+
+[c]
+format = "|  $version "
+style = "bold #d75f00"
+
+[dotnet]
+format = "|  $version "
+style = "bold blue"
+
+[dart]
+format = "|  $version "
+style = "bold cyan"
+
+[ruby]
+format = "|  $version "
+style = "bold red"
+
+[php]
+format = "| 󰑄 $version "
+style = "bold purple"
+
+[lua]
+format = "|  $version "
+style = "bold blue"
+
+[cpp]
+format = "|  $version "
+style = "bold blue"
+
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[kubernetes]
+disabled = true

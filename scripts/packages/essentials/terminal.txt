@@ -10,3 +10,4 @@ sd
 xh
 atuin
 fdupes
+starship
