@@ -10,3 +10,8 @@ sd
 xh
 atuin
 fdupes
+starship
+fastfetch
+eza
+calc
+aria2

@@ -26,6 +26,8 @@ FISH_FUNCTIONS="$HOME/.config/fish/functions"
 FISH_FUNCTIONS_TO_PASS="$SHELL_SCRIPT_DIRECTORY/../../configurations/essentials/shell/functions"
 FISH_CONSTANTS="$HOME/.config/fish/constants"
 FISH_CONSTANTS_TO_PASS="$SHELL_SCRIPT_DIRECTORY/../../configurations/essentials/shell/constants"
+STARSHIP_CONFIGURATION="$HOME/.config/starship.toml"
+STARSHIP_CONFIGURATION_TO_PASS="$SHELL_SCRIPT_DIRECTORY/../../configurations/essentials/shell/starship.toml"
 
 # Install shell package.
 install_packages "$FISH_SHELL" "$AUR_PACKAGE_MANAGER" "Installing shell..."
@@ -51,6 +53,14 @@ configure_fish_shell_files "$FISH_CONFIGURATION" "$FISH_CONSTANTS_TO_PASS" "$FIS
 
 # Configure shell functions.
 configure_fish_shell_files "$FISH_CONFIGURATION" "$FISH_FUNCTIONS_TO_PASS" "$FISH_FUNCTIONS" "functions"
+
+# Configure starship prompt.
+are_starship_configuration_files_the_same=$(compare_files "$STARSHIP_CONFIGURATION" "$STARSHIP_CONFIGURATION_TO_PASS")
+if [ "$are_starship_configuration_files_the_same" = "false" ]; then
+    log_info "Configuring starship prompt..."
+    mkdir -p "$HOME/.config"
+    cp -f "$STARSHIP_CONFIGURATION_TO_PASS" "$STARSHIP_CONFIGURATION"
+fi
 
 # Set default shell.
 current_shell=$(basename "$SHELL")
