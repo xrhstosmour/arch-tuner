@@ -60,6 +60,8 @@ The toolkit implements the following hardening measures:
 - Sudoers hardening
 - Fail2ban installation and configuration
 - Kernel sysctl hardening
+- CPU microcode updates
+- Hardened memory allocator via `LD_PRELOAD`
 - Systemd service hardening and journald log retention
 - AIDE integrity monitoring
 - Audit daemon configuration
@@ -67,9 +69,11 @@ The toolkit implements the following hardening measures:
 - Docker engine hardening: user namespaces, no new privileges, ICC off
 - Firewall denying incoming connections except the chosen SSH port
 - DNS over TLS
+- Encrypted Network Time Security (NTS)
 - Mount points hardening
 - SUID/SGID stripping with pacman hook
 - Antivirus with daily scan timer
+- Umask hardening to `077`
 - Encrypted swap with a random, never-persisted per-boot key
 - AppArmor Mandatory Access Control, complain mode by default
 - Secure Boot key creation, enrollment and signing stay manual, see `AGENTS.md`
