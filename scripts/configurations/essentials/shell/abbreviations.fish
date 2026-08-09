@@ -11,6 +11,8 @@ abbr pr "paru -Rns --noconfirm"
 abbr ip "ip -br a | grep UP | awk '{print \"Interface: \" \$1 \"\nIPv4: \" \$3}'"
 abbr po "sudo systemctl poweroff"
 abbr zzz "sudo systemctl suspend"
+abbr sm "btm"
+abbr ff "fastfetch"
 
 # Terminal tools abbreviations.
 abbr cat "bat"
@@ -25,6 +27,9 @@ abbr h "atuin history list"
 abbr hs "atuin search -i"
 abbr cl "clear"
 abbr rmdp "keep_best_file | xargs rm -v"
+abbr ls "eza --long --all --icons --color=always --group-directories-first --git"
+abbr eva "calc"
+abbr dl "aria2c -x 10 "
 
 # Services abbreviations.
 abbr sc "sudo systemctl"
@@ -35,3 +40,11 @@ abbr sce "sudo systemctl enable"
 abbr scstp "sudo systemctl stop"
 abbr scd "sudo systemctl disable"
 abbr scrr "sudo systemctl reload-or-restart"
+
+# Docker abbreviations.
+abbr d "docker"
+abbr dc "docker compose"
+abbr dcu "docker compose up --build -d"
+abbr dcd "docker compose down"
+abbr de --set-cursor "docker compose exec % /bin/bash"
+abbr dcl "docker compose down -v --remove-orphans && echo y | docker system prune -a --volumes"
