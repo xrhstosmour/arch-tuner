@@ -1,1 +1,0 @@
-# No packages required for sysctl hardening. Only kernel configuration settings are needed.

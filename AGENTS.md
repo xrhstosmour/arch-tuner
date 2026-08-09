@@ -48,7 +48,7 @@ Source `scripts/helpers/functions/*.sh` for these instead of writing a new equiv
 - `compare_files "target" "source"`: `true`/`false` string, whether two files are identical.
   Pair it with a changes-made flag so a restart only happens when something actually changed.
 - `change_configuration "key" "value" "file"`: edit a single key in place in a config file.
-  Several helpers still use ad-hoc `sed`/`grep` instead, see `documents/roadmap.md` backlog.
+  A few helpers still use ad-hoc `sed`/`grep` instead, see `documents/roadmap.md` Status.
 - `install_packages "packages_or_file" "package_manager" "message"` and
   `are_packages_installed "packages_or_file" "package_manager"`: accept either a space-separated
   string or a path to a `scripts/packages/**/*.txt` file.
