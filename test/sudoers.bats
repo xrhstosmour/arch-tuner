@@ -5,3 +5,11 @@
 
     ! grep -q 'requiretty' "$sudoers_drop_in"
 }
+
+@test "sudoers.sh validates the drop-in with visudo before deploying it" {
+    # Regression guard: a malformed drop-in breaks sudo for every user with
+    # no safety net if it is copied into /etc/sudoers.d without validation.
+    sudoers_script="$BATS_TEST_DIRNAME/../scripts/helpers/security/sudoers.sh"
+
+    grep -q 'visudo -cf' "$sudoers_script"
+}
