@@ -31,6 +31,22 @@ setup() {
     ! grep -E 'change_flag_value "\$[A-Z_]+"' <<<"$function_body"
 }
 
+@test "change_flag_value rejects a value containing a command substitution" {
+    # A value like '$(whoami)' would sit inside the double-quoted
+    # flag="value" line unescaped, and execute as root the next time
+    # source_state sources the file.
+    run change_flag_value "EXAMPLE_FLAG" '$(whoami)'
+
+    [ "$status" -eq 1 ]
+    [ ! -f "$STATE_FILE" ] || ! grep -q 'EXAMPLE_FLAG=' "$STATE_FILE"
+}
+
+@test "change_flag_value rejects a value containing a backtick command substitution" {
+    run change_flag_value "EXAMPLE_FLAG" 'x`whoami`x'
+
+    [ "$status" -eq 1 ]
+}
+
 @test "change_flag_value keeps the state directory and file root-only" {
     change_flag_value "EXAMPLE_FLAG" "1"
 
