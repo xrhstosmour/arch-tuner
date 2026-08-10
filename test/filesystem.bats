@@ -36,3 +36,12 @@ setup() {
     ! grep -q '/tmp/fstab.tmp' "$filesystem_under_test"
     grep -q 'mktemp' "$filesystem_under_test"
 }
+
+@test "change_configuration creates a missing parent directory before writing" {
+    local file="$BATS_TEST_TMPDIR/not-yet-created/paru.conf"
+
+    change_configuration "CleanMethod" " = KeepInstalled" "$file"
+
+    [ -f "$file" ]
+    grep -qxF "CleanMethod = KeepInstalled" "$file"
+}

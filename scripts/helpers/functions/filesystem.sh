@@ -226,7 +226,11 @@ change_configuration() {
     local value=$2
     local configuration_file_path=$3
 
-    if grep -q "^#*$key" "$configuration_file_path"; then
+    # The target's parent directory may not exist yet, e.g. an AUR helper's
+    # config directory before its first run creates it lazily.
+    sudo mkdir -p "$(dirname "$configuration_file_path")"
+
+    if grep -q "^#*$key" "$configuration_file_path" 2>/dev/null; then
         sudo sed -i "s|^#*$key.*|$key$value|" "$configuration_file_path"
     else
         echo "$key$value" | sudo tee -a "$configuration_file_path" >/dev/null
