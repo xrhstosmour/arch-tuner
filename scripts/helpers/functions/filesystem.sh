@@ -64,12 +64,22 @@ update_mount_options() {
             unique_options["$new_option"]=1
         done
 
-        # Create the modified options string from the unique options.
+        # Create the modified options string from the unique options, sorted
+        # for a stable comparison and a stable on-disk order. "${!unique_options[@]}"
+        # iterates in bash's hash order, which can differ run to run even
+        # when the resulting option *set* hasn't changed, spuriously
+        # triggering a rewrite below.
         local modified_options
-        modified_options=$(echo "${!unique_options[@]}" | tr ' ' ',')
+        modified_options=$(printf '%s\n' "${!unique_options[@]}" | sort | tr '\n' ',')
+        modified_options=${modified_options%,}
+
+        # Sort the on-disk options the same way before comparing.
+        local current_options_sorted
+        current_options_sorted=$(tr ',' '\n' <<<"$current_options" | sort | tr '\n' ',')
+        current_options_sorted=${current_options_sorted%,}
 
         # Update the fstab entry if necessary.
-        if [[ "$modified_options" != "$current_options" ]]; then
+        if [[ "$modified_options" != "$current_options_sorted" ]]; then
             log_info "Appending options $options to mount point $mount_point..."
             local temp_fstab
             temp_fstab=$(sudo mktemp /etc/fstab.tmp.XXXXXX)
