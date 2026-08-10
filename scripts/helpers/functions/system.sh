@@ -213,7 +213,9 @@ reset_system_to_clean_state() {
     log_info "Marking all installed packages as dependencies..."
     local fresh_packages
     fresh_packages=$(sudo $ARCH_PACKAGE_MANAGER -Qqe)
-    sudo $ARCH_PACKAGE_MANAGER -D --asdeps "$fresh_packages"
+    if [ -n "$fresh_packages" ]; then
+        echo "$fresh_packages" | xargs sudo $ARCH_PACKAGE_MANAGER -D --asdeps --
+    fi
 
     # Define essential packages.
     declare -a ESSENTIAL_PACKAGES=(

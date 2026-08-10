@@ -4,6 +4,8 @@ Description=Arch Tuner automatic system upgrade timer
 [Timer]
 OnCalendar=daily
 Persistent=true
+# Avoid every machine hitting mirrors at exactly the same instant daily.
+RandomizedDelaySec=1800
 
 [Install]
 WantedBy=timers.target

@@ -3,6 +3,7 @@
 Port 2222
 PermitRootLogin no
 PasswordAuthentication no
+KbdInteractiveAuthentication no
 PubkeyAuthentication yes
 MaxAuthTries 3
 MaxSessions 10

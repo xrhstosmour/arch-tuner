@@ -12,8 +12,11 @@ change_flag_value() {
     local flag="$1"
     local value="$2"
 
-    # Guard against values that could corrupt the state file.
-    if [[ $value == *\"* || $value == *\\* || $value == *$'\n'* ]]; then
+    # Guard against values that could corrupt the state file. Non-numeric
+    # values get written inside double quotes and this file is sourced as
+    # executable bash, so $ and ` must be rejected too, not just the
+    # quote/backslash/newline that would break the quoting itself.
+    if [[ $value == *\"* || $value == *\\* || $value == *$'\n'* || $value == *'$'* || $value == *'`'* ]]; then
         echo "invalid value" >&2
         return 1
     fi

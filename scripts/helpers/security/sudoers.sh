@@ -25,6 +25,14 @@ install_packages "sudo" "$AUR_PACKAGE_MANAGER" "Installing sudo..."
 are_sudoers_files_the_same=$(compare_files "$SUDOERS_CONFIGURATION" "$SUDOERS_CONFIGURATION_TO_PASS")
 
 if [[ "$are_sudoers_files_the_same" != "true" ]]; then
+
+    # A malformed drop-in breaks sudo for every user on the box, validate it
+    # the same way visudo itself would before it ever lands in /etc/sudoers.d.
+    if ! sudo visudo -cf "$SUDOERS_CONFIGURATION_TO_PASS"; then
+        log_error "Sudoers hardening configuration is invalid, aborting!"
+        exit 1
+    fi
+
     sudo cp -f "$SUDOERS_CONFIGURATION_TO_PASS" "$SUDOERS_CONFIGURATION"
     sudo chmod 0440 "$SUDOERS_CONFIGURATION"
     log_success "Sudoers hardening applied."

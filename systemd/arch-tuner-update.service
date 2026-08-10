@@ -4,3 +4,13 @@ Description=Arch Tuner automatic system upgrade
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/pacman -Syu --noconfirm
+# Deliberately conservative: ProtectSystem, ProtectHome, and
+# RestrictSUIDSGID are skipped, pacman needs broad filesystem write access
+# and legitimately installs setuid binaries as part of normal upgrades.
+NoNewPrivileges=yes
+ProtectClock=yes
+ProtectHostname=yes
+ProtectKernelLogs=yes
+LockPersonality=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes

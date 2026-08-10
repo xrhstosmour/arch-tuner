@@ -55,30 +55,44 @@ for path in "${EXCLUDE_PATHS[@]}"; do
     fi
 done
 
-# Finally, we add the part that selects the files of interest.
-FIND_COMMAND+=(-o -type f "(" -perm -4000 -o -perm -2000 ")" -print)
+# Finally, we add the part that selects the files of interest. NUL-separated
+# output (-print0) lets paths containing whitespace survive the loop below
+# intact instead of being word-split into bogus tokens.
+FIND_COMMAND+=(-o -type f "(" -perm -4000 -o -perm -2000 ")" -print0)
 
-# Execute the final command.
-suid_sgid_binary_files=$("${FIND_COMMAND[@]}" 2>&1 | grep -v "File system loop detected" || true)
-if [[ -z "$suid_sgid_binary_files" ]]; then
+# Execute the final command, discarding stderr noise like "File system loop
+# detected" from the excluded/pruned paths above.
+suid_sgid_binary_files=()
+while IFS= read -r -d '' binary_file; do
+    suid_sgid_binary_files+=("$binary_file")
+done < <("${FIND_COMMAND[@]}" 2>/dev/null)
+
+if [[ ${#suid_sgid_binary_files[@]} -eq 0 ]]; then
     log_info "No SUID/SGID binaries found!"
     exit 0
 fi
 
 # Iterate to remove the setuid and setgid bits from the files found.
-for binary_file in $suid_sgid_binary_files; do
+for binary_file in "${suid_sgid_binary_files[@]}"; do
 
     # Check if the file exists and is a regular file before proceeding.
     if [[ -e "$binary_file" && -f "$binary_file" ]]; then
 
+        # Derive the special-bits digit (suid=4, sgid=2, sticky=1) and test
+        # each bit independently with bitwise AND, a mode of 6755 (both suid
+        # and sgid set) matches neither a "4*" nor a "2*" prefix check.
+        file_mode=$(stat -c "%a" "$binary_file" 2>/dev/null)
+        special_bits=$(printf '%04o' "0$file_mode")
+        special_bits=${special_bits:0:1}
+
         # Check if the binary file has setuid bit set.
-        if [[ $(stat -c "%a" "$binary_file" 2>/dev/null) == 4* ]]; then
+        if (( special_bits & 4 )); then
             log_info "Disabling Set Owner User ID (SUID) from $binary_file..."
             sudo chmod u-s "$binary_file"
         fi
 
         # Check if the binary file has setgid bit set.
-        if [[ $(stat -c "%a" "$binary_file" 2>/dev/null) == 2* ]]; then
+        if (( special_bits & 2 )); then
             log_info "Disabling Set Group ID (SGID) from $binary_file..."
             sudo chmod g-s "$binary_file"
         fi

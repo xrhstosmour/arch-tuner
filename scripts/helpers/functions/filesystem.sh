@@ -64,12 +64,22 @@ update_mount_options() {
             unique_options["$new_option"]=1
         done
 
-        # Create the modified options string from the unique options.
+        # Create the modified options string from the unique options, sorted
+        # for a stable comparison and a stable on-disk order. "${!unique_options[@]}"
+        # iterates in bash's hash order, which can differ run to run even
+        # when the resulting option *set* hasn't changed, spuriously
+        # triggering a rewrite below.
         local modified_options
-        modified_options=$(echo "${!unique_options[@]}" | tr ' ' ',')
+        modified_options=$(printf '%s\n' "${!unique_options[@]}" | sort | tr '\n' ',')
+        modified_options=${modified_options%,}
+
+        # Sort the on-disk options the same way before comparing.
+        local current_options_sorted
+        current_options_sorted=$(tr ',' '\n' <<<"$current_options" | sort | tr '\n' ',')
+        current_options_sorted=${current_options_sorted%,}
 
         # Update the fstab entry if necessary.
-        if [[ "$modified_options" != "$current_options" ]]; then
+        if [[ "$modified_options" != "$current_options_sorted" ]]; then
             log_info "Appending options $options to mount point $mount_point..."
             local temp_fstab
             temp_fstab=$(sudo mktemp /etc/fstab.tmp.XXXXXX)
@@ -226,7 +236,11 @@ change_configuration() {
     local value=$2
     local configuration_file_path=$3
 
-    if grep -q "^#*$key" "$configuration_file_path"; then
+    # The target's parent directory may not exist yet, e.g. an AUR helper's
+    # config directory before its first run creates it lazily.
+    sudo mkdir -p "$(dirname "$configuration_file_path")"
+
+    if grep -q "^#*$key" "$configuration_file_path" 2>/dev/null; then
         sudo sed -i "s|^#*$key.*|$key$value|" "$configuration_file_path"
     else
         echo "$key$value" | sudo tee -a "$configuration_file_path" >/dev/null

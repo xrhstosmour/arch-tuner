@@ -25,6 +25,12 @@ CRYPTTAB="/etc/crypttab"
 # outlive a reboot this way, so there is no key to manage or leak.
 CRYPTTAB_ENTRY="swap $SWAP_FILE /dev/urandom swap,cipher=aes-xts-plain64,size=256"
 
+# The crypttab mapping alone only creates /dev/mapper/swap, this fstab entry
+# is what actually triggers swapon for it (per the ArchWiki dm-crypt/Swap
+# encryption guide), without it the swap file is never activated at all.
+FSTAB="/etc/fstab"
+FSTAB_ENTRY="/dev/mapper/swap none swap defaults 0 0"
+
 # Install disk encryption tooling, systemd links against libcryptsetup to
 # process crypttab, but it is only an optional dependency of the systemd
 # package, not installed by default.
@@ -46,4 +52,12 @@ if ! grep -qxF "$CRYPTTAB_ENTRY" "$CRYPTTAB" 2>/dev/null; then
     echo "$CRYPTTAB_ENTRY" | sudo tee -a "$CRYPTTAB" >/dev/null
 else
     log_info "Encrypted swap mapping already configured."
+fi
+
+# Add the fstab entry that actually activates the mapped swap device.
+if ! grep -qxF "$FSTAB_ENTRY" "$FSTAB" 2>/dev/null; then
+    log_info "Adding encrypted swap entry to $FSTAB..."
+    echo "$FSTAB_ENTRY" | sudo tee -a "$FSTAB" >/dev/null
+else
+    log_info "Encrypted swap entry already configured."
 fi
