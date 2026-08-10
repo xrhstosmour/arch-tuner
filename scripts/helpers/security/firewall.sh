@@ -42,7 +42,7 @@ fi
 # Allow SSH on the chosen port (covers both IPv4 and IPv6), shared with
 # ssh.sh and fail2ban.sh via state.sh so all three agree on the same port.
 ssh_port=$(get_ssh_port)
-if ! sudo ufw status | grep -q "$ssh_port/tcp"; then
+if ! sudo ufw status | grep -qE "^${ssh_port}/tcp[[:space:]]"; then
     log_info "Allowing SSH ($ssh_port/TCP) connections."
     sudo ufw allow in "$ssh_port/tcp"
 
@@ -51,14 +51,14 @@ if ! sudo ufw status | grep -q "$ssh_port/tcp"; then
 fi
 
 # Allow outbound DNS (53/tcp and 53/udp).
-if ! sudo ufw status | grep -q '53/tcp'; then
+if ! sudo ufw status | grep -qE '^53/tcp[[:space:]]'; then
     log_info "Allowing DNS (53/TCP) connections."
     sudo ufw allow out 53/tcp
 
     # Set the firewall_changes_made flag to 0 (true).
     firewall_changes_made=0
 fi
-if ! sudo ufw status | grep -q '53/udp'; then
+if ! sudo ufw status | grep -qE '^53/udp[[:space:]]'; then
     log_info "Allowing DNS (53/UDP) connections."
     sudo ufw allow out 53/udp
 
@@ -67,7 +67,7 @@ if ! sudo ufw status | grep -q '53/udp'; then
 fi
 
 # Allow outbound HTTP (80/tcp).
-if ! sudo ufw status | grep -q '80/tcp'; then
+if ! sudo ufw status | grep -qE '^80/tcp[[:space:]]'; then
     log_info "Allowing HTTP (80/TCP) connections."
     sudo ufw allow out 80/tcp
 
@@ -76,7 +76,7 @@ if ! sudo ufw status | grep -q '80/tcp'; then
 fi
 
 # Allow outbound HTTPS (443/tcp).
-if ! sudo ufw status | grep -q '443/tcp'; then
+if ! sudo ufw status | grep -qE '^443/tcp[[:space:]]'; then
     log_info "Allowing HTTPS (443/TCP) connections."
     sudo ufw allow out 443/tcp
 
@@ -85,7 +85,7 @@ if ! sudo ufw status | grep -q '443/tcp'; then
 fi
 
 # Allow outbound NTP (123/udp).
-if ! sudo ufw status | grep -q '123/udp'; then
+if ! sudo ufw status | grep -qE '^123/udp[[:space:]]'; then
     log_info "Allowing NTP (123/UDP) connections."
     sudo ufw allow out 123/udp
 
