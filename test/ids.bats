@@ -45,3 +45,25 @@ special_bits_of() {
     grep -q 'special_bits & 4' "$ids_script"
     grep -q 'special_bits & 2' "$ids_script"
 }
+
+@test "ids.sh reads find results NUL-separated, not an unquoted word-split loop" {
+    ! grep -qE '^for binary_file in \$suid_sgid_binary_files' "$ids_script"
+    grep -q -- '-print0' "$ids_script"
+    grep -q "read -r -d ''" "$ids_script"
+}
+
+@test "a NUL-separated find/read loop keeps a path containing whitespace intact" {
+    directory_with_space="$BATS_TEST_TMPDIR/dir with space"
+    mkdir -p "$directory_with_space"
+    binary_file="$directory_with_space/binary"
+    touch "$binary_file"
+    chmod u+s "$binary_file"
+
+    files=()
+    while IFS= read -r -d '' found; do
+        files+=("$found")
+    done < <(find "$BATS_TEST_TMPDIR" -type f -perm -4000 -print0 2>/dev/null)
+
+    [ "${#files[@]}" -eq 1 ]
+    [ "${files[0]}" = "$binary_file" ]
+}
