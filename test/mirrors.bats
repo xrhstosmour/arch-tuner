@@ -2,6 +2,12 @@
 
 setup() {
     rate_mirrors_script="$BATS_TEST_DIRNAME/../scripts/configurations/essentials/mirrors/rate-mirrors.sh"
+    mirrors_script="$BATS_TEST_DIRNAME/../scripts/helpers/essentials/mirrors.sh"
+}
+
+@test "mirrors.sh executes the rate-mirrors script directly, not via cat + bash -c" {
+    ! grep -q 'RATE_MIRRORS_COMMAND' "$mirrors_script"
+    grep -q 'bash "\$RATE_MIRRORS_SCRIPT"' "$mirrors_script"
 }
 
 @test "rate-mirrors.sh backs up the mirrorlist and validates the result before overwriting" {

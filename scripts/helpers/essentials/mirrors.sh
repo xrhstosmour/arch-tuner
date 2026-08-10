@@ -15,11 +15,10 @@ source "$MIRRORS_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 source "$MIRRORS_SCRIPT_DIRECTORY/../functions/services.sh"
 source "$MIRRORS_SCRIPT_DIRECTORY/../../core/flags.sh"
 
-# Define the rate-mirrors script file and command.
+# Define the rate-mirrors script file.
 RATE_MIRRORS_SCRIPT="$MIRRORS_SCRIPT_DIRECTORY/../../configurations/essentials/mirrors/rate-mirrors.sh"
-RATE_MIRRORS_COMMAND=$(cat "$RATE_MIRRORS_SCRIPT")
 
-# Install mirror list manager and execute the command.
+# Install mirror list manager and execute the script.
 install_packages "rate-mirrors-bin" "$AUR_PACKAGE_MANAGER" "Installing mirror list manager..."
 log_info "Configuring mirror list..."
-/bin/bash -c "$RATE_MIRRORS_COMMAND"
+bash "$RATE_MIRRORS_SCRIPT"
