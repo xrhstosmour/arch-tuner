@@ -16,8 +16,13 @@ source "$SYSTEMD_SCRIPT_DIRECTORY/../functions/filesystem.sh"
 
 # Constant variables for the systemd configuration paths.
 # Docker is excluded, its namespace/kernel-module needs conflict with this drop-in; it is hardened via daemon.json instead.
-SYSTEMD_SERVICE_NAMES=("sshd" "chronyd")
-SYSTEMD_CONFIGURATION_TO_PASS="$SYSTEMD_SCRIPT_DIRECTORY/../../configurations/security/systemd/99-hardening"
+# sshd gets its own, lighter drop-in: NoNewPrivileges/ProtectSystem=strict/
+# ProtectHome would permanently block sudo/su and scp/sftp for every SSH
+# session, unlike chronyd, which is a plain daemon with no such needs.
+declare -A SYSTEMD_CONFIGURATION_FILES=(
+    ["sshd"]="$SYSTEMD_SCRIPT_DIRECTORY/../../configurations/security/systemd/99-hardening-sshd"
+    ["chronyd"]="$SYSTEMD_SCRIPT_DIRECTORY/../../configurations/security/systemd/99-hardening-chronyd"
+)
 
 # Flag to track if any changes were made. 1 = no change, 0 = change made.
 systemd_changes_made=1
@@ -25,19 +30,20 @@ systemd_changes_made=1
 # Function to configure a specific service.
 configure_service() {
     local service_name="$1"
-    
+    local configuration_to_pass="$2"
+
     # Create the drop-in directory if it does not exist.
     local drop_in_directory="/etc/systemd/system/${service_name}.service.d/"
     if [ ! -d "$drop_in_directory" ]; then
         sudo mkdir -p "$drop_in_directory"
     fi
-    
+
     # Copy the hardening configuration if it differs from the current one.
     local drop_in_file="$drop_in_directory/99-hardening.conf"
-    are_files_the_same=$(compare_files "$drop_in_file" "$SYSTEMD_CONFIGURATION_TO_PASS")
-    
+    are_files_the_same=$(compare_files "$drop_in_file" "$configuration_to_pass")
+
     if [[ "$are_files_the_same" != "true" ]]; then
-        sudo cp -f "$SYSTEMD_CONFIGURATION_TO_PASS" "$drop_in_file"
+        sudo cp -f "$configuration_to_pass" "$drop_in_file"
         systemd_changes_made=0
         log_success "${service_name} systemd drop-in applied."
     else
@@ -46,8 +52,9 @@ configure_service() {
 }
 
 # Apply hardening to all services.
+SYSTEMD_SERVICE_NAMES=("sshd" "chronyd")
 for service in "${SYSTEMD_SERVICE_NAMES[@]}"; do
-    configure_service "$service"
+    configure_service "$service" "${SYSTEMD_CONFIGURATION_FILES[$service]}"
 done
 
 # Reload systemd and restart services if any changes were made.
