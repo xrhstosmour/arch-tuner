@@ -21,9 +21,17 @@ if ! grep -q '^Color' "$PACMAN_CONFIGURATION" || ! grep -q '^ParallelDownloads' 
     log_info "Configuring $ARCH_PACKAGE_MANAGER package manager..."
 fi
 
-# Add pacman signature hardening.
+# Add pacman signature hardening. append_line_to_file dedupes only on an
+# exact line match, which never matches the shipped commented default
+# ("#SigLevel = Required DatabaseOptional"), so it would always append at
+# the end of the file, landing inside whichever repo section is physically
+# last instead of [options]. change_configuration replaces the commented
+# default in place, like the Color/ParallelDownloads settings below.
 source "$PACMAN_SCRIPT_DIRECTORY/../functions/filesystem.sh"
-if ! append_line_to_file "$PACMAN_CONFIGURATION" "SigLevel = Required DatabaseOptional TrustedOnly" "Adding pacman signature hardening..."; then
+if ! grep -q '^SigLevel = Required DatabaseOptional TrustedOnly' "$PACMAN_CONFIGURATION"; then
+    log_info "Adding pacman signature hardening..."
+    change_configuration "SigLevel" " = Required DatabaseOptional TrustedOnly" "$PACMAN_CONFIGURATION"
+else
     log_info "Pacman signature hardening already configured."
 fi
 
