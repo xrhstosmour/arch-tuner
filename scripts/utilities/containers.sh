@@ -31,5 +31,10 @@ enable_service "docker"
 checkout_containers_repository
 ensure_containers_network
 
-# Each container stack helper is added here as its own dedicated pull
-# request, in the order documents/roadmap.md describes.
+# Deploy the shared PostgreSQL and Redis dependencies future stacks such as
+# Authelia and NetBird provision their own database or session store in.
+sh "$CONTAINERS_SCRIPT_DIRECTORY/../helpers/containers/postgresql.sh"
+sh "$CONTAINERS_SCRIPT_DIRECTORY/../helpers/containers/redis.sh"
+
+# Each further container stack helper is added here as its own dedicated
+# pull request, in the order documents/roadmap.md describes.
