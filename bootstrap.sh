@@ -18,7 +18,10 @@ cleanup() {
 trap cleanup EXIT
 
 if ! command -v git &>/dev/null; then
-    pacman -Sy --noconfirm --needed git
+    # -Sy alone (sync without upgrade) is the classic Arch "partial upgrade"
+    # anti-pattern; -Syu keeps the sync and install in one consistent
+    # transaction with the rest of the system.
+    pacman -Syu --noconfirm --needed git
 fi
 
 git clone --depth 1 "$REPOSITORY_URL" "$CLONE_DIRECTORY"
