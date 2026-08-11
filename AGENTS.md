@@ -4,11 +4,16 @@ Tips and rules for any AI agent working in this repository. Read this first.
 
 ## What this repository is
 
-Arch Tuner is an Arch Linux VPS hardening toolkit. `install.sh` drives three phases in order:
+Arch Tuner is an Arch Linux VPS hardening toolkit. `install.sh` drives four phases in order:
 
 - `scripts/utilities/essentials.sh`: package manager configuration, essential packages, shell setup.
 - `scripts/utilities/privacy.sh`: privacy-hardening helpers under `scripts/helpers/privacy/`.
 - `scripts/utilities/security.sh`: security-hardening helpers under `scripts/helpers/security/`.
+- `scripts/utilities/containers.sh`: deploys Docker Compose stacks from the pinned, upstream
+  `xrhstosmour/containers` repository under `scripts/helpers/containers/`. Runs after `security.sh`
+  so Docker is already installed and hardened. Unlike the other three phases, it never marks
+  itself complete and is offered again on every `install.sh` run, since new stacks land in
+  separate pull requests over time.
 
 `documents/roadmap.md` is the living plan, what phases exist, what the current pull request
 series adds, and what remains. Read it before picking up work.
@@ -18,8 +23,14 @@ series adds, and what remains. Read it before picking up work.
 - `scripts/core/`: `constants.sh` for static values, `flags.sh` for documented defaults. Both are
   sourced before the runtime state file, so runtime values can override them.
 - `scripts/helpers/functions/`: shared utilities every helper sources, see below.
-- `scripts/helpers/essentials/`, `scripts/helpers/privacy/`, `scripts/helpers/security/`: one file
-  per feature, called from the matching `scripts/utilities/*.sh`.
+- `scripts/helpers/essentials/`, `scripts/helpers/privacy/`, `scripts/helpers/security/`,
+  `scripts/helpers/containers/`: one file per feature, called from the matching
+  `scripts/utilities/*.sh`. `scripts/helpers/functions/containers.sh` holds shared logic every
+  container helper needs (repository checkout/pinning, secret generation, `.env` rendering,
+  Docker Compose wrappers). The pinned upstream checkout lives at `/opt/arch-tuner/containers`
+  (`CONTAINERS_DIRECTORY` in `scripts/core/constants.sh`); helpers never edit its tracked files,
+  they layer `.env` files, `docker-compose.override.yml` files, and extra files dropped into
+  directories the base compose already scans on top instead.
 - `scripts/configurations/<phase>/<feature>/`: config payloads a helper copies onto the host.
   Bash payloads need `#!/bin/bash`. Fish payloads use the `.fish` extension.
 - `scripts/packages/<phase>/<feature>.txt`: plain text, one package per line.
@@ -77,6 +88,12 @@ When multiple pull requests add hardening helpers in parallel, each adds its own
 file, configuration, and package list, and must not modify `scripts/utilities/security.sh`,
 `scripts/core/*`, or shared files under `scripts/helpers/functions/`. Wiring a new helper into
 `security.sh` happens in a dedicated wiring pull request, after the helper pull requests merge.
+
+The `scripts/utilities/containers.sh` series is a deliberate exception: those pull requests land
+strictly sequentially, one stack verified working before the next opens, so there is no
+concurrent-PR conflict for the split to prevent. Each container stack pull request wires its own
+line directly into `containers.sh`, and may add new functions (never edit existing ones) to
+`scripts/helpers/functions/containers.sh`.
 
 ## Naming and style
 
