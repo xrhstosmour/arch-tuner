@@ -51,5 +51,8 @@ sh "$CONTAINERS_SCRIPT_DIRECTORY/../helpers/containers/filestash.sh"
 # Deploy Uptime Kuma, fronted through Traefik.
 sh "$CONTAINERS_SCRIPT_DIRECTORY/../helpers/containers/uptime-kuma.sh"
 
+# Deploy LinkStack, fronted through Traefik.
+sh "$CONTAINERS_SCRIPT_DIRECTORY/../helpers/containers/linkstack.sh"
+
 # Each further container stack helper is added here as its own dedicated
 # pull request, in the order documents/roadmap.md describes.
