@@ -33,17 +33,20 @@ enabling AppArmor's kernel `lsm=` parameter and enforcing any profile beyond com
 A fourth phase, `containers`, deploys Docker Compose stacks from the pinned upstream
 `xrhstosmour/containers` repository, one stack per pull request, each verified working with a
 real `docker compose` run before it opens, not just read for review. Unlike the other three
-phases it never marks itself complete, since new stacks land over time. 5 pull requests are open
-against this phase, stacked in this order, each depending on the one before it: the scaffold
-(`scripts/utilities/containers.sh`, `scripts/helpers/functions/containers.sh`, the pinned
-checkout at `/opt/arch-tuner/containers`), a shared PostgreSQL/Redis pair, Traefik with ACME
-HTTP-01, Authelia fronted through Traefik, and NetBird registered as a public OpenID Connect
-client of Authelia instead of a third-party identity provider. NetBird's own
+phases it never marks itself complete, since new stacks land over time. All 9 originally-scoped
+stacks now have open pull requests, stacked in this order, each depending on the one before it:
+the scaffold (`scripts/utilities/containers.sh`, `scripts/helpers/functions/containers.sh`, the
+pinned checkout at `/opt/arch-tuner/containers`), a shared PostgreSQL/Redis pair, Traefik with
+ACME HTTP-01, Authelia fronted through Traefik, NetBird registered as a public OpenID Connect
+client of Authelia instead of a third-party identity provider, then Filestash, Uptime Kuma,
+LinkStack, and Dockhand, each fronted through Traefik the same way Authelia is (own host port
+closed, Traefik routes by `Host()` label instead), and each rendering the operator's chosen
+domain directly into a generated override, their own `template.env` files have no `DOMAIN`
+variable to reference, unlike Traefik's or Authelia's. NetBird's own
 dashboard/signal/relay/management stay on their own ports rather than fronted through Traefik,
 its documented reverse-proxy support needs a dedicated TLS-passthrough component this pinned
 upstream commit does not ship. `coturn`'s TURN relay ports stay open for the same reason, they
-cannot be reverse-proxied. Filestash, Uptime Kuma, LinkStack, and Dockhand remain, each fronted
-by Traefik.
+cannot be reverse-proxied.
 
 ## Remaining
 
