@@ -39,5 +39,8 @@ sh "$CONTAINERS_SCRIPT_DIRECTORY/../helpers/containers/redis.sh"
 # Deploy the reverse proxy every later stack fronts itself through.
 sh "$CONTAINERS_SCRIPT_DIRECTORY/../helpers/containers/traefik.sh"
 
+# Deploy the authentication portal, fronted through Traefik.
+sh "$CONTAINERS_SCRIPT_DIRECTORY/../helpers/containers/authelia.sh"
+
 # Each further container stack helper is added here as its own dedicated
 # pull request, in the order documents/roadmap.md describes.
