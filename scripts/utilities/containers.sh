@@ -36,5 +36,8 @@ ensure_containers_network
 sh "$CONTAINERS_SCRIPT_DIRECTORY/../helpers/containers/postgresql.sh"
 sh "$CONTAINERS_SCRIPT_DIRECTORY/../helpers/containers/redis.sh"
 
+# Deploy the reverse proxy every later stack fronts itself through.
+sh "$CONTAINERS_SCRIPT_DIRECTORY/../helpers/containers/traefik.sh"
+
 # Each further container stack helper is added here as its own dedicated
 # pull request, in the order documents/roadmap.md describes.
