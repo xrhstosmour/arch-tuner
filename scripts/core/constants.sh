@@ -14,3 +14,11 @@ INSTALLATION_TYPE="server"
 # Package managers to use.
 ARCH_PACKAGE_MANAGER="pacman"
 AUR_PACKAGE_MANAGER=""
+
+# Containers integration configuration. The commit is pinned so every
+# helper works against the exact same, reviewed revision of the upstream
+# repository, never a moving branch tip.
+CONTAINERS_REPOSITORY_URL="https://github.com/xrhstosmour/containers.git"
+CONTAINERS_REPOSITORY_COMMIT="1b3ae03609525e35544967671f14a7308d653b47"
+CONTAINERS_DIRECTORY="/opt/arch-tuner/containers"
+CONTAINERS_NETWORK_NAME="internal"
