@@ -1,0 +1,37 @@
+# Compose merges this file with the upstream service directory's tracked
+# "docker-compose.yml" automatically, no "-f" flags needed, so that tracked
+# file never needs editing. Map fields such as "labels" merge key by key,
+# but list fields such as "command" are replaced wholesale, not diffed, so
+# the list below repeats every one of the base file's flags verbatim plus
+# the ACME additions. If the upstream base file's own command list ever
+# changes, this override drifts out of sync until it is updated to match.
+#
+# Uses ACME HTTP-01 (the "web" entrypoint, port 80) rather than upstream's
+# own commented-out "tlsChallenge" (TLS-ALPN-01) example, since HTTP-01 only
+# needs a domain pointed at this server and ports 80/443 reachable, no DNS
+# provider API access.
+services:
+  traefik:
+    command:
+      - "--global.checkNewVersion=true"
+      - "--global.sendAnonymousUsage=false"
+      - "--log=true"
+      - "--log.level=INFO"
+      - "--accesslog=true"
+      - "--accessLog.bufferingSize=100"
+      - "--accessLog.filters.statusCodes=204-299,400-499,500-599"
+      - "--api.dashboard=true"
+      - "--api.insecure=false"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web_secure.address=:443"
+      - "--certificatesresolvers.le.acme.email=${TRAEFIK_EMAIL?Variable not set}"
+      - "--certificatesresolvers.le.acme.storage=/certificates/acme.json"
+      - "--certificatesresolvers.le.acme.httpchallenge=true"
+      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+      - "--providers.file=true"
+      - "--providers.file.watch=true"
+      - "--providers.file.directory=/configuration"
+    labels:
+      - "traefik.http.routers.traefik.tls.certresolver=${TRAEFIK_CERTIFICATE_RESOLVER?Variable not set}"
