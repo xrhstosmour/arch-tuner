@@ -215,6 +215,150 @@ get_acme_email() {
     echo "$email"
 }
 
+# Function to prompt for a value without echoing it to the terminal, for
+# credentials such as an admin password.
+# Usage:
+#   prompt_hidden_input "prompt_message"
+prompt_hidden_input() {
+    local prompt="$1"
+    local input=""
+
+    log_info -n "$prompt: "
+    read -rs input
+    echo >&2
+
+    echo "$input"
+}
+
+# Function to prompt for the admin username, once, and persist the choice.
+# Usage:
+#   get_containers_admin_username
+get_containers_admin_username() {
+    source_state
+
+    if [ -n "$CONTAINERS_ADMIN_USERNAME" ]; then
+        echo "$CONTAINERS_ADMIN_USERNAME"
+        return
+    fi
+
+    local username=""
+    while :; do
+        username=$(prompt_user_input "Enter the admin username" "admin")
+
+        if [[ "$username" =~ ^[a-zA-Z0-9_.-]+$ ]]; then
+            break
+        fi
+
+        log_error "Invalid username: '$username'."
+    done
+
+    change_flag_value "CONTAINERS_ADMIN_USERNAME" "$username"
+    echo "$username"
+}
+
+# Function to prompt for the admin email address, once, and persist the
+# choice. Kept separate from "get_acme_email", the two can differ.
+# Usage:
+#   get_containers_admin_email
+get_containers_admin_email() {
+    source_state
+
+    if [ -n "$CONTAINERS_ADMIN_EMAIL" ]; then
+        echo "$CONTAINERS_ADMIN_EMAIL"
+        return
+    fi
+
+    local email=""
+    while :; do
+        email=$(prompt_user_input "Enter the admin email address" "")
+
+        if [[ "$email" =~ ^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$ ]]; then
+            break
+        fi
+
+        log_error "Invalid email address: '$email'."
+    done
+
+    change_flag_value "CONTAINERS_ADMIN_EMAIL" "$email"
+    echo "$email"
+}
+
+# Function to prompt for the admin password, once, with confirmation, and
+# persist the choice. Rejects "$" and a backtick, "change_flag_value"
+# rejects those too, to keep the state file, sourced as executable bash on
+# every run, safe from injection.
+# Usage:
+#   get_containers_admin_password
+get_containers_admin_password() {
+    source_state
+
+    if [ -n "$CONTAINERS_ADMIN_PASSWORD" ]; then
+        echo "$CONTAINERS_ADMIN_PASSWORD"
+        return
+    fi
+
+    local password="" confirmation=""
+    while :; do
+        password=$(prompt_hidden_input "Enter the admin password, at least 12 characters, no '\$' or backtick")
+
+        if [[ "$password" == *'$'* || "$password" == *'`'* ]]; then
+            log_error "Password cannot contain '\$' or a backtick."
+            continue
+        fi
+
+        if [ "${#password}" -lt 12 ]; then
+            log_error "Password must be at least 12 characters."
+            continue
+        fi
+
+        confirmation=$(prompt_hidden_input "Confirm the admin password")
+
+        if [ "$password" == "$confirmation" ]; then
+            break
+        fi
+
+        log_error "Passwords did not match."
+    done
+
+    change_flag_value "CONTAINERS_ADMIN_PASSWORD" "$password"
+    echo "$password"
+}
+
+# Function to read a single value out of an already-rendered ".env" file, so
+# a consumer service can reuse a dependency's generated credentials, such as
+# the shared PostgreSQL or Redis password, without duplicating them into
+# arch-tuner's own state file.
+# Usage:
+#   read_environment_value "/path/to/.env" "KEY"
+read_environment_value() {
+    local target_file="$1"
+    local key="$2"
+
+    sudo grep -m 1 "^${key}=" "$target_file" | cut -d '=' -f 2-
+}
+
+# Function to ensure a database exists on the shared PostgreSQL container,
+# for a consumer added after PostgreSQL was already initialized. The
+# upstream image's own additional-databases mechanism only runs once, on
+# first initialization of an empty data directory, it does not retroactively
+# create a database added to "POSTGRESQL_ADDITIONAL_DATABASES" afterward.
+# Usage:
+#   ensure_postgresql_database "database_name" "owner"
+ensure_postgresql_database() {
+    local database_name="$1"
+    local owner="$2"
+
+    # "\gexec" is a psql client-side meta-command, it only works fed through
+    # stdin (matching the upstream image's own "initialize-databases.sh"),
+    # not passed as a "-c" argument string.
+    sudo docker exec -i postgresql psql -v ON_ERROR_STOP=1 --username "$owner" >/dev/null <<EOSQL
+SELECT 'CREATE DATABASE "${database_name}"'
+WHERE NOT EXISTS (
+  SELECT FROM pg_database WHERE datname = '${database_name}'
+)\gexec
+EOSQL
+}
+
 # Function to generate a bcrypt htpasswd entry for HTTP basic authentication,
 # without requiring an "apache-utils"/"httpd-tools" package on the host.
 # Usage:

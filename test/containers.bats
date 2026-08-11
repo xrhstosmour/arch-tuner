@@ -185,3 +185,74 @@ EOF
     grep -qxF "DOMAIN=example.com" "$target"
     [ "$first_secret" = "$second_secret" ]
 }
+
+@test "get_containers_admin_username rejects a username with spaces and prompts again" {
+    run bash -c "source '$containers_under_test' && printf 'bad name\ngoodname\n' | get_containers_admin_username"
+
+    [ "$status" -eq 0 ]
+    [ "$(echo "$output" | tail -n 1)" = "goodname" ]
+}
+
+@test "get_containers_admin_email rejects an invalid email and prompts again" {
+    run bash -c "source '$containers_under_test' && printf 'not-an-email\nadmin@example.com\n' | get_containers_admin_email"
+
+    [ "$status" -eq 0 ]
+    [ "$(echo "$output" | tail -n 1)" = "admin@example.com" ]
+}
+
+@test "get_containers_admin_password rejects a value containing a dollar sign" {
+    run bash -c "source '$containers_under_test' && printf 'has\$dollar123\nvalidpassword123\nvalidpassword123\n' | get_containers_admin_password"
+
+    [ "$status" -eq 0 ]
+    [ "$(echo "$output" | tail -n 1)" = "validpassword123" ]
+}
+
+@test "get_containers_admin_password rejects a value shorter than 12 characters" {
+    run bash -c "source '$containers_under_test' && printf 'short\nvalidpassword123\nvalidpassword123\n' | get_containers_admin_password"
+
+    [ "$status" -eq 0 ]
+    [ "$(echo "$output" | tail -n 1)" = "validpassword123" ]
+}
+
+@test "get_containers_admin_password rejects a confirmation that does not match" {
+    run bash -c "source '$containers_under_test' && printf 'validpassword123\nwrongconfirmation12\nvalidpassword123\nvalidpassword123\n' | get_containers_admin_password"
+
+    [ "$status" -eq 0 ]
+    [ "$(echo "$output" | tail -n 1)" = "validpassword123" ]
+}
+
+@test "get_containers_admin_password persists the chosen password and does not reprompt" {
+    bash -c "source '$containers_under_test' && printf 'validpassword123\nvalidpassword123\n' | get_containers_admin_password" >/dev/null
+
+    run bash -c "source '$containers_under_test' && get_containers_admin_password </dev/null"
+
+    [ "$status" -eq 0 ]
+    [ "$output" = "validpassword123" ]
+}
+
+@test "read_environment_value extracts a key's value, tolerating '=' inside it" {
+    target="$BATS_TEST_TMPDIR/dependency.env"
+    printf 'POSTGRESQL_USER=arch_tuner\nPOSTGRESQL_PASSWORD=abc=def\n' >"$target"
+
+    run read_environment_value "$target" "POSTGRESQL_PASSWORD"
+
+    [ "$output" = "abc=def" ]
+}
+
+@test "ensure_postgresql_database uses a CREATE DATABASE guarded by a NOT EXISTS check, fed through stdin" {
+    stdin_log="$BATS_TEST_TMPDIR/stdin.log"
+    cat >"$fake_bin/docker" <<EOF
+#!/usr/bin/env bash
+echo "docker \$*" >> "$calls_log"
+cat > "$stdin_log"
+EOF
+    chmod +x "$fake_bin/docker"
+    PATH="$fake_bin:$PATH"
+
+    ensure_postgresql_database "authelia" "arch_tuner"
+
+    grep -q 'exec -i postgresql psql' "$calls_log"
+    grep -q 'CREATE DATABASE .authelia.' "$stdin_log"
+    grep -q 'NOT EXISTS' "$stdin_log"
+    grep -qF '\gexec' "$stdin_log"
+}
