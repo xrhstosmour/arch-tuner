@@ -1,6 +1,6 @@
 # Arch Tuner roadmap
 
-An Arch Linux VPS hardening toolkit, three phases: essentials, privacy, security. See
+An Arch Linux VPS hardening toolkit, four phases: essentials, privacy, security, containers. See
 `README.md` for what it does and `AGENTS.md` for how to work in this repository.
 
 ## Status
@@ -30,6 +30,16 @@ wired into `privacy.sh`/`security.sh`. Enrolling Secure Boot keys into firmware 
 bootloader and kernel stay a manual, administrator-reviewed step, see `AGENTS.md`, as does
 enabling AppArmor's kernel `lsm=` parameter and enforcing any profile beyond complain mode.
 
+A fourth phase, `containers`, deploys Docker Compose stacks from the pinned upstream
+`xrhstosmour/containers` repository, one stack per pull request, verified working before each
+pull request opens. Unlike the other three phases it never marks itself complete, since new
+stacks land over time. The scaffold (`scripts/utilities/containers.sh`,
+`scripts/helpers/functions/containers.sh`, the pinned checkout at `/opt/arch-tuner/containers`)
+is merged to `main`. Traefik, then a shared PostgreSQL/Redis pair, then Authelia, then NetBird are
+next, in that order, since Authelia acts as NetBird's OpenID Connect provider and both need
+PostgreSQL, avoiding any third-party identity provider dependency. Filestash, Uptime Kuma,
+LinkStack, and Dockhand follow, each fronted by Traefik.
+
 ## Remaining
 
 - A Linux kernel runtime guard, once one exists with support for current kernels.
@@ -41,8 +51,3 @@ enabling AppArmor's kernel `lsm=` parameter and enforcing any profile beyond com
   general-purpose VPS.
 - PAM U2F/FIDO2 authentication for `sudo`. Needs a hardware authenticator physically attached to
   the machine, not available here, dropped rather than kept as a feature nobody can use or verify.
-
-## Backlog
-
-- Integration with a future containers repository for application hosting. Traefik, filebrowser,
-  uptime-kuma, and tailscale stay out of scope for this repository.
