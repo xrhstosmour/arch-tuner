@@ -6,6 +6,7 @@ CONTAINERS_FUNCTIONS_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && p
 # Import functions.
 source "$CONTAINERS_FUNCTIONS_SCRIPT_DIRECTORY/logs.sh"
 source "$CONTAINERS_FUNCTIONS_SCRIPT_DIRECTORY/state.sh"
+source "$CONTAINERS_FUNCTIONS_SCRIPT_DIRECTORY/ui.sh"
 
 # ? Importing constants.sh is not needed, because it is already sourced in the logs script.
 
@@ -157,6 +158,61 @@ render_environment_file() {
     sudo cp "$temp_file" "$target_file"
     sudo chmod 0600 "$target_file"
     rm -f "$temp_file"
+}
+
+# Function to prompt for the domain pointed at this server, once, and
+# persist the choice so later container helpers, such as an Authelia or
+# NetBird subdomain, reuse the exact same value.
+# Usage:
+#   get_containers_domain
+get_containers_domain() {
+    source_state
+
+    if [ -n "$CONTAINERS_DOMAIN" ]; then
+        echo "$CONTAINERS_DOMAIN"
+        return
+    fi
+
+    local domain=""
+    while :; do
+        domain=$(prompt_user_input "Enter the domain pointed at this server" "")
+
+        if [[ "$domain" =~ ^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$ ]]; then
+            break
+        fi
+
+        log_error "Invalid domain: '$domain'."
+    done
+
+    change_flag_value "CONTAINERS_DOMAIN" "$domain"
+    echo "$domain"
+}
+
+# Function to prompt for the email address used for ACME (Let's Encrypt)
+# certificate registration, once, and persist the choice.
+# Usage:
+#   get_acme_email
+get_acme_email() {
+    source_state
+
+    if [ -n "$CONTAINERS_ACME_EMAIL" ]; then
+        echo "$CONTAINERS_ACME_EMAIL"
+        return
+    fi
+
+    local email=""
+    while :; do
+        email=$(prompt_user_input "Enter the email address for Let's Encrypt ACME registration" "")
+
+        if [[ "$email" =~ ^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]+$ ]]; then
+            break
+        fi
+
+        log_error "Invalid email address: '$email'."
+    done
+
+    change_flag_value "CONTAINERS_ACME_EMAIL" "$email"
+    echo "$email"
 }
 
 # Function to generate a bcrypt htpasswd entry for HTTP basic authentication,

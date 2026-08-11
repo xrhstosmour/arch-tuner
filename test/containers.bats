@@ -132,6 +132,38 @@ EOF
     [[ "$(grep '^JWT_SECRET=' "$target")" =~ ^JWT_SECRET=[0-9a-f]{64}$ ]]
 }
 
+@test "get_containers_domain rejects an invalid domain and prompts again" {
+    run bash -c "source '$containers_under_test' && printf 'not a domain\nexample.com\n' | get_containers_domain"
+
+    [ "$status" -eq 0 ]
+    [ "$(echo "$output" | tail -n 1)" = "example.com" ]
+}
+
+@test "get_containers_domain persists the chosen domain and does not reprompt" {
+    bash -c "source '$containers_under_test' && printf 'example.com\n' | get_containers_domain" >/dev/null
+
+    run bash -c "source '$containers_under_test' && get_containers_domain </dev/null"
+
+    [ "$status" -eq 0 ]
+    [ "$output" = "example.com" ]
+}
+
+@test "get_acme_email rejects an invalid email and prompts again" {
+    run bash -c "source '$containers_under_test' && printf 'not-an-email\nadmin@example.com\n' | get_acme_email"
+
+    [ "$status" -eq 0 ]
+    [ "$(echo "$output" | tail -n 1)" = "admin@example.com" ]
+}
+
+@test "get_acme_email persists the chosen email and does not reprompt" {
+    bash -c "source '$containers_under_test' && printf 'admin@example.com\n' | get_acme_email" >/dev/null
+
+    run bash -c "source '$containers_under_test' && get_acme_email </dev/null"
+
+    [ "$status" -eq 0 ]
+    [ "$output" = "admin@example.com" ]
+}
+
 @test "render_environment_file preserves an already-rendered value on a second run" {
     template="$BATS_TEST_TMPDIR/template.env"
     target="$BATS_TEST_TMPDIR/rendered.env"
