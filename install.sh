@@ -12,13 +12,14 @@ INSTALL_SCRIPT_DIRECTORY=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 # Constant variable for the constants script path.
 CONSTANTS_SCRIPT_PATH="$INSTALL_SCRIPT_DIRECTORY/scripts/core/constants.sh"
 
-declare -a ORDERED_SCRIPTS=("essentials" "privacy" "security")
+declare -a ORDERED_SCRIPTS=("essentials" "privacy" "security" "containers")
 
 # Scripts to run containing their completion flag, initial setup value and optional message, splitted by "|".
 declare -A SCRIPTS=(
     ["essentials"]="ESSENTIALS_COMPLETED|1|Would you like to run the essentials setup script?"
     ["privacy"]="PRIVACY_COMPLETED|1|Would you like to run the privacy setup script?"
     ["security"]="SECURITY_COMPLETED|1|Would you like to run the security setup script?"
+    ["containers"]="CONTAINERS_COMPLETED|1|Would you like to run the containers setup script?"
 )
 
 # Import functions and flags.
@@ -94,6 +95,12 @@ for script in "${ORDERED_SCRIPTS[@]}"; do
 
                 # Do not log the rerun warning.
                 reboot_system "${!completion_flag}" "$completion_flag" 1
+            elif [ "$script" == "containers" ]; then
+
+                # New container stacks land in separate pull requests over
+                # time, so this phase never marks itself complete or
+                # reboots, it is offered again on every run.
+                log_success "Containers script execution finished!"
             fi
         fi
     fi
