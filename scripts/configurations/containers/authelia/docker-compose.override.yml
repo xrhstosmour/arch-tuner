@@ -1,0 +1,23 @@
+# Fronts Authelia through Traefik instead of publishing its own host port,
+# mirroring the label block Traefik's own dashboard already uses for
+# itself. The certificate resolver name ("le") is hardcoded rather than
+# read from a "${TRAEFIK_CERTIFICATE_RESOLVER}" variable, upstream's
+# "template.env" for this service does not declare that variable, each
+# service here is a separate Compose project with its own ".env", so a
+# cross-project variable reference is not available.
+#
+# A bare "ports: []" does NOT clear the base file's ports mapping, Compose's
+# merge library treats an empty sequence the same as an absent field.
+# "!reset" is the Compose-spec tag for explicitly clearing a field, verified
+# against a real Docker Compose (v5.3.1) run, not merely assumed from docs.
+services:
+  authelia:
+    ports: !reset []
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=internal"
+      - "traefik.http.routers.authelia.rule=Host(`authelia.${DOMAIN?Variable not set}`)"
+      - "traefik.http.routers.authelia.entrypoints=web_secure"
+      - "traefik.http.routers.authelia.tls=true"
+      - "traefik.http.routers.authelia.tls.options=tls-opts@file"
+      - "traefik.http.routers.authelia.tls.certresolver=le"
