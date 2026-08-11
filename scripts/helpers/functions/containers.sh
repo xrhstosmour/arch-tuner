@@ -119,8 +119,15 @@ render_environment_file() {
 
     local -A existing_values=()
     if [ -f "$target_file" ]; then
-        while IFS='=' read -r existing_key existing_value; do
-            [[ -z "$existing_key" || "$existing_key" == \#* ]] && continue
+        local existing_line existing_key existing_value
+        while IFS= read -r existing_line; do
+            [[ -z "$existing_line" || "$existing_line" == \#* || "$existing_line" != *=* ]] && continue
+            # Parameter expansion, not "IFS='=' read", "read" silently
+            # drops a trailing delimiter with nothing after it, corrupting
+            # any value ending in "=", such as base64 padding, verified
+            # against a real value one byte at a time until this surfaced.
+            existing_key="${existing_line%%=*}"
+            existing_value="${existing_line#*=}"
             existing_values["$existing_key"]="$existing_value"
         done <"$target_file"
     fi
@@ -359,6 +366,33 @@ WHERE NOT EXISTS (
 EOSQL
 }
 
+# Function to generate an RSA private key in PKCS#8 PEM format, for a
+# service that needs to sign tokens with its own key, such as an OIDC
+# provider's JSON Web Key Set.
+# Usage:
+#   generate_rsa_private_key
+generate_rsa_private_key() {
+    openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:2048 2>/dev/null
+}
+
+# Function to return an already-generated file's content, or generate and
+# persist one if the file does not exist yet, for a value too large or
+# unsafe for the single-line state file, such as a multi-line PEM key.
+# Usage:
+#   get_or_generate_file_secret "/path/to/file" "generator_function_name"
+get_or_generate_file_secret() {
+    local target_file="$1"
+    local generator_function_name="$2"
+
+    if [ ! -f "$target_file" ]; then
+        sudo mkdir -p "$(dirname "$target_file")"
+        "$generator_function_name" | sudo tee "$target_file" >/dev/null
+        sudo chmod 0600 "$target_file"
+    fi
+
+    sudo cat "$target_file"
+}
+
 # Function to generate a bcrypt htpasswd entry for HTTP basic authentication,
 # without requiring an "apache-utils"/"httpd-tools" package on the host.
 # Usage:
@@ -386,4 +420,18 @@ start_container_service() {
     local service_directory="$1"
 
     (cd "$service_directory" && docker_compose up -d)
+}
+
+# Function to force a service's Docker Compose stack to recreate. Compose
+# only detects a change from the resolved compose configuration itself
+# (image, environment, command, labels, ...), never from the contents of a
+# file it bind-mounts, so a rerun that only changes such a file's content,
+# without changing the mount's declared path, needs this instead of
+# "start_container_service", verified against a real Docker Compose run.
+# Usage:
+#   force_recreate_container_service "/path/to/service/directory"
+force_recreate_container_service() {
+    local service_directory="$1"
+
+    (cd "$service_directory" && docker_compose up -d --force-recreate)
 }

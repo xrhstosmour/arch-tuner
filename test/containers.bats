@@ -186,6 +186,24 @@ EOF
     [ "$first_secret" = "$second_secret" ]
 }
 
+@test "render_environment_file preserves a value ending in '=', such as base64 padding, on a second run" {
+    # Regression guard: "IFS='=' read" silently drops a trailing delimiter
+    # with nothing after it, corrupting any value ending in "=" one
+    # character at a time on every subsequent render.
+    template="$BATS_TEST_TMPDIR/template.env"
+    target="$BATS_TEST_TMPDIR/rendered.env"
+    printf "ENCRYPTION_KEY='string_without_special_characters'\n" >"$template"
+
+    declare -A known_values=(["ENCRYPTION_KEY"]="fake-base64-padding-test-value-not-a-real-secret==")
+    declare -a secret_keys=()
+
+    render_environment_file "$template" "$target" known_values secret_keys
+    render_environment_file "$template" "$target" known_values secret_keys
+    render_environment_file "$template" "$target" known_values secret_keys
+
+    grep -qxF "ENCRYPTION_KEY=fake-base64-padding-test-value-not-a-real-secret==" "$target"
+}
+
 @test "get_containers_admin_username rejects a username with spaces and prompts again" {
     run bash -c "source '$containers_under_test' && printf 'bad name\ngoodname\n' | get_containers_admin_username"
 
@@ -255,4 +273,31 @@ EOF
     grep -q 'CREATE DATABASE .authelia.' "$stdin_log"
     grep -q 'NOT EXISTS' "$stdin_log"
     grep -qF '\gexec' "$stdin_log"
+}
+
+@test "generate_rsa_private_key returns a PKCS#8 PEM-formatted key" {
+    run generate_rsa_private_key
+
+    [ "$status" -eq 0 ]
+    [[ "$output" == *"BEGIN PRIVATE KEY"* ]]
+    [[ "$output" == *"END PRIVATE KEY"* ]]
+}
+
+@test "get_or_generate_file_secret generates and persists a file on first call" {
+    target_file="$BATS_TEST_TMPDIR/secret.pem"
+
+    run get_or_generate_file_secret "$target_file" "generate_rsa_private_key"
+
+    [ "$status" -eq 0 ]
+    [ -f "$target_file" ]
+    [[ "$output" == *"BEGIN PRIVATE KEY"* ]]
+}
+
+@test "get_or_generate_file_secret returns the same content on a second call instead of regenerating" {
+    target_file="$BATS_TEST_TMPDIR/secret.pem"
+
+    first=$(get_or_generate_file_secret "$target_file" "generate_rsa_private_key")
+    second=$(get_or_generate_file_secret "$target_file" "generate_rsa_private_key")
+
+    [ "$first" = "$second" ]
 }
