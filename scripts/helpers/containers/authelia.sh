@@ -60,6 +60,22 @@ declare -a authelia_secret_keys=("AUTHELIA_JWT_SECRET" "AUTHELIA_SESSION_SECRET"
 log_info "Configuring Authelia..."
 render_environment_file "$AUTHELIA_SERVICE_DIRECTORY/template.env" "$AUTHELIA_SERVICE_DIRECTORY/.env" authelia_known_values authelia_secret_keys
 
+# The override below mounts "configuration/oidc-provider.yml" as a second
+# "--config" path. A bind mount to a host path that does not exist yet gets
+# silently created by Docker as an empty directory instead of a file,
+# permanently breaking that mount for the container's lifetime. Ensure a
+# minimal, valid placeholder is a real file before the override is ever
+# applied, so this never happens on a first deploy, before NetBird's own
+# helper has written the real OIDC provider configuration there.
+AUTHELIA_OIDC_PROVIDER_FILE="$AUTHELIA_SERVICE_DIRECTORY/configuration/oidc-provider.yml"
+if [ -d "$AUTHELIA_OIDC_PROVIDER_FILE" ]; then
+    sudo rmdir "$AUTHELIA_OIDC_PROVIDER_FILE" 2>/dev/null || true
+fi
+if [ ! -f "$AUTHELIA_OIDC_PROVIDER_FILE" ]; then
+    sudo mkdir -p "$(dirname "$AUTHELIA_OIDC_PROVIDER_FILE")"
+    printf -- '---\n' | sudo tee "$AUTHELIA_OIDC_PROVIDER_FILE" >/dev/null
+fi
+
 # Front Authelia through Traefik instead of publishing its own host port.
 sudo mkdir -p "$(dirname "$AUTHELIA_OVERRIDE_TARGET")"
 if [ "$(compare_files "$AUTHELIA_OVERRIDE_TARGET" "$AUTHELIA_OVERRIDE_SOURCE")" == "false" ]; then

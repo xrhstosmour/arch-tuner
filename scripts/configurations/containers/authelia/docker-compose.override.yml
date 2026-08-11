@@ -10,9 +10,45 @@
 # merge library treats an empty sequence the same as an absent field.
 # "!reset" is the Compose-spec tag for explicitly clearing a field, verified
 # against a real Docker Compose (v5.3.1) run, not merely assumed from docs.
+#
+# "command" and "volumes" are full replacements of the base file's own
+# lists (Compose replaces list fields wholesale, it does not merge them),
+# repeating everything the base file already does and adding, at the very
+# end, a second "--config" path so Authelia also loads "oidc-provider.yml"
+# (rendered by the NetBird helper, see its own comments), Authelia merges
+# multiple "--config" paths together. If the base file's own script ever
+# changes, this override drifts out of sync until it is updated to match.
 services:
   authelia:
     ports: !reset []
+    volumes:
+      - "./configuration/configuration.yml:/source/configuration.yml:ro"
+      - "./configuration/oidc-provider.yml:/oidc-provider.yml:ro"
+      - "/config"
+    command:
+      - |
+        until echo -n | nc -w 2 postgresql ${POSTGRESQL_PORT?Variable not set}; do
+          echo "Waiting for PostgreSQL...";
+          sleep 2;
+        done
+        until echo -n | nc -w 2 redis ${REDIS_PORT?Variable not set}; do
+          echo "Waiting for Redis...";
+          sleep 2;
+        done
+        sed "s|\$${DOMAIN}|$$DOMAIN|g" /source/configuration.yml > /tmp/configuration.yml
+        HASH=$$(authelia crypto hash generate bcrypt --password "$$ADMIN_PASSWORD" | awk '{print $$2}')
+        cat > /tmp/users_database.yml <<-CONFIG
+        ---
+        users:
+          $${ADMIN_USERNAME}:
+            disabled: false
+            displayname: 'Admin'
+            password: '$${HASH}'
+            email: '$${ADMIN_EMAIL}'
+            groups:
+              - 'admins'
+        CONFIG
+        exec /app/entrypoint.sh --config /tmp/configuration.yml --config /oidc-provider.yml
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=internal"

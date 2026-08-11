@@ -28,3 +28,26 @@ setup() {
     grep -q 'traefik.enable=true' "$override_file"
     grep -q 'authelia\.\${DOMAIN' "$override_file"
 }
+
+@test "the override loads oidc-provider.yml as a second Authelia config path, without dropping the base entrypoint script" {
+    grep -q './configuration/oidc-provider.yml:/oidc-provider.yml:ro' "$override_file"
+    grep -q -- '--config /tmp/configuration.yml --config /oidc-provider.yml' "$override_file"
+    # The base script's Postgres/Redis wait loops and user database
+    # rendering must survive the full command-list replacement.
+    grep -q 'Waiting for PostgreSQL' "$override_file"
+    grep -q 'users_database.yml' "$override_file"
+}
+
+@test "authelia.sh ensures oidc-provider.yml is a real file before applying the override that mounts it" {
+    # Regression guard: a bind mount to a missing host path is silently
+    # created by Docker as an empty directory instead of a file, verified
+    # against a real Docker run, permanently breaking that mount. This
+    # placeholder step must run, and be ordered, before the override copy.
+    placeholder_line=$(grep -n 'AUTHELIA_OIDC_PROVIDER_FILE' "$authelia_script" | head -1 | cut -d: -f1)
+    override_copy_line=$(grep -n 'cp "\$AUTHELIA_OVERRIDE_SOURCE"' "$authelia_script" | head -1 | cut -d: -f1)
+
+    [ -n "$placeholder_line" ]
+    [ -n "$override_copy_line" ]
+    [ "$placeholder_line" -lt "$override_copy_line" ]
+    grep -q "if \[ -d \"\$AUTHELIA_OIDC_PROVIDER_FILE\" \]" "$authelia_script"
+}
