@@ -45,5 +45,8 @@ sh "$CONTAINERS_SCRIPT_DIRECTORY/../helpers/containers/authelia.sh"
 # Deploy the VPN, registering it as an Authelia OIDC client.
 sh "$CONTAINERS_SCRIPT_DIRECTORY/../helpers/containers/netbird.sh"
 
+# Deploy Filestash, fronted through Traefik.
+sh "$CONTAINERS_SCRIPT_DIRECTORY/../helpers/containers/filestash.sh"
+
 # Each further container stack helper is added here as its own dedicated
 # pull request, in the order documents/roadmap.md describes.
