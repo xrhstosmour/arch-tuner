@@ -31,14 +31,19 @@ bootloader and kernel stay a manual, administrator-reviewed step, see `AGENTS.md
 enabling AppArmor's kernel `lsm=` parameter and enforcing any profile beyond complain mode.
 
 A fourth phase, `containers`, deploys Docker Compose stacks from the pinned upstream
-`xrhstosmour/containers` repository, one stack per pull request, verified working before each
-pull request opens. Unlike the other three phases it never marks itself complete, since new
-stacks land over time. The scaffold (`scripts/utilities/containers.sh`,
-`scripts/helpers/functions/containers.sh`, the pinned checkout at `/opt/arch-tuner/containers`)
-is merged to `main`. Traefik, then a shared PostgreSQL/Redis pair, then Authelia, then NetBird are
-next, in that order, since Authelia acts as NetBird's OpenID Connect provider and both need
-PostgreSQL, avoiding any third-party identity provider dependency. Filestash, Uptime Kuma,
-LinkStack, and Dockhand follow, each fronted by Traefik.
+`xrhstosmour/containers` repository, one stack per pull request, each verified working with a
+real `docker compose` run before it opens, not just read for review. Unlike the other three
+phases it never marks itself complete, since new stacks land over time. 5 pull requests are open
+against this phase, stacked in this order, each depending on the one before it: the scaffold
+(`scripts/utilities/containers.sh`, `scripts/helpers/functions/containers.sh`, the pinned
+checkout at `/opt/arch-tuner/containers`), a shared PostgreSQL/Redis pair, Traefik with ACME
+HTTP-01, Authelia fronted through Traefik, and NetBird registered as a public OpenID Connect
+client of Authelia instead of a third-party identity provider. NetBird's own
+dashboard/signal/relay/management stay on their own ports rather than fronted through Traefik,
+its documented reverse-proxy support needs a dedicated TLS-passthrough component this pinned
+upstream commit does not ship. `coturn`'s TURN relay ports stay open for the same reason, they
+cannot be reverse-proxied. Filestash, Uptime Kuma, LinkStack, and Dockhand remain, each fronted
+by Traefik.
 
 ## Remaining
 
